@@ -5,7 +5,7 @@ import EntityGraphProof from './components/EntityGraphProof'
 import Footer from './components/Footer'
 export default function App() {
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900">
+    <div className="min-h-screen bg-[#fafaf7] text-[#1a1d23]">
       <Hero />
       <JourneyLoop />
       <SkillsSection />

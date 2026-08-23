@@ -1,9 +1,33 @@
 export default function Footer() {
   return (
-    <footer className="max-w-7xl mx-auto px-6 py-10 text-center">
-      <h3 className="text-xl font-bold mb-2">Bring your ITSM into one graph</h3>
-      <p className="text-sm text-zinc-500 mb-4">Terra Service Management — AI for ITSM, ITIL4-aligned.</p>
-      <div className="text-xs text-zinc-400">© 2026 Terra · No pricing/testimonials fabricated</div>
+    <footer className="bg-[#1a1d23] text-[#fafaf7] border-t-[6px] border-[#facc15]">
+      <div className="max-w-[1280px] mx-auto px-6 lg:px-8 py-10">
+        <div className="grid md:grid-cols-[1.2fr_0.8fr] gap-8">
+          <div>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="h-8 w-8 bg-[#facc15] text-[#1a1d23] grid place-items-center font-display font-bold tracking-widest">T</div>
+              <span className="font-display text-[15px] font-bold tracking-widest uppercase">Terra Service Management</span>
+              <span className="hidden sm:inline font-mono text-[10px] tracking-widest uppercase bg-white/10 px-2 py-1">AI for ITSM — ITIL4</span>
+            </div>
+            <h3 className="font-display text-[26px] font-bold tracking-tight uppercase leading-none">Bring your ITSM into one graph</h3>
+            <p className="mt-2 text-[13px] leading-[1.6] text-white/60 max-w-[52ch]">One Andon line, 8 stations, 5 Andon skills. No silos, no theater — just the line, the harness, and the cord.</p>
+          </div>
+          <div className="flex flex-col gap-3 md:items-end md:text-right">
+            <div className="inline-flex items-center gap-2 font-mono text-[11px] tracking-widest uppercase text-white/60">
+              <span className="h-1.5 w-1.5 bg-[#10b981] rounded-full" />
+              Line ready — pull when needed
+            </div>
+            <div className="font-mono text-[11px] leading-[1.6] text-white/40">
+              © 2026 Terra · No pricing / testimonials fabricated
+              <br />
+              Static showcase — facts from business-capabilities.md
+            </div>
+          </div>
+        </div>
+
+        {/* hazard stripe */}
+        <div className="mt-8 h-[6px] w-full" style={{ background: 'repeating-linear-gradient(45deg, #facc15 0 12px, #1a1d23 12px 24px)' }} />
+      </div>
     </footer>
   )
 }

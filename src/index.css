@@ -1,6 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
 @import "tailwindcss";
 
 @theme {
+  --color-graphite: #1a1d23;
+  --color-steel: #8a8f98;
+  --color-steel-20: #e8e9eb;
+  --color-offwhite: #fafaf7;
+  --color-hazard: #facc15;
   --color-incident: #ef4444;
   --color-problem: #a855f7;
   --color-change: #f59e0b;
@@ -9,4 +15,33 @@
   --color-asset: #3b82f6;
   --color-request: #0ea5e9;
   --color-ci: #475569;
+  --font-display: "Oswald", sans-serif;
+  --font-body: "Public Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+/* Base */
+html { scrollbar-gutter: stable; }
+body {
+  font-family: var(--font-body);
+  background: var(--color-offwhite);
+  color: var(--color-graphite);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Browser surfaces — cheap signal of craft */
+::selection { background: #1a1d23; color: #fafaf7; }
+* { caret-color: #ef4444; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #e8e9eb; }
+::-webkit-scrollbar-thumb { background: #8a8f98; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #1a1d23; }
+:focus-visible { outline: 2px solid #f59e0b; outline-offset: 2px; }
+a { text-underline-offset: 3px; }
+:where(.font-mono) { font-variant-numeric: tabular-nums; }
+
+/* Andon utilities */
+.andon-rail {
+  background: linear-gradient(to right, #1a1d23 0, #1a1d23 100%) 0 50% / 100% 2px no-repeat;
 }
