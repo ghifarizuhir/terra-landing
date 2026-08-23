@@ -42,18 +42,18 @@ export default function Hero() {
         {/* Left — headline */}
         <div>
           <motion.div variants={item} className="inline-flex items-center gap-2 border border-[#1a1d23] bg-[#fafaf7] px-2.5 py-1 font-mono text-[11px] tracking-widest uppercase font-semibold">
-            <span className="h-1.5 w-1.5 bg-[#ef4444] rounded-full" />
-            Entity-graph — not silos
+            <span className="h-1.5 w-1.5 bg-[#10b981] rounded-full" />
+            Knowledge — not product pitch
           </motion.div>
 
           <motion.h1 variants={item} className="mt-4 font-display font-bold tracking-tight leading-[0.9] text-[#1a1d23]">
-            <span className="block text-[42px] lg:text-[64px] uppercase">One Graph.</span>
-            <span className="block text-[42px] lg:text-[64px] uppercase text-[#8a8f98]">One Line.</span>
-            <span className="block text-[42px] lg:text-[64px] uppercase">No Silos.</span>
+            <span className="block text-[42px] lg:text-[64px] uppercase">Terra —</span>
+            <span className="block text-[42px] lg:text-[64px] uppercase text-[#8a8f98]">AI for ITSM</span>
+            <span className="block text-[20px] lg:text-[22px] font-sans font-medium tracking-tight normal-case text-[#3a3f4a] mt-2">What each management does + what AI skills it needs</span>
           </motion.h1>
 
           <motion.p variants={item} className="mt-4 text-[15px] leading-[1.6] text-[#3a3f4a] max-w-[52ch]">
-            8 managements as stations on a single Andon line. Every work item is a node — incidents, problems, changes, knowledge, assets + Service Map — linked by <span className="font-mono text-[12px] bg-[#1a1d23] text-[#fafaf7] px-1 py-0.5">entity_links</span>. AI pulls the cord per station.
+            8 managements as stations on one line — what each does, why it matters, and which AI skill makes it better. Generic ITSM knowledge, no ITIL4 verbatim, no codebase.
           </motion.p>
 
           <motion.div variants={item} className="mt-6 flex flex-wrap items-center gap-3">
@@ -74,7 +74,7 @@ export default function Hero() {
           </motion.div>
 
           <motion.div variants={item} className="mt-6 flex items-center gap-3 font-mono text-[11px] tracking-widest uppercase text-[#8a8f98]">
-            <span>Incident</span><span className="text-[#e8e9eb]">—</span><span>Problem</span><span className="text-[#e8e9eb]">—</span><span>Change</span><span className="text-[#e8e9eb]">—</span><span>Knowledge</span><span className="text-[#e8e9eb]">—</span><span>Improvement</span>
+            <span>Incident</span><span className="text-[#e8e9eb]">—</span><span>Problem</span><span className="text-[#e8e9eb]">—</span><span>Change</span><span className="text-[#e8e9eb]">—</span><span>Knowledge</span><span className="text-[#e8e9eb]">—</span><span>Request</span><span className="text-[#e8e9eb]">—</span><span>Improvement</span>
           </motion.div>
         </div>
 

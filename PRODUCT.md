@@ -8,57 +8,66 @@ web
 
 ## Users
 
-External showcase audience for Terra Service Management (AI for ITSM):
-- **Prospective enterprise IT leaders (CIO, IT managers, team leads)** — evaluating an ITIL4-aligned platform that unifies incident, problem, change, request, knowledge, asset, improvement + Service Map in one entity graph.
-- **Secondary: internal team & partners** — needs to understand 8 managements + AI skills mapping quickly (30-second comprehension).
+Knowledge seekers for **Terra — AI for ITSM**:
+- **IT practitioners & team leads** — want to understand what each ITSM management does (not ITIL4-certified, generic operational knowledge) + what AI skills are needed per management.
+- **Secondary: partners / internal enablement** — needs 30-second comprehension of the 8 managements as a connected system.
 
-Landing purpose is **Persuade**: visitor decides Terra is credible and wants to act (explore journey, view skills, request demo). Not Operate.
+Landing purpose is **Read**: visitor *understands* — what each management does + what AI skills it needs. Not marketing the Terra codebase implementation (no `entity_links`, no `apps/*` details). Terra is the framing, not the proof.
 
 ## Product Purpose
 
-Terra Service Management is an IT operations platform that unifies every kind of IT work — incidents, problems, changes, improvements, service requests, knowledge articles, assets, and Service Map — in one graph with AI skills per management. Success on landing: visitor can recount the lifecycle (Incident → Problem/RCA → Change → Knowledge → Improvement, with Request parallel and Asset/Service Map as foundation) and understands AI augments each step, not replaces it.
+Terra — AI for ITSM knowledge landing: explain 8 core managements as standalone knowledge (what each does, why it matters) and pair each with the AI-augmented skills it needs. Success: visitor can recount the 8 managements + name one AI skill per management, without needing to understand Terra's internal implementation.
 
 ## Positioning
 
-Entity-graph unification: unlike siloed ITSM suites where each work type lives in its own module, Terra treats every work item as a node in a single graph (`entity_links` with 5 relations: parent, depends_on, relates_to, caused_by, resolved_by). Anything can link to anything, and ITIL4 is methodology not ceremony. That graph plus per-management AI skills (Security Audit, Description Quality, RCA Completeness, Compliance, CI Description Quality) is the mechanism a competitor could not truthfully copy.
+Knowledge-first, not product-first: we do not claim ITIL4 certification or reproduce ITIL4 verbatim. We describe generic ITSM management knowledge in operational language, with AI as the enabler per station. Terra is the host for that knowledge.
 
 ## Operating Context
 
-- Content is static factual showcase: 8 managements derived from `terra-service-management/docs/business-capabilities.md` and `PRODUCT.md`.
-- Visitor scans on desktop (1280px) and mobile (375px), often on corporate network, needs fast load (< 2s) and no horizontal scroll.
-- One-page journey: Hero → Journey Loop → Skills → Entity-Graph Proof → CTA. No auth, no backend.
-- Design must honor entity-type color language: Incident red, Problem purple, Change amber, Improvement emerald, Asset blue, Request sky, Knowledge indigo, Service Map slate.
+- Content is generic ITSM knowledge + AI skills — not derived from `terra-service-management` codebase, no code references.
+- Explicitly **avoid ITIL4 certification claims** (author not certified) — use plain management language.
+- Visitor scans on desktop (1280px) and mobile (375px), needs fast load (< 2s) and no horizontal scroll.
+- One-page journey: Hero → Andon Line (8 stations knowledge) → Skills matrix → Principles → CTA. No auth, no backend, static only.
+- Design keeps Andon world (graphite/steel/off-white, Oswald caps, rail+lamp+cord) — now carries knowledge, not product metrics.
 
 ## Capabilities and Constraints
 
-Confirmed capabilities to show:
-- 8 managements with factual details: Incident (war-room, recurrence, impact), Problem + RCA (8 categories, draft/published), Change (goals/checkpoints, monitoringPeriodDays), Knowledge (7 kbTypes, sections), Asset (ciId link), Service Map (CI graph, dependencies, impact), Request (targetDate/overdue), Improvement (effort voting).
-- Cross-cutting: entity graph, comments/timeline/versions/reviews.
-- AI: 5 default agent skills + Pulse Advisor + Dispatch (secondary).
+Knowledge to show (8 managements, generic):
+- **Incident Management** — what it does + AI skills (triage, priority, war-room summarization, recurrence detection).
+- **Problem Management** — what it does + AI skills (clustering, RCA draft, pattern mining).
+- **Change Management** — what it does + AI skills (risk scoring, impact prediction, drift detection).
+- **Service Request Management** — what it does + AI skills (intent classification, auto-routing).
+- **Knowledge Management** — what it does + AI skills (auto-generation from resolutions, search relevance).
+- **Service Configuration (Service Map)** — what it does + AI skills (dependency mapping, impact prediction).
+- **Asset Management** — what it does + AI skills (inventory linking, lifecycle).
+- **Continual Improvement** — what it does + AI skills (trend detection, suggestion mining).
+- No codebase-specific bullets (no `entity_links`, `goals`, `checkpoints`).
 
 Constraints:
-- Do not fabricate pricing, testimonials, case studies (none exist in PRODUCT.md: Evidence on Hand).
-- English concise operational voice; monospace IDs (INC-202501-003 style).
+- Do not claim ITIL4 certification or quote ITIL4 verbatim.
+- Do not fabricate pricing, testimonials, case studies.
+- Do not expose Terra codebase internals.
+- English concise operational voice; monospace IDs as light illustration only, not as data proof.
 - Static only, Vite + React + Tailwind, deploy Cloudflare Pages/Vercel, no backend fetch.
 - Performance: split chunks (react/motion/lucide separately), tree-shake lucide.
 
 ## Brand Commitments
 
-- Product name: **Terra Service Management** (short: Terra).
-- Entity-type color language established; monospace IDs; concise operational labels.
-- Existing landing scaffold uses Tailwind, shadcn patterns, lucide-react, motion — new world must replace visual language intentionally, not polish incumbent zinc neutrals.
+- Product name: **Terra — AI for ITSM** (short: Terra).
+- Keep entity-type color hints (Incident red, Problem purple, etc.) as wayfinding, not as spec.
+- Andon world (graphite/steel/off-white, hazard yellow for pull) — already shipped.
 
 ## Evidence on Hand
 
-- `terra-service-management/docs/PRODUCT.md`, `business-capabilities.md` (observational 2026-08-14), `docs/CHEAT-SHEET.md`, `docs/features/*` — factual spec corpus.
-- Current terra-landing scaffold: Vite 6 + React 19 + Tailwind 4 + motion, 7 tests green, docs/superpowers/specs/2026-08-24-terra-landing-journey-design.md (Journey Loop spec), docs/superpowers/plans/...
-- No marketing copy exists — to be authored at production fidelity, labeled synthetic where demo data used.
+- Generic ITSM management knowledge (authored for landing, not imported from codebase).
+- Current terra-landing scaffold: Vite 6 + React 19 + Tailwind 4 + motion, Andon world shipped, 7 tests green.
+- No ITIL4 certification, no product marketing claims to fabricate.
 
 ## Product Principles
 
-1. One graph, not silos — every management is a node, linking is first-class.
-2. ITIL4 as methodology, not ceremony — processes make work faster and traceable.
-3. Prove, don't claim — every management card shows factual capability a competitor cannot copy-paste.
-4. AI per management, not bolt-on — each node has relevant skill badge.
-5. Speed for scanners — Persuade in seconds, readable at any viewport.
+1. Knowledge over marketing — explain what each management does before how Terra does it.
+2. One skill per station — every management has an AI skill that makes it better.
+3. No certification theater — generic operational language, no ITIL4 verbatim.
+4. AI augments, not replaces — human judgment stays, AI speeds the call.
+5. Scannable — 8 stations readable in 30 seconds, any viewport.
 

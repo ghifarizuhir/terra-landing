@@ -11,9 +11,10 @@ describe('managements data', () => {
       expect(m.color).toBeTruthy()
     }
   })
-  it('incident has Security Audit skill', () => {
+  it('incident has AI skill', () => {
     const inc = managements.find(m => m.prefix === 'INC-')!
-    expect(inc.skills).toContain('Security Audit')
+    expect(inc.skills.length).toBeGreaterThan(0)
+    expect(inc.bullets.join(' ')).toMatch(/incident|restore/i)
   })
   it('has 5 default skills', () => {
     expect(defaultSkills).toHaveLength(5)

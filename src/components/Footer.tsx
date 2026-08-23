@@ -6,11 +6,11 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-3 mb-3">
               <div className="h-8 w-8 bg-[#facc15] text-[#1a1d23] grid place-items-center font-display font-bold tracking-widest">T</div>
-              <span className="font-display text-[15px] font-bold tracking-widest uppercase">Terra Service Management</span>
-              <span className="hidden sm:inline font-mono text-[10px] tracking-widest uppercase bg-white/10 px-2 py-1">AI for ITSM — ITIL4</span>
+              <span className="font-display text-[15px] font-bold tracking-widest uppercase">Terra — AI for ITSM</span>
+              <span className="hidden sm:inline font-mono text-[10px] tracking-widest uppercase bg-white/10 px-2 py-1">What each management does · What AI skill it needs</span>
             </div>
-            <h3 className="font-display text-[26px] font-bold tracking-tight uppercase leading-none">Bring your ITSM into one graph</h3>
-            <p className="mt-2 text-[13px] leading-[1.6] text-white/60 max-w-[52ch]">One Andon line, 8 stations, 5 Andon skills. No silos, no theater — just the line, the harness, and the cord.</p>
+            <h3 className="font-display text-[26px] font-bold tracking-tight uppercase leading-none">Knowledge first. Then augmentation.</h3>
+            <p className="mt-2 text-[13px] leading-[1.6] text-white/60 max-w-[52ch]">One Andon line, 8 stations, one AI skill each. Not a product demo — a shared understanding of what each management does.</p>
           </div>
           <div className="flex flex-col gap-3 md:items-end md:text-right">
             <div className="inline-flex items-center gap-2 font-mono text-[11px] tracking-widest uppercase text-white/60">
@@ -18,9 +18,9 @@ export default function Footer() {
               Line ready — pull when needed
             </div>
             <div className="font-mono text-[11px] leading-[1.6] text-white/40">
-              © 2026 Terra · No pricing / testimonials fabricated
+              © 2026 Terra · Knowledge landing — no ITIL4 certification claimed
               <br />
-              Static showcase — facts from business-capabilities.md
+              Generic ITSM management knowledge + AI skills
             </div>
           </div>
         </div>

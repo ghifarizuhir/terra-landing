@@ -5,7 +5,7 @@ describe('JourneyLoop', () => {
   it('renders all 8 managements', () => {
     render(<JourneyLoop />)
     expect(screen.getByText('Incident Management')).toBeInTheDocument()
-    expect(screen.getByText('Service Map (CMDB)')).toBeInTheDocument()
+    expect(screen.getByText(/Service Configuration/)).toBeInTheDocument()
   })
   it('renders foundation section', () => {
     render(<JourneyLoop />)
