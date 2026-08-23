@@ -1,10 +1,17 @@
+import { motion, useReducedMotion } from 'framer-motion'
 import { cn } from '../lib/cn'
 import * as Icons from 'lucide-react'
 type Props = { prefix: string; title: string; oneLiner: string; bullets: string[]; skills: string[]; color: string; icon: string }
 export default function ManagementCard({ prefix, title, oneLiner, bullets, skills, color, icon }: Props) {
   const Icon = (Icons as any)[icon] ?? Icons.Box
+  const shouldReduceMotion = useReducedMotion()
   return (
-    <div className={cn("rounded-2xl border bg-white p-5 shadow-sm hover:shadow-md transition-all hover:scale-[1.02]", "border-zinc-200")}>
+    <motion.div
+      initial={shouldReduceMotion ? undefined : { opacity: 0, y: 8 }}
+      whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.3 }}
+      className={cn("rounded-2xl border bg-white p-5 shadow-sm hover:shadow-md transition-all hover:scale-[1.02]", "border-zinc-200")}>
       <div className="flex items-center gap-3 mb-2">
         <div className={cn("h-9 w-9 rounded-xl flex items-center justify-center text-white", color)}>
           <Icon className="h-5 w-5" />
@@ -24,6 +31,6 @@ export default function ManagementCard({ prefix, title, oneLiner, bullets, skill
         ))}
         {skills.length === 0 && <span className="text-[11px] text-zinc-400">No native skill — links to CI</span>}
       </div>
-    </div>
+    </motion.div>
   )
 }
