@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import { it, expect } from 'vitest'
 import ManagementCard from '../src/components/ManagementCard'
 const props = { prefix: 'INC-', title: 'Incident Management', oneLiner: 'Detect & Respond', bullets: ['war-room','recurrence'], skills: ['Security Audit'], color: 'bg-red-500', icon: 'Siren' }
 it('renders prefix, title, oneliner, skills', () => {
