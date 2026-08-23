@@ -1,9 +1,14 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { cn } from '../lib/cn'
-import * as Icons from 'lucide-react'
+import { Siren, ClipboardList, SearchX, GitBranch, BookOpen, TrendingUp, Package, Network, Sparkles, Box } from 'lucide-react'
+
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Siren, ClipboardList, SearchX, GitBranch, BookOpen, TrendingUp, Package, Network,
+}
+
 type Props = { prefix: string; title: string; oneLiner: string; bullets: string[]; skills: string[]; color: string; icon: string }
 export default function ManagementCard({ prefix, title, oneLiner, bullets, skills, color, icon }: Props) {
-  const Icon = (Icons as any)[icon] ?? Icons.Box
+  const Icon = iconMap[icon] ?? Box
   const shouldReduceMotion = useReducedMotion()
   return (
     <motion.div
@@ -26,7 +31,7 @@ export default function ManagementCard({ prefix, title, oneLiner, bullets, skill
       <div className="flex flex-wrap gap-1.5">
         {skills.map(s => (
           <span key={s} className="inline-flex items-center gap-1 text-[11px] bg-zinc-900 text-white px-2 py-1 rounded-full">
-            <Icons.Sparkles className="h-3 w-3" /> {s}
+            <Sparkles className="h-3 w-3" /> {s}
           </span>
         ))}
         {skills.length === 0 && <span className="text-[11px] text-zinc-400">No native skill — links to CI</span>}

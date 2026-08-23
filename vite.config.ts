@@ -10,4 +10,15 @@ export default defineConfig({
     setupFiles: ['./tests/setup.ts'],
     globals: true,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          motion: ['framer-motion'],
+          lucide: ['lucide-react'],
+        },
+      },
+    },
+  },
 })
