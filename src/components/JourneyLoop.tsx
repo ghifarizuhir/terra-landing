@@ -1,11 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { managements } from '../data/managements'
 
 export default function JourneyLoop() {
   const [open, setOpen] = useState<string | null>(null)
+  const [expanded, setExpanded] = useState<string | null>(null)
   const active = open ? managements.find((m) => m.id === open) ?? null : null
   const shouldReduceMotion = useReducedMotion()
+
+  useEffect(() => {
+    setExpanded(null)
+  }, [open])
 
   const gridVariants = shouldReduceMotion
     ? undefined
@@ -114,15 +119,43 @@ export default function JourneyLoop() {
                 </ol>
               </div>
               <div className="mt-5 pt-4 border-t border-[#e8e9eb]">
-                <div className="font-mono text-[11px] tracking-widest uppercase font-semibold mb-2">AI skills needed — real skills</div>
-                <div className="space-y-3">
-                  {active.skills.map((s) => (
-                    <div key={s.name} className="border border-[#e8e9eb] bg-white p-3">
-                      <div className="font-mono text-[11px] tracking-widest uppercase font-bold bg-[#1a1d23] text-[#fafaf7] inline-block px-2 py-1">{s.name}</div>
-                      <div className="mt-2 text-[12.5px] leading-[1.5] text-[#1a1d23] font-medium">{s.what}</div>
-                      <div className="mt-1 text-[11px] leading-[1.5] text-[#8a8f98] font-mono">How: {s.how}</div>
-                    </div>
-                  ))}
+                <div className="font-mono text-[11px] tracking-widest uppercase font-semibold mb-2">AI skills needed — click to open</div>
+                <div className="space-y-2">
+                  {active.skills.map((s) => {
+                    const isOpen = expanded === s.name
+                    return (
+                      <div key={s.name} className="border border-[#1a1d23] bg-white overflow-hidden">
+                        <button
+                          onClick={() => setExpanded(isOpen ? null : s.name)}
+                          className="w-full flex items-center justify-between p-3 text-left hover:bg-[#fafaf7] transition-colors"
+                        >
+                          <span className="font-mono text-[11px] tracking-widest uppercase font-bold bg-[#1a1d23] text-[#fafaf7] px-2 py-1">{s.name}</span>
+                          <span className="font-mono text-[11px] text-[#8a8f98]">{isOpen ? '−' : '+'}</span>
+                        </button>
+                        {isOpen && (
+                          <div className="px-3 pb-3 space-y-2 border-t border-[#e8e9eb] bg-[#fafaf7]/50">
+                            <div className="pt-2">
+                              <div className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98]">Overview</div>
+                              <p className="text-[12.5px] leading-[1.5] text-[#1a1d23] mt-1">{s.overview}</p>
+                            </div>
+                            <div>
+                              <div className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98]">When to use</div>
+                              <p className="text-[11px] leading-[1.5] text-[#3a3f4a] mt-1">{s.whenToUse}</p>
+                            </div>
+                            <div>
+                              <div className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98]">How it works</div>
+                              <p className="text-[11px] leading-[1.5] text-[#3a3f4a] font-mono mt-1">{s.how}</p>
+                            </div>
+                            {s.example && (
+                              <div className="bg-[#1a1d23] text-[#fafaf7] p-2 font-mono text-[11px] leading-[1.4]">
+                                <span className="text-[#facc15]">Example →</span> {s.example}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             </div>
