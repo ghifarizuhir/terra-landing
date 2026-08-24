@@ -16,6 +16,15 @@ describe('managements data', () => {
     expect(inc.skills.length).toBeGreaterThan(0)
     expect(inc.bullets.join(' ')).toMatch(/incident|restore/i)
   })
+  it('incident covers the full 6-stage cycle, one skill per stage, in order', () => {
+    const inc = managements.find(m => m.prefix === 'INC-')!
+    expect(inc.skills).toHaveLength(6)
+    for (const s of inc.skills) expect(s.stage).toBeTruthy()
+    const stages = [...inc.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
+    expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
+      'Detect & log', 'Triage', 'Diagnose', 'Communicate', 'Resolve & restore', 'Close & learn',
+    ])
+  })
   it('has 5 default skills', () => {
     expect(defaultSkills).toHaveLength(5)
   })

@@ -7,6 +7,8 @@ export default function JourneyLoop() {
   const active = open ? managements.find((m) => m.id === open) ?? null : null
   const shouldReduceMotion = useReducedMotion()
   const totalSkills = managements.reduce((n, m) => n + m.skills.length, 0)
+  const sortedSkills = active ? [...active.skills].sort((a, b) => (a.stage ?? '').localeCompare(b.stage ?? '')) : []
+  const allStaged = !!active && active.skills.length > 0 && active.skills.every((s) => !!s.stage)
 
   const gridVariants = shouldReduceMotion
     ? undefined
@@ -87,10 +89,10 @@ export default function JourneyLoop() {
           <motion.div
             key={active.id}
             layoutId={`card-${active.id}`}
-            initial={{ opacity: 0, y: 16 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] as const }}
+            exit={{ opacity: 0, y: shouldReduceMotion ? 0 : 8 }}
+            transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.28, ease: [0.16, 1, 0.3, 1] as const }}
             className="fixed inset-0 z-50 bg-[#fafaf7] flex flex-col overflow-hidden"
           >
             {/* Top bar */}
@@ -125,13 +127,40 @@ export default function JourneyLoop() {
                   <div className="flex items-center gap-3 mb-3">
                     <h3 className="font-display text-[18px] font-bold tracking-tight uppercase">AI skills — real skills</h3>
                     <span className="font-mono text-[10px] tracking-widest uppercase bg-[#1a1d23] text-[#fafaf7] px-2 py-1">{active.skills.length} skills</span>
+                    {allStaged && (
+                      <span className="font-mono text-[10px] tracking-widest uppercase bg-[#facc15] text-[#1a1d23] font-semibold px-2 py-1">{active.skills.length}/{active.skills.length} stages</span>
+                    )}
                     <span className="h-px flex-1 bg-[#e8e9eb]" />
                   </div>
+
+                  {/* Cycle strip — Andon rail, one node per lifecycle stage */}
+                  {allStaged && (
+                    <div className="mb-4">
+                      <p className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98] mb-2">Cycle coverage — one skill per stage</p>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+                        {sortedSkills.map((s) => (
+                          <div key={`strip-${s.name}`} className="border border-[#1a1d23] bg-white p-2">
+                            <div className="flex items-center gap-1.5">
+                              <span className="h-1.5 w-1.5 rounded-full shrink-0" style={{ background: active.color.replace('bg-', '').includes('red') ? '#ef4444' : active.color.includes('purple') ? '#a855f7' : active.color.includes('amber') ? '#f59e0b' : active.color.includes('indigo') ? '#6366f1' : active.color.includes('emerald') ? '#10b981' : active.color.includes('blue') ? '#3b82f6' : active.color.includes('sky') ? '#0ea5e9' : '#475569' }} />
+                              <span className="font-mono text-[9px] tracking-widest uppercase font-bold">{s.stage}</span>
+                            </div>
+                            <p className="font-mono text-[9px] leading-[1.4] tracking-wider uppercase text-[#8a8f98] mt-1.5 line-clamp-2">{s.name}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="grid lg:grid-cols-2 gap-3">
-                    {active.skills.map((s) => (
+                    {sortedSkills.map((s) => (
                       <div key={s.name} className="border border-[#1a1d23] bg-white flex flex-col">
                         <div className="p-3 border-b border-[#e8e9eb] bg-[#fafaf7]">
-                          <div className="font-mono text-[11px] tracking-widest uppercase font-bold bg-[#1a1d23] text-[#fafaf7] inline-block px-2 py-1">{s.name}</div>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-mono text-[11px] tracking-widest uppercase font-bold bg-[#1a1d23] text-[#fafaf7] inline-block px-2 py-1">{s.name}</span>
+                            {s.stage && (
+                              <span className="font-mono text-[9px] tracking-widest uppercase font-semibold bg-[#facc15] text-[#1a1d23] px-1.5 py-0.5">{s.stage}</span>
+                            )}
+                          </div>
                           {s.description && <p className="font-mono text-[11px] leading-[1.4] mt-2 bg-white border border-[#e8e9eb] p-2">{s.description}</p>}
                         </div>
                         <div className="p-3 space-y-3 flex-1">

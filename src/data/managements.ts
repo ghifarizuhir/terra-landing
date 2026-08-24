@@ -1,6 +1,7 @@
 // src/data/managements.ts — Terra — AI for ITSM: clear knowledge + real AI skills (full SKILL.md structure) per management.
 export type SkillDetail = {
   name: string
+  stage?: string
   description?: string
   overview: string
   whenToUse: string | string[]
@@ -34,7 +35,40 @@ export const managements: Management[] = [
     ],
     skills: [
       {
+        name: 'Auto-log enrichment',
+        stage: '01 · Detect & log',
+        description: 'Use when monitoring floods the queue with raw alert bursts, incidents arrive with empty fields, or responders retype what the payload already says',
+        overview: 'Auto-log enrichment turns a burst of correlated alerts into one clean incident: duplicates merge, and service, component, start time and error signature are copied from the structured payload into the ticket. Core principle: one outage is one ticket — and the alert already knows most of its own fields. The AI copies structured facts; it never invents values it cannot find.',
+        whenToUse: [
+          'Burst of related alerts from one service within minutes (CPU + health-check + latency)',
+          'Incident created by monitoring webhook arrives with blank description or missing affected-service',
+          'Responders spend minutes copying host, error text and timestamps from dashboards into the ticket',
+          'When NOT to use: alerts are genuinely distinct failures — merging hides independent outages; or a clean manual report is already complete',
+        ],
+        corePattern: {
+          before: '// Before: humans triage alert storms by hand\nfunction log(alerts) {\n  // 14 CPU alerts + 2 health-checks → 16 tickets? copy-paste each\n  return alerts.map((a) => createTicket(a)) // queue floods\n}',
+          after: '// After: cluster, merge, enrich\nfunction log(alerts) {\n  const clusters = clusterByServiceAndSignature(alerts, { windowMin: 5 })\n  return clusters.map((c) => createTicket({\n    service: c.service, component: c.component, startedAt: c.firstSeen,\n    errorSignature: c.signature, mergedAlerts: c.size,\n  })) // one incident per cluster, fields pre-filled from payload\n}',
+        },
+        quickReference: {
+          headers: ['Signal', 'Action', 'Rule'],
+          rows: [
+            ['Same service + same signature ≤5 min', 'Merge into one incident', 'keep alert count'],
+            ['Different signature or service', 'Separate incidents', 'never cross-merge'],
+            ['Structured field in payload', 'Copy into ticket', 'mark as auto-filled'],
+            ['Field not in payload', 'Leave empty for human', 'do not guess'],
+          ],
+        },
+        how: 'Fingerprint each alert by service + error signature, time-window clustering merges bursts, structured extraction copies fields into the draft incident. Output: one incident per cluster with auto-filled fields marked as such. Maintenance windows are excluded. Human-entered fields are never overwritten.',
+        commonMistakes: [
+          'Merging across services or signatures → two outages hidden as one. Fix: strict fingerprint match.',
+          'Overwriting responder edits with payload data. Fix: auto-fill only empty fields.',
+          'Creating tickets during maintenance windows. Fix: check change/maintenance calendar first.',
+        ],
+        example: '14 “CPU >90%” + 2 health-check fails on checkout-api in 4 minutes → 1 INC pre-filled: Payments / checkout-api / started 09:12 / signature “cpu-saturation” / “16 alerts merged”.',
+      },
+      {
         name: 'Auto-triage & priority',
+        stage: '02 · Triage',
         description: 'Use when incidents have inconsistent priority, wrong team assignment, or triage queue grows faster than humans can read',
         overview: 'Auto-triage is a reference skill for suggesting priority and assignee from incident text and history. Core principle: history is the training data — past incidents with similar titles taught the model what “P1 + Payments” looks like, so the next “timeout 504” does not need a human to guess. It is a technique, not a rule: the AI suggests, the human confirms.',
         whenToUse: [
@@ -67,6 +101,7 @@ export const managements: Management[] = [
       },
       {
         name: 'War-room summarization',
+        stage: '04 · Communicate',
         description: 'Use when incident timelines have long scroll, duplicate questions, or shift handovers where newcomers ask what happened so far',
         overview: 'War-room summarization condenses a noisy incident timeline (dozens of comments, status changes) into a 3-bullet handover readable in 30 seconds. Core principle: the timeline is the source of truth — the AI compresses it, never invents. It is a reference skill for handovers, not a decision maker.',
         whenToUse: [
@@ -97,6 +132,7 @@ export const managements: Management[] = [
       },
       {
         name: 'Similar-incident detection',
+        stage: '03 · Diagnose',
         description: 'Use when responders ask “has this happened before?”, duplicate incidents pile up in the queue, or restore-path knowledge lives only in senior heads',
         overview: 'Similar-incident detection surfaces past incidents that resemble the current one — by title, symptom and affected service. Core principle: if it happened before, the fastest path to restore is what worked last time. The AI links candidates, it never merges; humans decide whether two incidents are truly the same.',
         whenToUse: [
@@ -125,6 +161,70 @@ export const managements: Management[] = [
           'Linking without resolution context → match found but no “what fixed it”. Fix: always show prior resolution summary.',
         ],
         example: 'INC “Checkout timeout 504” → INC-1042 same title resolved 6 days ago (0.88) → suggests duplicate + “fixed by rollback v2.3” → responder reuses workaround in minutes instead of rediscovering it.',
+      },
+      {
+        name: 'Resolution suggester',
+        stage: '05 · Resolve & restore',
+        description: 'Use when the diagnosis is clear but responders stare at the ticket unsure what to do, or MTTR is dominated by “what now?” instead of work',
+        overview: 'Resolution suggester ranks candidate actions for a diagnosed incident — workarounds and fixes drawn from similar resolved incidents and matched runbooks — each with its past success rate and source. Core principle: during an outage, restore first, root-cause later; the fastest safe action beats the perfect fix. The AI suggests and ranks; only humans execute.',
+        whenToUse: [
+          'Diagnosis points at a known failure mode (same signature resolved before)',
+          'A runbook exists but nobody on shift remembers which one or trusts it',
+          'P1 needs an interim workaround while engineering prepares the real fix',
+          'When NOT to use: genuinely novel failure with no history — escalate to deeper expertise instead of dressing up a guess',
+        ],
+        corePattern: {
+          before: '// Before: fix chosen under pressure\nfunction resolve(incident) {\n  // “try restarting? redeploy? someone check the runbook?”\n  return loudestOpinion() // slow, inconsistent, untracked\n}',
+          after: '// After: ranked candidates with evidence\nfunction resolve(incident) {\n  const options = rankActions(incident, history, runbooks)\n  // [{action:"rollback v2.3", source:"INC-1042", success:1.0}, {action:"RB-07 §3"}]\n  return options // human picks and executes\n}',
+        },
+        quickReference: {
+          headers: ['Candidate', 'Shown as', 'Rule'],
+          rows: [
+            ['Past resolution ≥0.85 match', '“Proven” + success rate', 'cite incident'],
+            ['Runbook step match', 'Steps + link', 'flag staleness'],
+            ['Partial similarity', 'Options ranked', 'no single answer'],
+            ['No history at all', 'Say so honestly', 'escalate, do not guess'],
+          ],
+        },
+        how: 'Reuses similar-incident embeddings, joins each candidate with its resolution record and duration, ranks by same-service × recency × past success. Output: top-3 {action, source link, success rate, blast radius}. Execution always stays with the human; outcomes are written back so rankings improve.',
+        commonMistakes: [
+          'Presenting an unverified suggestion as “proven”. Fix: label every candidate with its evidence.',
+          'Hiding blast radius (“rollback also drops in-flight orders”). Fix: show side effects next to action.',
+          'Treating the workaround as the fix — problem never gets the handover. Fix: mark workaround as temporary.',
+        ],
+        example: 'Diagnosed 504 on checkout → suggests “Rollback to v2.3 — used 4×, 100% success (INC-1042)” ahead of deep-dive; service restored in 12 minutes, root cause goes to Problem.',
+      },
+      {
+        name: 'Closure & handover pack',
+        stage: '06 · Close & learn',
+        description: 'Use when incidents close as one-liners like “fixed”, postmortems start from a blank page, or problem/knowledge teams chase responders for context',
+        overview: 'Closure & handover pack assembles the learning record at close time: timeline digest, impact, actions taken, resolution and open follow-ups — formatted so problem management gets a problem statement and knowledge gets an article stub, not a scavenger hunt. Core principle: learning is part of closing; whatever is not captured now is lost forever.',
+        whenToUse: [
+          'Any non-trivial incident is about to close with a thin resolution note',
+          'An incident closes that has recurred before — recurrence must reach problem management',
+          'Major/war-room incident closure where stakeholders expect a record',
+          'When NOT to use: trivial password-reset-class tickets — lightweight close is fine',
+        ],
+        corePattern: {
+          before: "// Before: close = type “done”, move on\nfunction close(incident) {\n  incident.resolution = prompt('resolution?') // “fixed”\n  return incident // context evaporates\n}",
+          after: '// After: pack generated from the timeline\nfunction close(incident) {\n  const pack = buildClosurePack(incident.timeline)\n  // {summary, impact, actions, followUps} + problem flag + KB draft\n  return reviewAndSave(pack) // human reviews before anything is created\n}',
+        },
+        quickReference: {
+          headers: ['Signal at close', 'Route', 'Rule'],
+          rows: [
+            ['Recurred ≥2×', 'Propose Problem record', 'human confirms'],
+            ['Novel cause + novel fix', 'Draft Knowledge article', 'from timeline only'],
+            ['Standard documented fix', 'Link existing article', 'no new article'],
+            ['Every closure', 'Summary + impact attached', 'extractive only'],
+          ],
+        },
+        how: 'Extractive assembly from the timeline and comms into four sections (what happened, impact, actions, follow-ups); classifies the learning target (problem / knowledge / none) using recurrence count and novelty; drafts are staged for human review before any record is created. Recurrence counters feed back into similar-incident and triage skills.',
+        commonMistakes: [
+          'Writing a root cause into the closure — that is problem management’s job, not the closer’s. Fix: record facts, flag for RCA.',
+          'Auto-creating problem records or articles without review. Fix: draft and stage, human publishes.',
+          'Skipping follow-up capture (“we should add alerting”) — they evaporate. Fix: follow-ups are a required section.',
+        ],
+        example: 'INC closes after rollback → pack: “504 checkout, 22 min, 12 orders affected, rollback v2.3” + “3rd occurrence in 30 days → propose PRB” + KB stub drafted from timeline, awaiting review.',
       },
     ],
     color: 'bg-red-500', icon: 'Siren', order: 1, lane: 'cycle'
