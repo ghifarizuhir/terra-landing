@@ -239,6 +239,7 @@ export const managements: Management[] = [
     skills: [
       {
         name: 'Intent classification',
+        stage: '01 · Intake & classify',
         description: 'Use when users write free-text and it is ambiguous whether the input is a service request or an incident, or which catalog item it maps to',
         overview: 'Intent classification decides whether incoming text is a service request or an incident, and which catalog item it maps to. Core principle: the catalog is the vocabulary — the model maps free text to a fixed enum (access/hardware/info/…), not to open-ended labels.',
         whenToUse: [
@@ -267,7 +268,72 @@ export const managements: Management[] = [
         example: '“Need MacBook for new hire Budi, start 2026-09-01” → hardware, 0.91.',
       },
       {
+        name: 'Completeness checker',
+        stage: '02 · Validate',
+        description: 'Use when requests reach fulfillers missing fields or attachments, and fulfillment starts with a “can you also send me…” email instead of work',
+        overview: 'Completeness checker validates a request against its catalog item’s requirements before it enters a queue — missing laptop model, no manager name, absent justification — and asks the requester one consolidated question covering everything at once. Core principle: a request that cannot be fulfilled yet should not look fulfillable; bounce once, completely, or not at all.',
+        whenToUse: [
+          'Catalog item has required fields/attachments that arrive empty',
+          'Fulfillers spend their first touch asking for details instead of fulfilling',
+          'Requests bounce back and forth 2–3 times before work can start',
+          'When NOT to use: optional fields — nagging over nice-to-haves kills goodwill',
+        ],
+        corePattern: {
+          before: '// Before: discover gaps one email at a time\nfulfill(request) // → “which model?” → wait → “and manager approval?” → wait\n// 3 days lost before real work starts',
+          after: '// After: validate once, ask everything at once\nconst gaps = checkRequirements(request, catalogItem.requires)\nreturn gaps.length ? askOnce(gaps) : routeToFulfillment(request)\n// one message, all missing items, with defaults suggested',
+        },
+        quickReference: {
+          headers: ['Check', 'On gap', 'Rule'],
+          rows: [
+            ['Required field empty', 'Ask in consolidated message', 'suggest common default'],
+            ['Attachment missing', 'Request upload link', 'block progression'],
+            ['Approval prerequisite', 'Flag to approval stage', 'do not fulfill first'],
+            ['Optional field empty', 'Proceed silently', 'never nag'],
+          ],
+        },
+        how: 'Each catalog item declares required fields and attachments; the checker diffs them against the submitted request. All gaps are combined into one clarifying message, ordered by blocking impact, with sensible defaults pre-filled where history shows one dominant answer (e.g. standard laptop model). Requests pass through only when genuinely fulfillable.',
+        commonMistakes: [
+          'Asking per-field as they are noticed → the 3-email dance returns. Fix: single consolidated ask.',
+          'Treating optional as required → friction and abandoned carts. Fix: only catalog-declared requirements.',
+          'Guessing values silently → wrong hardware ordered. Fix: suggest defaults visibly, requester confirms.',
+        ],
+        example: 'Hardware request without model + start date → one message: “Which model? (85% pick MacBook Air) · Start date? · Manager name missing” → completed same day, fulfillment starts next morning.',
+      },
+      {
+        name: 'Approval router',
+        stage: '03 · Approve',
+        description: 'Use when approvals sit for days with the wrong person, requesters have no idea where theirs is stuck, or every approval chases its approver manually',
+        overview: 'Approval router determines who must approve a request — by item type × cost × requester role policy — attaches the context an approver needs to decide fast, and nudges approvals sitting past due. Core principle: approval should take one glance; the AI finds the right pair of eyes and hands them everything on one screen.',
+        whenToUse: [
+          'Access/costly items waiting on an approval chain nobody is sure about',
+          'Approvals routed by org-chart guesswork bounce between managers',
+          'Stale approvals age out silently past due dates',
+          'When NOT to use: pre-approved zero-cost items with policy-defined auto-approval',
+        ],
+        corePattern: {
+          before: '// Before: who approves this? ask around\nrouteTo(requester.manager) // → “not mine, try IT budget owner”\n// 4 days of forwarding, no record why',
+          after: '// After: policy-derived route with context\nconst chain = resolveApprovers(item, cost, role)\nsendForApproval(chain[0], packContext(request))\nonStale(() => remind(chain[0], afterDays: 2))',
+        },
+        quickReference: {
+          headers: ['Signal', 'Action', 'Rule'],
+          rows: [
+            ['Policy match (item+cost+role)', 'Route to named approver', 'cite policy line'],
+            ['No policy match', 'Escalate to service owner', 'never guess silently'],
+            ['Approved', 'Release to routing stage', 'context carried'],
+            ['Pending > SLA days', 'Auto-remind', 'max 2 reminders'],
+          ],
+        },
+        how: 'Reads the approval matrix (item category, cost threshold, requester role → approver), builds a one-screen context pack (what, why, cost, policy basis), sends with due date, and auto-reminds up to twice before escalating. Every hop and nudge is recorded so the audit trail explains itself.',
+        commonMistakes: [
+          'Routing by org chart proximity → wrong approver, silent delays. Fix: explicit approval matrix.',
+          'Reminding forever → approvers mute the channel. Fix: cap reminders, then escalate.',
+          'Sending bare titles (“approve REQ-42”) → slow decisions. Fix: always attach context pack.',
+        ],
+        example: '“Jira admin access, Finance, $0” → policy: Finance data tools need Data Owner + manager → both get context pack; Data Owner approves day 1, manager reminded day 3, released to IAM routing.',
+      },
+      {
         name: 'Auto-routing',
+        stage: '04 · Route & fulfill',
         description: 'Use when a service request is approved and needs assignment to the correct fulfillment team with a realistic due date',
         overview: 'Auto-routing suggests the owner team and a realistic due date for a validated request. Core principle: history is the SLA — past fulfillment times for that catalog item predict the next due date.',
         whenToUse: [
@@ -294,6 +360,70 @@ export const managements: Management[] = [
           'Ignoring department → Engineering hardware goes to IT. Fix: include requester dept.',
         ],
         example: 'Hardware from Engineering → Workplace, targetDate 7 days (median for hardware).',
+      },
+      {
+        name: 'Status comms drafter',
+        stage: '05 · Deliver & confirm',
+        description: 'Use when requesters ask “any update on my laptop?” because fulfillment happens in silence, and closure arrives as a surprise status flip',
+        overview: 'Status comms drafter answers “where is my request?” from the fulfillment timeline — ordered, shipped, delivered — and drafts the delivery confirmation message so closure is explicit, not a silent status change. Core principle: silence reads as neglect; the timeline already knows the answer, someone just has to say it.',
+        whenToUse: [
+          'Requester asks for status on an in-flight request',
+          'Fulfillment state changed (ordered/shipped/done) without telling the requester',
+          'Request is fulfilled — needs explicit confirmation before closing',
+          'When NOT to use: nothing has changed since the last update — do not send empty noise',
+        ],
+        corePattern: {
+          before: '// Before: requester pings, human digs\nonStatusQuestion((req) => readTimelineManually(req)) // 10 min per ping\n// close happens silently; requester finds out by accident',
+          after: '// After: draft from timeline\nconst msg = draftFrom(timeline) // “Ordered 12/8 · shipped 15/8 · ETA Mon”\nreturn humanSends(msg)\nonFulfilled((req) => proposeConfirmation(req))',
+        },
+        quickReference: {
+          headers: ['Trigger', 'Draft', 'Rule'],
+          rows: [
+            ['“Any update?”', 'Timeline digest + ETA', 'extractive only'],
+            ['State changed', 'Proactive one-liner', 'send via human'],
+            ['Fulfilled', 'Confirmation + how to return issues', 'explicit close'],
+            ['No change since last', 'Nothing', 'no empty updates'],
+          ],
+        },
+        how: 'Compresses the fulfillment timeline into 1–2 sentences with the next milestone and date, always extractive (dates and states come from records, not invention). Drafts are sent by humans or auto-posted where policy allows. At fulfillment, proposes the confirmation message that doubles as the closure record.',
+        commonMistakes: [
+          'Inventing ETAs to sound helpful → broken promises. Fix: only dates that exist in records.',
+          'Updating on every micro-change → spam. Fix: meaningful milestones only.',
+          'Closing without confirmation → requester reopens or loses trust. Fix: confirmation is part of closure.',
+        ],
+        example: 'Laptop request → “MacBook ordered 12/8, shipped 15/8, arriving Monday to your desk” sent proactively at ship event → delivery confirmed → closed with requester’s OK.',
+      },
+      {
+        name: 'Demand miner',
+        stage: '06 · Close & mine demand',
+        description: 'Use when the same manual requests repeat every week yet stay manual, and nobody can prove which new catalog item or automation would pay off first',
+        overview: 'Demand miner clusters fulfilled requests over time to expose what people actually keep asking for — and quantifies it: volume, handler time, seasonality. Core principle: the catalog should grow from evidence of repeated demand, not from whoever complained loudest this month.',
+        whenToUse: [
+          'Quarterly catalog review: which free-text asks recur often enough to become items?',
+          'A request type is fulfilled manually 20× a month with the same three steps',
+          'Stakeholders debate new self-service flows with no usage data',
+          'When NOT to use: one-off unusual requests — no pattern to mine yet',
+        ],
+        corePattern: {
+          before: '// Before: catalog evolves by anecdote\nreviewCatalog() // “I think people want X?”\n// same manual fulfillment continues, cost invisible',
+          after: '// After: demand ranked by evidence\nconst clusters = mineDemand(fulfilledRequests, { lookbackDays: 90 })\n// [{pattern: “VPN token reset”, count: 34, avgHandleMin: 18}]\nreturn proposeCatalogItem(clusters[0])',
+        },
+        quickReference: {
+          headers: ['Signal', 'Threshold', 'Proposal'],
+          rows: [
+            ['Same cluster ≥10× / month', 'Propose catalog item', 'with volume + effort'],
+            ['Purely digital + deterministic', 'Propose full automation', 'zero-touch flow'],
+            ['Cluster shrinking', 'No action', 'watch'],
+            ['One-off requests', 'Ignore', 'no pattern'],
+          ],
+        },
+        how: 'Embeds fulfilled request texts over a trailing quarter, clusters them (same technique family as problem pattern clustering), and joins each cluster with handler time from fulfillment records. Output: ranked list {pattern, volume, total handle time, seasonality} with proposals to add catalog items or automate zero-touch flows. Humans decide what enters the catalog.',
+        commonMistakes: [
+          'Building catalog items for tiny clusters → shelfware entries. Fix: volume threshold.',
+          'Ignoring handler time → big-volume-but-trivial wins crowd out real savings. Fix: rank by minutes × count.',
+          'Automating a flaky manual process as-is → automated mess. Fix: flag process health before automation.',
+        ],
+        example: '90-day mine: “VPN token reset” × 34, 18 min each ≈ 10 hours handled manually → proposal: self-service reset flow, projected full automation of the cluster.',
       },
     ],
     color: 'bg-sky-500', icon: 'ClipboardList', order: 0, lane: 'parallel'

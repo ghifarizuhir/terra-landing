@@ -19,8 +19,8 @@ describe('JourneyLoop', () => {
     expect(screen.getAllByText('06 · Close & learn').length).toBeGreaterThanOrEqual(2)
 
     fireEvent.click(screen.getByRole('button', { name: '← Back to grid' }))
-    fireEvent.click(screen.getByRole('button', { name: /Service Request Management/ }))
-    const reqHeading = screen.getAllByText('Service Request Management').find((el) => el.tagName === 'H2')!
+    fireEvent.click(screen.getByRole('button', { name: /Asset Management/ }))
+    const reqHeading = screen.getAllByText('Asset Management').find((el) => el.tagName === 'H2')!
     const overlay = reqHeading.closest('.fixed') as HTMLElement
     expect(overlay).toBeTruthy()
     expect(within(overlay).queryByText(/Cycle coverage — one skill per stage/i)).not.toBeInTheDocument()
@@ -38,5 +38,12 @@ describe('JourneyLoop', () => {
     expect(screen.getByText(/Cycle coverage — one skill per stage/i)).toBeInTheDocument()
     expect(screen.getAllByText('01 · Log & plan').length).toBeGreaterThanOrEqual(2)
     expect(screen.getAllByText('06 · Close & learn').length).toBeGreaterThanOrEqual(2)
+  })
+  it('shows cycle strip for Service Request too', () => {
+    render(<JourneyLoop />)
+    fireEvent.click(screen.getByRole('button', { name: /Service Request Management/ }))
+    expect(screen.getByText(/Cycle coverage — one skill per stage/i)).toBeInTheDocument()
+    expect(screen.getAllByText('01 · Intake & classify').length).toBeGreaterThanOrEqual(2)
+    expect(screen.getAllByText('06 · Close & mine demand').length).toBeGreaterThanOrEqual(2)
   })
 })

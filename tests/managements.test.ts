@@ -43,6 +43,15 @@ describe('managements data', () => {
       'Log & plan', 'Assess risk', 'Map blast radius', 'Approve & schedule', 'Deploy & verify', 'Close & learn',
     ])
   })
+  it('request covers the full 6-stage cycle, one skill per stage, in order', () => {
+    const req = managements.find(m => m.prefix === 'REQ-')!
+    expect(req.skills).toHaveLength(6)
+    for (const s of req.skills) expect(s.stage).toBeTruthy()
+    const stages = [...req.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
+    expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
+      'Intake & classify', 'Validate', 'Approve', 'Route & fulfill', 'Deliver & confirm', 'Close & mine demand',
+    ])
+  })
   it('has 5 default skills', () => {
     expect(defaultSkills).toHaveLength(5)
   })
