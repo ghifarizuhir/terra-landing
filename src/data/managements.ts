@@ -95,6 +95,37 @@ export const managements: Management[] = [
         ],
         example: '200-comment incident → “Payment gateway 504 since 09:12, 12 orders affected, rollback to v2.3 in progress — ETA 09:40.”',
       },
+      {
+        name: 'Similar-incident detection',
+        description: 'Use when responders ask “has this happened before?”, duplicate incidents pile up in the queue, or restore-path knowledge lives only in senior heads',
+        overview: 'Similar-incident detection surfaces past incidents that resemble the current one — by title, symptom and affected service. Core principle: if it happened before, the fastest path to restore is what worked last time. The AI links candidates, it never merges; humans decide whether two incidents are truly the same.',
+        whenToUse: [
+          'New incident looks familiar (“same 504 as last week”) but nobody remembers the INC number',
+          'Multiple reporters file separate tickets for one outage — duplicates flood the queue',
+          'Major incident needs known workarounds from previous occurrences, fast',
+          'When NOT to use: similarity below threshold or different affected service — a false link actively misleads restoration',
+        ],
+        corePattern: {
+          before: '// Before: matching by human memory\nfunction findSimilar(incident) {\n  // senior: “I think this was INC-something last month?”\n  return searchByMemory() // slow, misses, does not scale\n}',
+          after: '// After: AI ranks candidates, human confirms\nfunction findSimilar(incident) {\n  const matches = embedAndRank(incident, resolvedIncidents)\n  // [{id: "INC-1042", sim: 0.88, resolution: "rollback v2.3"}]\n  return matches.filter((m) => m.sim >= 0.75) // human confirms link/duplicate\n}',
+        },
+        quickReference: {
+          headers: ['Match', 'Action', 'Rule'],
+          rows: [
+            ['sim ≥0.85 + same service', 'Suggest as duplicate', 'merge only with confirm'],
+            ['sim 0.75–0.85', 'Suggest as related', 'link both directions'],
+            ['sim <0.75', 'No suggestion', 'avoid false leads'],
+            ['Duplicate confirmed', 'Carry over workaround + comms', 'restore faster'],
+          ],
+        },
+        how: 'Embed title + description + affected service, rank against resolved incidents from the last 180 days, boost same-service matches. Output: top-3 {incidentId, similarity, prior resolution summary}. Pattern: suggest links, never auto-merge; feed confirmed links back so recurring clusters surface to problem management.',
+        commonMistakes: [
+          'Auto-merging high-similarity pairs → two distinct outages collapse into one. Fix: human confirms every merge.',
+          'Keyword-only matching (“timeout”) → noisy false links across unrelated services. Fix: embedding + same-service boost.',
+          'Linking without resolution context → match found but no “what fixed it”. Fix: always show prior resolution summary.',
+        ],
+        example: 'INC “Checkout timeout 504” → INC-1042 same title resolved 6 days ago (0.88) → suggests duplicate + “fixed by rollback v2.3” → responder reuses workaround in minutes instead of rediscovering it.',
+      },
     ],
     color: 'bg-red-500', icon: 'Siren', order: 1, lane: 'cycle'
   },
