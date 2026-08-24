@@ -133,19 +133,76 @@ export default function JourneyLoop() {
                           <span className="font-mono text-[11px] text-[#8a8f98]">{isOpen ? '−' : '+'}</span>
                         </button>
                         {isOpen && (
-                          <div className="px-3 pb-3 space-y-2 border-t border-[#e8e9eb] bg-[#fafaf7]/50">
-                            <div className="pt-2">
+                          <div className="px-3 pb-3 space-y-3 border-t border-[#e8e9eb] bg-[#fafaf7]/50 max-h-[42vh] overflow-auto">
+                            {s.description && (
+                              <div className="pt-2">
+                                <div className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98]">Description (Use when…)</div>
+                                <p className="font-mono text-[11px] leading-[1.4] text-[#1a1d23] mt-1 bg-white border border-[#e8e9eb] p-2">{s.description}</p>
+                              </div>
+                            )}
+                            <div>
                               <div className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98]">Overview</div>
                               <p className="text-[12.5px] leading-[1.5] text-[#1a1d23] mt-1">{s.overview}</p>
                             </div>
                             <div>
                               <div className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98]">When to use</div>
-                              <p className="text-[11px] leading-[1.5] text-[#3a3f4a] mt-1">{s.whenToUse}</p>
+                              {Array.isArray(s.whenToUse) ? (
+                                <ul className="mt-1 space-y-1 list-disc pl-4 text-[11px] leading-[1.5] text-[#3a3f4a]">
+                                  {s.whenToUse.map((w) => (
+                                    <li key={w}>{w}</li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <p className="text-[11px] leading-[1.5] text-[#3a3f4a] mt-1">{s.whenToUse}</p>
+                              )}
+                              {s.whenNotToUse && <p className="text-[11px] leading-[1.4] text-[#8a8f98] mt-1 italic">When NOT to use: {s.whenNotToUse}</p>}
                             </div>
+                            {s.corePattern && (
+                              <div>
+                                <div className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98]">Core Pattern</div>
+                                <div className="mt-1 grid gap-2">
+                                  <pre className="bg-[#1a1d23] text-[#fafaf7] p-2 text-[10px] leading-[1.4] overflow-auto">{s.corePattern.before}</pre>
+                                  <pre className="bg-[#facc15] text-[#1a1d23] p-2 text-[10px] leading-[1.4] overflow-auto">{s.corePattern.after}</pre>
+                                </div>
+                              </div>
+                            )}
+                            {s.quickReference && (
+                              <div>
+                                <div className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98]">Quick Reference</div>
+                                <table className="mt-1 w-full border border-[#e8e9eb] text-[11px]">
+                                  <thead>
+                                    <tr className="bg-[#1a1d23] text-[#fafaf7]">
+                                      {s.quickReference.headers.map((h) => (
+                                        <th key={h} className="text-left px-2 py-1 font-mono text-[10px] tracking-widest uppercase">{h}</th>
+                                      ))}
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {s.quickReference.rows.map((row, i) => (
+                                      <tr key={i} className="border-t border-[#e8e9eb] bg-white">
+                                        {row.map((cell) => (
+                                          <td key={cell} className="px-2 py-1">{cell}</td>
+                                        ))}
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            )}
                             <div>
-                              <div className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98]">How it works</div>
-                              <p className="text-[11px] leading-[1.5] text-[#3a3f4a] font-mono mt-1">{s.how}</p>
+                              <div className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98]">Implementation</div>
+                              <p className="text-[11px] leading-[1.5] text-[#3a3f4a] font-mono mt-1 bg-white border border-[#e8e9eb] p-2">{s.how}</p>
                             </div>
+                            {s.commonMistakes && (
+                              <div>
+                                <div className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98]">Common Mistakes</div>
+                                <ul className="mt-1 space-y-1 list-disc pl-4 text-[11px] leading-[1.5] text-[#3a3f4a]">
+                                  {s.commonMistakes.map((m) => (
+                                    <li key={m}>{m}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
                             {s.example && (
                               <div className="bg-[#1a1d23] text-[#fafaf7] p-2 font-mono text-[11px] leading-[1.4]">
                                 <span className="text-[#facc15]">Example →</span> {s.example}
