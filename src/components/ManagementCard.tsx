@@ -11,7 +11,7 @@ type Props = {
   title: string
   oneLiner: string
   bullets: string[]
-  skills: string[]
+  skills: (string | { name: string })[]
   color: string // bg-* class
   icon: string
 }
@@ -78,14 +78,17 @@ export default function ManagementCard({ prefix, title, oneLiner, bullets, skill
         {/* Andon call — skill badges as lamp calls */}
         <div className="flex flex-wrap gap-1.5 pt-3 border-t border-[#e8e9eb]">
           {skills.length > 0 ? (
-            skills.map((s) => (
-              <span
-                key={s}
-                className="inline-flex items-center gap-1 font-mono text-[10px] tracking-widest uppercase font-semibold bg-[#1a1d23] text-[#fafaf7] px-2 py-1 rounded-sm"
-              >
-                <Sparkles className="h-3 w-3 text-[#f59e0b]" /> {s}
-              </span>
-            ))
+            skills.map((s) => {
+              const label = typeof s === 'string' ? s : s.name
+              return (
+                <span
+                  key={label}
+                  className="inline-flex items-center gap-1 font-mono text-[10px] tracking-widest uppercase font-semibold bg-[#1a1d23] text-[#fafaf7] px-2 py-1 rounded-sm"
+                >
+                  <Sparkles className="h-3 w-3 text-[#f59e0b]" /> {label}
+                </span>
+              )
+            })
           ) : (
             <span className="font-mono text-[10px] tracking-widest uppercase text-[#8a8f98] border border-dashed border-[#8a8f98]/50 px-2 py-1 rounded-sm">
               No cord — links to CI

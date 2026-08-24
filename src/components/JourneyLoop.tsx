@@ -55,8 +55,8 @@ export default function JourneyLoop() {
             <div className="mt-2 flex flex-wrap gap-1 shrink-0">
               <span className="font-mono text-[9px] tracking-widest uppercase text-[#8a8f98] w-full">AI skills →</span>
               {m.skills.slice(0, 2).map((s) => (
-                <span key={s} className="font-mono text-[9px] tracking-widest uppercase bg-[#1a1d23] text-[#fafaf7] px-1.5 py-0.5">
-                  {s}
+                <span key={s.name} className="font-mono text-[9px] tracking-widest uppercase bg-[#1a1d23] text-[#fafaf7] px-1.5 py-0.5">
+                  {s.name}
                 </span>
               ))}
             </div>
@@ -114,12 +114,14 @@ export default function JourneyLoop() {
                 </ol>
               </div>
               <div className="mt-5 pt-4 border-t border-[#e8e9eb]">
-                <div className="font-mono text-[11px] tracking-widest uppercase font-semibold mb-2">AI skills needed</div>
-                <div className="flex flex-wrap gap-2">
+                <div className="font-mono text-[11px] tracking-widest uppercase font-semibold mb-2">AI skills needed — real skills</div>
+                <div className="space-y-3">
                   {active.skills.map((s) => (
-                    <span key={s} className="font-mono text-[11px] tracking-widest uppercase bg-[#1a1d23] text-[#fafaf7] px-3 py-1.5">
-                      {s}
-                    </span>
+                    <div key={s.name} className="border border-[#e8e9eb] bg-white p-3">
+                      <div className="font-mono text-[11px] tracking-widest uppercase font-bold bg-[#1a1d23] text-[#fafaf7] inline-block px-2 py-1">{s.name}</div>
+                      <div className="mt-2 text-[12.5px] leading-[1.5] text-[#1a1d23] font-medium">{s.what}</div>
+                      <div className="mt-1 text-[11px] leading-[1.5] text-[#8a8f98] font-mono">How: {s.how}</div>
+                    </div>
                   ))}
                 </div>
               </div>
