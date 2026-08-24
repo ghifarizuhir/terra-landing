@@ -34,6 +34,15 @@ describe('managements data', () => {
       'Detect & cluster', 'Prioritize', 'Investigate (RCA)', 'Workaround', 'Verify fix', 'Close & watch',
     ])
   })
+  it('change covers the full 6-stage cycle, one skill per stage, in order', () => {
+    const chg = managements.find(m => m.prefix === 'CHG-')!
+    expect(chg.skills).toHaveLength(6)
+    for (const s of chg.skills) expect(s.stage).toBeTruthy()
+    const stages = [...chg.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
+    expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
+      'Log & plan', 'Assess risk', 'Map blast radius', 'Approve & schedule', 'Deploy & verify', 'Close & learn',
+    ])
+  })
   it('has 5 default skills', () => {
     expect(defaultSkills).toHaveLength(5)
   })

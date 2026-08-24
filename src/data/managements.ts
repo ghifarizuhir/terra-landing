@@ -507,7 +507,40 @@ export const managements: Management[] = [
     ],
     skills: [
       {
+        name: 'Change-request drafter',
+        stage: '01 · Log & plan',
+        description: 'Use when change requests are thin one-liners like “update DB”, rollout steps are invented per deploy, or rollback is a blank field nobody fills',
+        overview: 'Change-request drafter assembles a complete change record from history: intent, rollout steps, verification checks and a rollback plan drawn from similar completed changes on the same service. Core principle: past changes are the template — if no previous change ever used a rollback step, the drafter says so instead of inventing one.',
+        whenToUse: [
+          'New change created with a short description and empty rollback field',
+          'Same service gets changed repeatedly with rewritten-from-scratch plans',
+          'Author is junior to change process — needs the structure, not the lecture',
+          'When NOT to use: emergency fix mid-incident — speed beats paperwork; draft after the fact',
+        ],
+        corePattern: {
+          before: '// Before: plan typed from memory\nconst chg = { title: "update DB", rollback: null }\n// discovered incomplete at 2am during a failed deploy',
+          after: '// After: drafted from similar completed changes\nconst chg = draftFromHistory({ ci: "CI-042", intent })\n// {steps: [...], verify: [...], rollback: from INC/CHG evidence}\nreturn humanEdits(chg) // author confirms every step',
+        },
+        quickReference: {
+          headers: ['Section', 'Source', 'Rule'],
+          rows: [
+            ['Intent + description', 'Author input + linked CI', 'expanded, not invented'],
+            ['Rollout steps', 'Similar completed changes', 'most recent wins'],
+            ['Rollback plan', 'What actually worked before', 'never fabricated'],
+            ['Verification steps', 'Post-deploy checks used before', 'human edits'],
+          ],
+        },
+        how: 'Finds completed changes touching the same CI/service (embedding + exact CI match), extracts their steps, rollbacks and outcomes; drafts the new record section by section with source links. Output is a staged draft — nothing enters the approval flow until the author edits and submits. Missing sections are flagged, not filled with guesses.',
+        commonMistakes: [
+          'Copying a rollback plan from an unrelated service → dangerous theater. Fix: same-CI history only.',
+          'Auto-submitting drafts into approval → reviewers rubber-stamp noise. Fix: author submits.',
+          'Fabricating plausible-sounding steps → hallucinated ops. Fix: extractive, cite sources, flag gaps.',
+        ],
+        example: '“Update DB” on CI-042 → draft expands to intent + 5 rollout steps + rollback “restore snapshot pre-CHG-118 (worked in 4 min)” + 3 verify checks, each citing its source change.',
+      },
+      {
         name: 'Risk scoring',
+        stage: '02 · Assess risk',
         description: 'Use when changes are created with vague descriptions, every change is marked medium, or production changes have no risk signal',
         overview: 'Risk scoring grades a planned change as low/medium/high/critical before approval. Core principle: description length and environment are the signals — a 10-word prod change is riskier than a 100-word staging change.',
         whenToUse: [
@@ -538,6 +571,7 @@ export const managements: Management[] = [
       },
       {
         name: 'Impact prediction',
+        stage: '03 · Map blast radius',
         description: 'Use when a change touches a CI that has dependencies and the blast radius is discovered only after deploy',
         overview: 'Impact prediction lists which services and apps will be affected if this change is deployed. Core principle: the Service Map is the truth — traverse the dependency graph from the touched CI downstream.',
         whenToUse: [
@@ -562,6 +596,102 @@ export const managements: Management[] = [
           'Only direct deps → misses transitive. Fix: traverse full downstream.',
         ],
         example: 'Change on CI-042 payment-api → predicts: APP-004 Checkout, CI-017 DB, CI-089 cache.',
+      },
+      {
+        name: 'CAB evidence pack',
+        stage: '04 · Approve & schedule',
+        description: 'Use when approvers decide from a title and a gut feeling, meetings re-litigate the same questions, or two changes collide on the same service unnoticed',
+        overview: 'CAB evidence pack compiles everything an approver needs into one view: risk score, predicted blast radius, rollout and rollback plans, schedule conflicts (change freezes, overlapping changes on the same CI) — plus a draft rationale either way. Core principle: approval quality is bounded by evidence quality; the AI assembles, the board decides.',
+        whenToUse: [
+          'Change enters approval with prod impact or high risk score',
+          'Approvers keep asking “what else touches this CI next week?”',
+          'Change freeze calendar exists but nobody checks it before scheduling',
+          'When NOT to use: standard pre-approved change (password rotation, patching) with a fixed low-risk path',
+        ],
+        corePattern: {
+          before: '// Before: approval by vibes\ncabReview(change) // “looks fine, who wrote this? ok go”\n// conflicts discovered when two deploys hit one CI in the same window',
+          after: '// After: pack first, decision second\nconst pack = assembleEvidence(change)\n// {risk, blastRadius, conflicts: [CHG-131 same CI], freezeCheck}\nreturn cab.decide(pack) // human approve/reject/schedule',
+        },
+        quickReference: {
+          headers: ['Pack section', 'Source', 'Flags'],
+          rows: [
+            ['Risk + reason', 'Risk scoring', 'high → extra scrutiny'],
+            ['Blast radius', 'Impact prediction', 'prod apps listed'],
+            ['Conflicts', 'Same-CI changes ±48h', 'overlap warning'],
+            ['Freeze calendar', 'Schedule check', 'blocked windows'],
+          ],
+        },
+        how: 'Joins outputs of the earlier stages (risk, impact) with schedule data: other pending changes on the same CIs within a conflict window and active freeze periods. Renders one evidence pack with a drafted approve/defer rationale citing specifics. The board’s decision and any rejection reasons are recorded back for future drafting.',
+        commonMistakes: [
+          'Auto-approving low-risk packs → approval theater returns via the side door. Fix: humans decide, always.',
+          'Conflict window too narrow (same hour) → sequential deploys still collide. Fix: default ±48h.',
+          'Packs so long nobody reads them. Fix: one screen — flags up top, evidence behind.',
+        ],
+        example: 'CHG “DB pool fix” on CI-042 → pack: high risk · 3 apps impacted · conflicts CHG-131 (same CI, +6h) · freeze starts Friday → CAB defers to Monday, rationale recorded.',
+      },
+      {
+        name: 'Post-deploy sentinel',
+        stage: '05 · Deploy & verify',
+        description: 'Use when deploys go green and everyone walks away, while the real verdict — error rates, latency, business metrics — shows up hours later unwatched',
+        overview: 'Post-deploy sentinel watches the affected services during the monitoring period, comparing live metrics against a pre-deploy baseline, and proposes hold or rollback when anomalies appear. Core principle: green pipeline means deployed, not working. The AI watches and alerts; pulling the trigger stays human.',
+        whenToUse: [
+          'High/critical change just deployed to prod with a monitoring period set',
+          'Deploy finished outside overlap hours — no engineer is naturally watching',
+          'Service has known wobble where humans need a diff against baseline, not raw dashboards',
+          'When NOT to use: low-risk isolated change with trivial verification checks already defined',
+        ],
+        corePattern: {
+          before: '// Before: deploy green → attention moves on\ndeploy(change) // ✅ pipeline passed\n// latency creep found 4h later by users, not by us',
+          after: '// After: sentinel compares against baseline\nsentinel.watch({ services: impacted, window: monitoringPeriod })\nonAnomaly((m) => proposeHold(m)) // {metric, delta, baseline, confidence}',
+        },
+        quickReference: {
+          headers: ['Signal', 'Proposal', 'Threshold'],
+          rows: [
+            ['Error rate vs baseline', 'Propose rollback', 'sustained >2× baseline'],
+            ['Latency p95 drift', 'Propose hold', '>50% over baseline'],
+            ['Within expected range', 'Report healthy', 'no action noise'],
+            ['Any proposal', 'Human executes', 'never auto-trigger'],
+          ],
+        },
+        how: 'Baseline = same weekday/hour window from before deployment, so daily seasonality does not fake anomalies. Watches only the services in the predicted blast radius. Anomalies are proposed as actions with metric evidence attached; rollback execution remains a human decision tied to the change record.',
+        commonMistakes: [
+          'Alerting on absolute thresholds → normal traffic spikes page everyone. Fix: compare to seasonal baseline.',
+          'Watching everything instead of blast radius → noise buries signal. Fix: scope to predicted impact list.',
+          'Auto-rollback without human → AI performs a production change. Fix: propose, never execute.',
+        ],
+        example: 'DB pool fix deploys 18:40 → sentinel watches checkout-api: p95 within baseline all evening → 22:15 error rate 2.4× baseline sustained → proposes rollback with metric diff; engineer approves in 2 minutes.',
+      },
+      {
+        name: 'Closure & drift report',
+        stage: '06 · Close & learn',
+        description: 'Use when changes close the moment monitoring ends, related incidents later have no link back, and the runbook nobody updated quietly rots',
+        overview: 'Closure & drift report closes the loop: it checks whether the change held after the monitoring period (no related incidents, config still matches intent) and lists what should be updated — runbooks, architecture docs, the CI record. Core principle: a change is done when it stopped generating work, not when it deployed green.',
+        whenToUse: [
+          'Monitoring period completed without rollback — candidate for closure review',
+          'Incident appears days/weeks later touching a recently changed CI',
+          'Docs and diagrams that reference this service may now be stale',
+          'When NOT to use: change was rolled back — it feeds problem/incident records instead',
+        ],
+        corePattern: {
+          before: '// Before: close = status flip\nif (monitoringOver()) change.close()\n// docs say old schema, incidents arrive unlinkable, drift begins',
+          after: '// After: closure checks holding power\nconst report = driftCheck({ change, lookbackDays: 30 })\n// {relatedIncidents: 0, docUpdates: [runbook §4], ciFieldsStale: false}\nreturn reviewAndClose(report) // human closes with context',
+        },
+        quickReference: {
+          headers: ['Check', 'Window', 'Outcome'],
+          rows: [
+            ['Related incidents', '30d post-close', '0 → clean close'],
+            ['Config vs intent', 'at close', 'drift flagged'],
+            ['Docs referencing CI', 'at close', 'update list'],
+            ['Clean result', '-', 'close + archive evidence'],
+          ],
+        },
+        how: 'After the monitoring period, correlates new incidents against the changed CIs (embedding + CI match), diffs current config against the change intent, and lists documents referencing the touched services. Output: one-page report {held: yes/no, follow-ups}. Closure stays a human call; reports attach permanently so future drafting inherits the outcome.',
+        commonMistakes: [
+          'Closing with open follow-ups (“docs later”) → never happens. Fix: follow-ups are part of the report.',
+          'Zero lookback for related incidents → drift invisible. Fix: mandatory 30-day correlation.',
+          'Treating rolled-back changes as closures → wrong lessons archived. Fix: rollbacks route to problem/incident.',
+        ],
+        example: 'DB pool fix, monitoring done → report: held 30d · 0 related incidents · runbook §4 references old pool size → close with 1 doc follow-up assigned, evidence archived for future drafts.',
       },
     ],
     color: 'bg-amber-500', icon: 'GitBranch', order: 3, lane: 'cycle'

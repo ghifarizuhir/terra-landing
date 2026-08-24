@@ -32,4 +32,11 @@ describe('JourneyLoop', () => {
     expect(screen.getAllByText('01 · Detect & cluster').length).toBeGreaterThanOrEqual(2)
     expect(screen.getAllByText('06 · Close & watch').length).toBeGreaterThanOrEqual(2)
   })
+  it('shows cycle strip for Change too', () => {
+    render(<JourneyLoop />)
+    fireEvent.click(screen.getByRole('button', { name: /Change Management/ }))
+    expect(screen.getByText(/Cycle coverage — one skill per stage/i)).toBeInTheDocument()
+    expect(screen.getAllByText('01 · Log & plan').length).toBeGreaterThanOrEqual(2)
+    expect(screen.getAllByText('06 · Close & learn').length).toBeGreaterThanOrEqual(2)
+  })
 })
