@@ -8,29 +8,36 @@ export default function JourneyLoop() {
 
   return (
     <>
-      {/* Dashboard grid — 4×2, fills viewport, no page scroll */}
-      <div className="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-4 gap-px bg-[#1a1d23] p-px overflow-hidden">
+      {/* Dashboard grid — full-width, 100vh adaptif: 4×2 desktop, 2×4 mobile, fills remaining height */}
+      <div className="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-4 grid-rows-4 lg:grid-rows-2 gap-px bg-[#1a1d23] p-px overflow-hidden auto-rows-fr">
         {managements.map((m) => (
           <button
             key={m.id}
             onClick={() => setOpen(m.id)}
             className="text-left bg-[#fafaf7] p-3 lg:p-4 flex flex-col min-h-0 overflow-hidden hover:bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] focus-visible:ring-inset"
           >
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-2 shrink-0">
               <span className="h-2 w-2 rounded-full shrink-0" style={{ background: m.color.replace('bg-', '').includes('red') ? '#ef4444' : m.color.includes('purple') ? '#a855f7' : m.color.includes('amber') ? '#f59e0b' : m.color.includes('indigo') ? '#6366f1' : m.color.includes('emerald') ? '#10b981' : m.color.includes('blue') ? '#3b82f6' : m.color.includes('sky') ? '#0ea5e9' : '#475569' }} />
               <span className="font-mono text-[10px] tracking-widest uppercase font-semibold bg-[#1a1d23] text-[#fafaf7] px-1.5 py-0.5 rounded-sm">{m.prefix}</span>
               <span className="ml-auto font-mono text-[10px] tracking-widest uppercase text-[#8a8f98] hidden xl:inline">{m.lane}</span>
             </div>
-            <h3 className="font-display text-[12px] font-bold tracking-widest uppercase leading-tight line-clamp-2">{m.title}</h3>
-            <p className="font-display text-[13px] leading-tight mt-1 line-clamp-2">{m.oneLiner}</p>
-            <div className="mt-2 flex flex-wrap gap-1">
+            <h3 className="font-display text-[12px] font-bold tracking-widest uppercase leading-tight shrink-0">{m.title}</h3>
+            <p className="font-display text-[12.5px] leading-[1.3] mt-1 shrink-0 line-clamp-2">{m.oneLiner}</p>
+            {/* Description — fills empty feeling */}
+            <div className="mt-2 space-y-1 shrink-0">
+              <p className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98]">Does</p>
+              <p className="text-[11.5px] leading-[1.45] text-[#3a3f4a] line-clamp-2">{m.bullets[0]}</p>
+              <p className="hidden lg:block text-[11.5px] leading-[1.45] text-[#3a3f4a] line-clamp-1 opacity-80">{m.bullets[1]}</p>
+            </div>
+            <div className="mt-2 flex flex-wrap gap-1 shrink-0">
+              <span className="font-mono text-[9px] tracking-widest uppercase text-[#8a8f98] w-full">AI skills →</span>
               {m.skills.slice(0, 2).map((s) => (
                 <span key={s} className="font-mono text-[9px] tracking-widest uppercase bg-[#1a1d23] text-[#fafaf7] px-1.5 py-0.5">
                   {s}
                 </span>
               ))}
             </div>
-            <span className="mt-auto pt-2 font-mono text-[10px] tracking-widest uppercase text-[#8a8f98]">Click for detail →</span>
+            <span className="mt-auto pt-2 font-mono text-[10px] tracking-widest uppercase text-[#8a8f98] shrink-0">Details →</span>
           </button>
         ))}
       </div>
