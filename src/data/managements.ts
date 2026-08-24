@@ -836,6 +836,7 @@ export const managements: Management[] = [
     skills: [
       {
         name: 'Resolution → article',
+        stage: '01 · Capture',
         description: 'Use when a problem RCA is published or a change is marked achieved but the fix stays in comments and the KB stays empty',
         overview: 'Resolution → article generates a knowledge article draft from a closed problem or change resolution. Core principle: the resolution is the source — the draft prefills from published RCA or change goals, human publishes.',
         whenToUse: [
@@ -864,7 +865,72 @@ export const managements: Management[] = [
         example: 'RCA “DB pool fix” → draft KB “Runbook: DB pool exhausted — increase maxPool to 50” (runbook).',
       },
       {
+        name: 'Structure & tagging assist',
+        stage: '02 · Structure & review',
+        description: 'Use when KB drafts are wall-of-text with no sections or tags, reviews bounce for structure instead of substance, and every author formats differently',
+        overview: 'Structure & tagging assist shapes a raw draft into a reviewable article: sections per kbType template, suggested tags pulled from content, a readability pass, then routes it to the right technical reviewer. Core principle: reviewers should spend attention on whether the fix is right — not on reformatting. The AI structures; meaning stays with the author.',
+        whenToUse: [
+          'Draft has no symptom/cause/steps separation — hard to follow mid-incident',
+          'Tagging is inconsistent, so search misses articles that exist',
+          'Review cycles waste time on “can you restructure this?” feedback',
+          'When NOT to use: postmortem with required legal/compliance wording — template may break format rules',
+        ],
+        corePattern: {
+          before: '// Before: reviewer = editor + fact-checker\nreview(rawDraft) // “add steps section, add tags, what’s the symptom here?”\n// 3 rounds of formatting ping-pong before anyone checks the facts',
+          after: '// After: structure arrives done, review checks substance\nconst shaped = applyTemplate(draft, kbType) // {symptom, cause, steps, verify}\nshaped.tags = suggestTags(shaped) // from entities in text\nreturn routeForReview(shaped, domainExpert)',
+        },
+        quickReference: {
+          headers: ['Pass', 'Input', 'Output'],
+          rows: [
+            ['Template sections', 'Raw draft', 'kbType-shaped article'],
+            ['Tags', 'Entities in text (CI, app, error)', '5–10 consistent tags'],
+            ['Readability', 'Full text', 'flags long steps, jargon'],
+            ['Reviewer route', 'Domain of content', 'named technical reviewer'],
+          ],
+        },
+        how: 'Applies the kbType section template by classifying each paragraph into a target slot (extractive move, never rewrite), extracts candidate tags from recognized entities (services, error signatures, products) matched against existing tag vocabulary, flags unreadable steps (>N actions in one line, undefined acronyms), and suggests the reviewer whose past approvals cover this domain. Author confirms all changes.',
+        commonMistakes: [
+          'Rewriting sentences → meaning drifts in safety-critical runbooks. Fix: move text, do not rewrite it.',
+          'Free-form new tags → vocabulary chaos returns. Fix: match existing tag set, propose additions separately.',
+          'Routing reviews to whoever is free → wrong expertise approves wrong fixes. Fix: domain-matched reviewers.',
+        ],
+        example: 'Wall-of-text pool-exhaustion draft → structured {symptom: 504s at peak, cause: pool not recycled, steps: 4} + tags [db, checkout-api, timeout] → routed to the DB platform reviewer.',
+      },
+      {
+        name: 'Context publisher',
+        stage: '03 · Publish & target',
+        description: 'Use when published articles live only in the portal nobody opens during an outage, while agents needed them inside the ticket',
+        overview: 'Context publisher places an approved article where its audience actually works: the portal, the runbook slot of matching CIs, the in-ticket suggestion pool for future similar incidents. Core principle: publishing is placement, not a button — knowledge that surfaces after the incident is trivia.',
+        whenToUse: [
+          'Article approved but visible only via direct URL / portal search',
+          'Runbooks exist for services but never appear when those services fail',
+          'Teams argue the KB is useless because nothing shows up mid-ticket',
+          'When NOT to use: sensitive internal analysis restricted by policy — placement must respect ACLs first',
+        ],
+        corePattern: {
+          before: '// Before: one button, one place\npublish(kb) // → portal listing #47\n// during next checkout outage, agent never sees it exists',
+          after: '// After: placed where work happens\nplace({\n  kb,\n  ciSlots: cisMatching(kb.tags),      // runbook slot on CI pages\n  suggestionPool: embedInto(kb),       // findable by Search relevance\n}) // humans confirm placements',
+        },
+        quickReference: {
+          headers: ['Article type', 'Primary surface', 'Secondary'],
+          rows: [
+            ['Runbook', 'CI page slot + in-ticket pool', 'Portal'],
+            ['Troubleshoot guide', 'In-ticket suggestion pool', 'Portal'],
+            ['Postmortem', 'Portal + problem links', 'not in-ticket'],
+            ['FAQ', 'Portal', '-'],
+          ],
+        },
+        how: 'Maps kbType + tags to surfaces: matching CIs get the article in their runbook slot, embeddings feed the in-ticket suggestion index used by search relevance, and visibility follows ACLs. Placement changes are proposed as a package the human confirms, so sensitive material never leaks into broad surfaces.',
+        commonMistakes: [
+          'Publishing everything everywhere → in-ticket noise drowns real matches. Fix: type-based surface rules.',
+          'Ignoring ACLs in placement → internal postmortems visible broadly. Fix: ACL check precedes placement.',
+          'One-time setup → new CIs miss runbook slots. Fix: placements derive from tags, re-evaluated on CI changes.',
+        ],
+        example: '“Runbook: DB pool exhausted” → placed on CI-042 runbook slot + embedded into in-ticket suggestions → next 504 shows it at triage without anyone searching.',
+      },
+      {
         name: 'Search relevance',
+        stage: '04 · Find & surface',
         description: 'Use when a new incident is created and the right KB article is not suggested, so the team searches manually',
         overview: 'Search relevance suggests the right KB article when a similar incident is opened. Core principle: the incident text is the query — embedding similarity finds the KB whose sections already solved it.',
         whenToUse: [
@@ -890,6 +956,70 @@ export const managements: Management[] = [
           'Ignoring sections → title only. Fix: include KB sections in embedding.',
         ],
         example: 'New incident “504 checkout” → suggests KB-012 “Runbook: 504 — check DB pool” (0.81).',
+      },
+      {
+        name: 'Usefulness tracker',
+        stage: '05 · Use & feedback',
+        description: 'Use when KB health is measured by page views and thumbs-up, while nobody knows whether articles actually resolve incidents',
+        overview: 'Usefulness tracker correlates article usage with outcomes: when an incident linked to an article resolves successfully, the article earns a confirmed success; high views without successes mean findable-but-broken. Core principle: feedback is behavioral — resolution data tells the truth that star ratings flatter.',
+        whenToUse: [
+          'Quarterly KB review: which articles deserve investment?',
+          'An article gets traffic but the same failures keep escalating past it',
+          'Deciding where to spend documentation effort next quarter',
+          'When NOT to use: brand-new article with <10 exposures — sample too small to judge',
+        ],
+        corePattern: {
+          before: '// Before: popularity as proxy for quality\nrankArticlesBy(views) // SEO wins, usefulness invisible\n// broken runbook keeps collecting views and failed fixes',
+          after: '// After: outcome-linked scoring\nconst stats = correlate(kb, resolvedIncidents)\n// {views: 40, confirmedSuccesses: 3, successRate: "low"}\nreturn flagForRework(stats.topProblem)',
+        },
+        quickReference: {
+          headers: ['Pattern', 'Reading', 'Action'],
+          rows: [
+            ['High views + high success', 'Healthy workhorse', 'keep current'],
+            ['High views + low success', 'Findable but broken', 'flag rework'],
+            ['Low views + high success', 'Hidden gem', 'improve placement'],
+            ['Low views + low success', 'Candidate retire', 'route to watchdog'],
+          ],
+        },
+        how: 'Joins in-ticket suggestions and CI-slot placements with incident outcomes: an incident counts as article-assisted if the article was opened during its lifecycle and the incident did not escalate to problem within the window. Output per article: {views, assisted, successRate, trend}. Flags are proposals attached to articles; humans decide rework or retirement.',
+        commonMistakes: [
+          'Counting opens as success → views inflation returns. Fix: require positive incident outcome.',
+          'Punishing niche articles with tiny samples. Fix: minimum-exposure threshold.',
+          'Acting on flags automatically (auto-unpublish) → knowledge loss. Fix: propose, human retires.',
+        ],
+        example: 'KB-012: 40 views, only 3 assisted resolutions → flagged “findable but broken”; KB-031: 6 views, 5 successes → hidden gem, placement proposal sent.',
+      },
+      {
+        name: 'Freshness watchdog',
+        stage: '06 · Maintain & retire',
+        description: 'Use when three-year-old runbooks still claim to be truth, the service they describe was redesigned twice, and wrong instructions burn the next on-call',
+        overview: 'Freshness watchdog watches staleness signals — linked CI changed, product version moved, no confirmed success in months — and proposes update or retirement with evidence. Core principle: a wrong article is worse than no article; stale knowledge actively misleads at the worst moment.',
+        whenToUse: [
+          'CI referenced by an article was modified or replaced',
+          'Article had zero confirmed successes for N months while its topic recurred',
+          'Periodic KB hygiene sweep before audit or review',
+          'When NOT to use: reference material that does not decay (architecture decision records) — age alone is not staleness',
+        ],
+        corePattern: {
+          before: '// Before: staleness discovered by victims\nonCall.follows(runbookFrom2023) // steps reference deleted service\n// incident extended by 40 minutes of confusion',
+          after: '// After: signals surface before harm\nwatchdog.watch({ kb, signals: [ciChanged, versionDrift, noSuccess] })\nonStale((kb, evidence) => proposeUpdateOrRetire(kb))',
+        },
+        quickReference: {
+          headers: ['Signal', 'Verdict', 'Proposal'],
+          rows: [
+            ['Linked CI changed', 'Likely stale', 'propose update'],
+            ['No success in 6 months', 'Suspect', 'verify against reality'],
+            ['Topic retired from estate', 'Obsolete', 'propose archive'],
+            ['Contradicts newer article', 'Conflict', 'merge proposal'],
+          ],
+        },
+        how: 'Subscribes to change events on CIs and products referenced in each article’s tags and body entities; combines signal strength (how central was the changed component) with usefulness data from the tracker. Proposals come as evidence packages — what changed, what likely broke, suggested owner — routed to the last author or domain reviewer. Humans update or retire.',
+        commonMistakes: [
+          'Age-only triggers → good stable articles harassed. Fix: require change/success signals.',
+          'Silent auto-archive → teams lose tribal knowledge. Fix: proposals with grace period.',
+          'No ownership routing → flags rot next to the articles. Fix: route to last meaningful author.',
+        ],
+        example: 'CI-042 replaced by CI-077 → watchdog flags “Runbook: DB pool exhausted” referencing deleted CI → proposes update to new topology or archive, routed to former author with diff evidence.',
       },
     ],
     color: 'bg-indigo-500', icon: 'BookOpen', order: 4, lane: 'cycle'

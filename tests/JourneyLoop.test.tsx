@@ -46,4 +46,11 @@ describe('JourneyLoop', () => {
     expect(screen.getAllByText('01 · Intake & classify').length).toBeGreaterThanOrEqual(2)
     expect(screen.getAllByText('06 · Close & mine demand').length).toBeGreaterThanOrEqual(2)
   })
+  it('shows cycle strip for Knowledge too', () => {
+    render(<JourneyLoop />)
+    fireEvent.click(screen.getByRole('button', { name: /Knowledge Management/ }))
+    expect(screen.getByText(/Cycle coverage — one skill per stage/i)).toBeInTheDocument()
+    expect(screen.getAllByText('01 · Capture').length).toBeGreaterThanOrEqual(2)
+    expect(screen.getAllByText('06 · Maintain & retire').length).toBeGreaterThanOrEqual(2)
+  })
 })
