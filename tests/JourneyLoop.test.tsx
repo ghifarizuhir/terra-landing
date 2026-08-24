@@ -9,6 +9,6 @@ describe('JourneyLoop', () => {
   })
   it('renders foundation section', () => {
     render(<JourneyLoop />)
-    expect(screen.getByText(/foundation/i)).toBeInTheDocument()
+    expect(screen.getByText(/Foundation — always visible/i)).toBeInTheDocument()
   })
 })
