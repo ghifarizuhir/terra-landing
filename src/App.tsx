@@ -1,10 +1,17 @@
+import { motion, useReducedMotion } from 'framer-motion'
 import JourneyLoop from './components/JourneyLoop'
 
 export default function App() {
+  const shouldReduceMotion = useReducedMotion()
   return (
     <div className="h-[100dvh] flex flex-col overflow-hidden bg-[#fafaf7] text-[#1a1d23]">
       {/* Compact header — 100vh grid needs no large hero scroll */}
-      <header className="shrink-0 border-b border-[#1a1d23] bg-[#fafaf7]">
+      <motion.header
+        initial={shouldReduceMotion ? undefined : { y: -8, opacity: 0 }}
+        animate={shouldReduceMotion ? undefined : { y: 0, opacity: 1 }}
+        transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
+        className="shrink-0 border-b border-[#1a1d23] bg-[#fafaf7]"
+      >
         <div className="w-full px-4 lg:px-6 h-[56px] flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-7 w-7 bg-[#1a1d23] text-[#fafaf7] grid place-items-center font-display font-bold tracking-widest text-[12px]">T</div>
@@ -25,7 +32,7 @@ export default function App() {
           <p className="font-mono text-[11px] tracking-widest uppercase text-[#8a8f98] mt-1">Generic ITSM knowledge — no ITIL4 verbatim, no codebase · 100vh dashboard, no scroll</p>
         </div>
         <div className="h-[2px] bg-[#1a1d23]" />
-      </header>
+      </motion.header>
 
       {/* Grid — fills remaining viewport, no page scroll, full-width adaptif */}
       <main className="flex-1 min-h-0 flex flex-col overflow-hidden w-full px-3 lg:px-4 py-3">

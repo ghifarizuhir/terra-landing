@@ -1,20 +1,43 @@
 import { useState } from 'react'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { managements } from '../data/managements'
-import ManagementCard from './ManagementCard'
 
 export default function JourneyLoop() {
   const [open, setOpen] = useState<string | null>(null)
   const active = open ? managements.find((m) => m.id === open) ?? null : null
+  const shouldReduceMotion = useReducedMotion()
+
+  const gridVariants = shouldReduceMotion
+    ? undefined
+    : {
+        hidden: {},
+        visible: { transition: { staggerChildren: 0.06, delayChildren: 0.08 } },
+      }
+  const cardVariants = shouldReduceMotion
+    ? undefined
+    : {
+        hidden: { opacity: 0, y: 12 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const } },
+      }
 
   return (
     <>
       {/* Dashboard grid — full-width, 100vh adaptif: 4×2 desktop, 2×4 mobile, fills remaining height */}
-      <div className="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-4 grid-rows-4 lg:grid-rows-2 gap-px bg-[#1a1d23] p-px overflow-hidden auto-rows-fr">
+      <motion.div
+        variants={gridVariants}
+        initial="hidden"
+        animate="visible"
+        className="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-4 grid-rows-4 lg:grid-rows-2 gap-px bg-[#1a1d23] p-px overflow-hidden auto-rows-fr"
+      >
         {managements.map((m) => (
-          <button
+          <motion.button
             key={m.id}
+            variants={cardVariants}
+            whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
             onClick={() => setOpen(m.id)}
-            className="text-left bg-[#fafaf7] p-3 lg:p-4 flex flex-col min-h-0 overflow-hidden hover:bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] focus-visible:ring-inset"
+            className="text-left bg-[#fafaf7] p-3 lg:p-4 flex flex-col min-h-0 overflow-hidden hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] focus-visible:ring-inset"
+            transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.18 }}
           >
             <div className="flex items-center gap-2 mb-2 shrink-0">
               <span className="h-2 w-2 rounded-full shrink-0" style={{ background: m.color.replace('bg-', '').includes('red') ? '#ef4444' : m.color.includes('purple') ? '#a855f7' : m.color.includes('amber') ? '#f59e0b' : m.color.includes('indigo') ? '#6366f1' : m.color.includes('emerald') ? '#10b981' : m.color.includes('blue') ? '#3b82f6' : m.color.includes('sky') ? '#0ea5e9' : '#475569' }} />
@@ -38,9 +61,9 @@ export default function JourneyLoop() {
               ))}
             </div>
             <span className="mt-auto pt-2 font-mono text-[10px] tracking-widest uppercase text-[#8a8f98] shrink-0">Details →</span>
-          </button>
+          </motion.button>
         ))}
-      </div>
+      </motion.div>
 
       {/* Foundation hint for tests */}
       <div className="shrink-0 pt-2 flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase text-[#8a8f98]">
@@ -51,13 +74,26 @@ export default function JourneyLoop() {
 
 
 
-      {/* Detail modal */}
-      {active && (
-        <div className="fixed inset-0 z-50 grid place-items-center p-4 bg-[#1a1d23]/60 backdrop-blur-[2px]" onClick={() => setOpen(null)}>
-          <div
-            className="w-full max-w-[640px] bg-[#fafaf7] border border-[#1a1d23] overflow-hidden max-h-[85vh] flex flex-col"
-            onClick={(e) => e.stopPropagation()}
+      {/* Detail modal — AnimatePresence for exit */}
+      <AnimatePresence>
+        {active && (
+          <motion.div
+            key={active.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 grid place-items-center p-4 bg-[#1a1d23]/60 backdrop-blur-[2px]"
+            onClick={() => setOpen(null)}
           >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.98, y: 4 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] as const }}
+              className="w-full max-w-[640px] bg-[#fafaf7] border border-[#1a1d23] overflow-hidden max-h-[85vh] flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
             <div className="h-[3px] w-full" style={{ background: active.color.replace('bg-', '').includes('red') ? '#ef4444' : active.color.includes('purple') ? '#a855f7' : active.color.includes('amber') ? '#f59e0b' : active.color.includes('indigo') ? '#6366f1' : active.color.includes('emerald') ? '#10b981' : active.color.includes('blue') ? '#3b82f6' : active.color.includes('sky') ? '#0ea5e9' : '#475569' }} />
             <div className="p-6 overflow-auto">
               <div className="flex items-center gap-2 mb-3">
@@ -93,9 +129,10 @@ export default function JourneyLoop() {
                 Close
               </button>
             </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   )
 }
