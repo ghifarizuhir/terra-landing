@@ -6,6 +6,7 @@ export default function JourneyLoop() {
   const [open, setOpen] = useState<string | null>(null)
   const active = open ? managements.find((m) => m.id === open) ?? null : null
   const shouldReduceMotion = useReducedMotion()
+  const totalSkills = managements.reduce((n, m) => n + m.skills.length, 0)
 
   const gridVariants = shouldReduceMotion
     ? undefined
@@ -60,6 +61,11 @@ export default function JourneyLoop() {
                   {s.name}
                 </span>
               ))}
+              {m.skills.length > 2 && (
+                <span className="font-mono text-[9px] tracking-widest uppercase bg-[#facc15] text-[#1a1d23] font-semibold px-1.5 py-0.5">
+                  +{m.skills.length - 2}
+                </span>
+              )}
             </div>
             <span className="mt-auto pt-2 font-mono text-[10px] tracking-widest uppercase text-[#8a8f98] shrink-0">Details →</span>
           </motion.button>
@@ -69,7 +75,7 @@ export default function JourneyLoop() {
       {/* Foundation hint for tests */}
       <div className="shrink-0 pt-2 flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase text-[#8a8f98]">
         <span className="h-px flex-1 bg-[#e8e9eb]" />
-        Foundation — always visible · 8 stations · one AI skill each
+        Foundation — always visible · 8 stations · {totalSkills} AI skills
         <span className="h-px flex-1 bg-[#e8e9eb]" />
       </div>
 

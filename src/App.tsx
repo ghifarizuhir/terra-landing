@@ -1,8 +1,10 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import JourneyLoop from './components/JourneyLoop'
+import { managements } from './data/managements'
 
 export default function App() {
   const shouldReduceMotion = useReducedMotion()
+  const totalSkills = managements.reduce((n, m) => n + m.skills.length, 0)
   return (
     <div className="h-[100dvh] flex flex-col overflow-hidden bg-[#fafaf7] text-[#1a1d23]">
       {/* Compact header — 100vh grid needs no large hero scroll */}
@@ -40,7 +42,7 @@ export default function App() {
       </main>
 
       <footer className="shrink-0 h-[28px] border-t border-[#e8e9eb] bg-[#1a1d23] flex items-center px-4 lg:px-6">
-        <span className="font-mono text-[10px] tracking-widest uppercase text-white/60">© 2026 Terra · Knowledge landing — 8 stations, one AI skill each</span>
+        <span className="font-mono text-[10px] tracking-widest uppercase text-white/60">© 2026 Terra · Knowledge landing — 8 stations · {totalSkills} AI skills</span>
         <span className="ml-auto hidden sm:inline font-mono text-[10px] tracking-widest uppercase text-white/30">100vh · no scroll · click station</span>
       </footer>
     </div>
