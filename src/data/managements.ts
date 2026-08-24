@@ -308,6 +308,7 @@ export const managements: Management[] = [
     skills: [
       {
         name: 'Pattern clustering',
+        stage: '01 · Detect & cluster',
         description: 'Use when similar incidents repeat weekly but no problem is created and the team stays in reactive firefighting',
         overview: 'Pattern clustering finds groups of similar incidents that should become a problem. Core principle: recurrence is a graph signal — same app + overlapping title is the cluster, not a single incident’s severity.',
         whenToUse: [
@@ -336,7 +337,40 @@ export const managements: Management[] = [
         example: '3× “DB timeout 500” on APP-004 in 5 days → 0.78 → “Create PRB — DB capacity”.',
       },
       {
+        name: 'Recurring-impact scorer',
+        stage: '02 · Prioritize',
+        description: 'Use when the problem backlog is ranked by gut feel, small-but-daily failures sit below one-off P1s, or engineers argue about which RCA to run first',
+        overview: 'Recurring-impact scorer ranks the problem backlog by real cost: recurrence frequency × users affected × trend direction. Core principle: for problems, frequency beats severity — a 5-minute failure every day costs more than a one-hour outage once. The AI computes and ranks; humans confirm the priority.',
+        whenToUse: [
+          'Problem backlog has >10 open PRBs with no clear order',
+          'A daily nuisance incident outranks nothing because each occurrence looks small',
+          'Planning meeting needs evidence for “why this RCA first”',
+          'When NOT to use: brand-new problem with 1 occurrence — no recurrence data to score yet',
+        ],
+        corePattern: {
+          before: '// Before: backlog ordered by loudest voice\nconst queue = problems.sort((a, b) => b.shoutiness - a.shoutiness)\n// daily nuisances starve while big one-offs jump the line',
+          after: '// After: score = frequency x impact x trend\nconst scored = problems.map((p) => ({\n  prb: p.id,\n  score: p.occurrences * p.usersAffected * trendFactor(p),\n}))\nreturn scored.sort((a, b) => b.score - a.score) // human confirms top of queue',
+        },
+        quickReference: {
+          headers: ['Input', 'Weight', 'Output'],
+          rows: [
+            ['Occurrences / 30d', '×3', 'frequency dominates'],
+            ['Users affected', '×2', 'breadth matters'],
+            ['Trend rising vs flat', '×1.5 / ×1', 'rising beats stable'],
+            ['Score ≥ threshold', 'Suggest P-level', 'human confirms'],
+          ],
+        },
+        how: 'Counts occurrences from linked incidents over trailing 30 days, multiplies by distinct users affected and trend factor (rising/flat/falling via week-over-week delta). Output: {score, suggestedP, reason} per problem. Suggestion only — priority changes still need human confirmation, and every factor is shown so the ranking is arguable.',
+        commonMistakes: [
+          'Scoring on single-incident severity → backlog becomes just another P1 list. Fix: frequency is the dominant factor.',
+          'Hiding the formula → engineers distrust the rank. Fix: show factors next to score.',
+          'Auto-reprioritizing the board. Fix: suggest, human applies.',
+        ],
+        example: 'PRB “DB pool exhaustion”: 9 occurrences × 40 users × rising (×1.5) → score 540, suggested P2 — jumps above two older one-off P1s in the ranked backlog.',
+      },
+      {
         name: 'RCA draft assist',
+        stage: '03 · Investigate (RCA)',
         description: 'Use when a problem has linked incidents but its RCA is blank, inconsistent, or repeatedly written manually',
         overview: 'RCA draft assist generates a root-cause analysis draft from a cluster of linked incidents, ready for the engineer to edit. Core principle: linked incidents are the source — the draft compresses them, never invents.',
         whenToUse: [
@@ -364,6 +398,102 @@ export const managements: Management[] = [
           'Overwriting published RCA → lost. Fix: draft only, human publishes.',
         ],
         example: 'Linked 4 incidents → draft: “What happened: DB pool exhausted at 09:12, 12 orders failed…”',
+      },
+      {
+        name: 'Known-error publisher',
+        stage: '04 · Workaround',
+        description: 'Use when the cause is understood but the permanent fix is weeks away, and every new incident re-derives the same workaround from scratch',
+        overview: 'Known-error publisher turns a diagnosed problem into a findable known-error record: confirmed cause + the best workaround observed across linked incidents, published to knowledge so agents hit it during triage. Core principle: until the fix ships, the workaround is the product — make it impossible not to find.',
+        whenToUse: [
+          'RCA is confirmed but the permanent fix waits on a change window',
+          'Linked incidents show 2+ different workarounds for the same cause — pick and standardize one',
+          'Agents keep asking “how did we fix this last time?” in war-rooms',
+          'When NOT to use: RCA still unconfirmed — publishing an unproven cause poisons future diagnosis',
+        ],
+        corePattern: {
+          before: '// Before: workaround lives in one engineer’s head\nif (incident.matches(problem)) {\n  return askSeniorHowToMitigate() // slow, inconsistent, leaves with them\n}',
+          after: '// After: published known-error surfaces at triage\nconst ke = publishKnownError({\n  cause: problem.rca.rootCause,\n  workaround: bestObserved(problem.linkedIncidents),\n})\n// next similar incident links to ke automatically',
+        },
+        quickReference: {
+          headers: ['Input', 'Output', 'Rule'],
+          rows: [
+            ['Confirmed RCA', 'Cause section', 'verbatim from RCA'],
+            ['Linked incident resolutions', 'One standardized workaround', 'most-used wins'],
+            ['No confirmed RCA yet', 'Do not publish', 'wait for confirmation'],
+            ['Fix finally ships', 'Retire known-error', 'link to change'],
+          ],
+        },
+        how: 'Extracts cause text from the published RCA and ranks workarounds across linked incidents by success rate and usage count; drafts the known-error record and stages it for human review before publishing. When the permanent-fix change completes, proposes retiring the record so stale workarounds do not linger.',
+        commonMistakes: [
+          'Publishing before RCA is confirmed → wrong cause becomes canonical. Fix: gate on published RCA.',
+          'Listing three workarounds “so teams can choose” → inconsistency returns. Fix: one standard workaround.',
+          'Forgetting to retire after the fix → agents apply obsolete mitigations. Fix: tie retirement to change completion.',
+        ],
+        example: 'PRB “DB pool exhaustion” RCA confirmed → publishes KE: cause “pool never recycled on 504” + workaround “recycle pool via admin job” (used 4/5 times) → next checkout timeout links to it at triage.',
+      },
+      {
+        name: 'Fix-effectiveness check',
+        stage: '05 · Verify fix',
+        description: 'Use when the permanent fix just shipped and everyone assumes the problem is over, but nobody checked whether incidents actually stopped',
+        overview: 'Fix-effectiveness check compares incident recurrence after the permanent fix against the pre-fix baseline and declares a verdict: effective, partial, or no effect. Core principle: shipping is not fixing — only the recurrence curve decides. The AI measures; humans decide what to do about a failing verdict.',
+        whenToUse: [
+          'Permanent-fix change completed ≥1 week ago — baseline comparison is meaningful',
+          'Problem was closed on the assumption that deployment = resolution',
+          'Stakeholders ask “is it actually better now?” with no data behind the answer',
+          'When NOT to use: fix shipped days ago with near-zero traffic since — sample too small, wait',
+        ],
+        corePattern: {
+          before: '// Before: close because the change went green\nif (change.status === "completed") problem.close() // hope as strategy\n// nobody checks next month',
+          after: '// After: verdict from the curve\nconst v = compareRecurrence(problem, {\n  before: last30dBefore(change.completedAt),\n  after: daysSince(change.completedAt),\n}) // {verdict: "partial", reduction: "62%", evidence: clusterIds}\nreturn review(v) // human decides: keep open, adjust, close',
+        },
+        quickReference: {
+          headers: ['Reduction vs baseline', 'Verdict', 'Next'],
+          rows: [
+            ['≥80%', 'Effective', 'propose close + retire KE'],
+            ['30–80%', 'Partial', 'keep open, note residual'],
+            ['<30%', 'No effect', 'reopen investigation'],
+            ['<1 week of data', 'Inconclusive', 'wait for sample'],
+          ],
+        },
+        how: 'Builds a 30-day pre-fix occurrence baseline from linked incidents, then counts matching occurrences since the fix change completed; same embedding signature as pattern clustering so “similar” means the same thing in both places. Output: {reduction %, verdict, evidence}. Verdicts are proposals attached to the problem — closure still needs a human.',
+        commonMistakes: [
+          'Judging after 2 quiet days → noise reads as success. Fix: minimum observation window.',
+          'Ignoring partial results → residual occurrences have no owner. Fix: partial keeps the problem open.',
+          'Comparing different signatures pre/post → false improvement. Fix: reuse clustering embeddings.',
+        ],
+        example: 'Fix shipped 3 weeks ago: baseline 9/month → now 2/month = 78% reduction → verdict “Partial — keep open”; two residual timeouts share a new signature worth its own look.',
+      },
+      {
+        name: 'Recurrence watchdog',
+        stage: '06 · Close & watch',
+        description: 'Use when closed problems silently absorb nothing while their failure mode lives on under new titles, and nobody notices the same outage wearing a new name',
+        overview: 'Recurrence watchdog keeps watching after a problem closes: if incidents with the same signature re-emerge, it proposes reopening with the fresh cluster as evidence. Core principle: a problem is done when recurrence stops — not when its status says closed. The watch costs nothing; missing the comeback costs the whole RCA again.',
+        whenToUse: [
+          'Problem closed as “fixed” — start a watch instead of walking away',
+          'New incident arrives that matches a closed PRB’s signature',
+          'Quarterly hygiene: which closed problems have quietly recurred?',
+          'When NOT to use: problem closed as “no fault found” with zero occurrences ever linked — nothing to match against',
+        ],
+        corePattern: {
+          before: '// Before: closed = invisible\nproblem.close()\n// 6 weeks later the same failure returns under a new title — fresh RCA, full price\ncreateBrandNewProblem(incident)',
+          after: '// After: closed problems stay watched\nwatchdog.watch(problem, { signatureEmbedding, ttlDays: 90 })\nonMatch((incident, prb) => proposeReopen(prb, [incident])) // evidence attached',
+        },
+        quickReference: {
+          headers: ['Signal', 'Action', 'Threshold'],
+          rows: [
+            ['New incident sim ≥0.85 to closed PRB', 'Propose reopen', 'cluster attached'],
+            ['sim 0.7–0.85', 'Flag for review', 'human judges'],
+            ['Quiet through TTL', 'Archive watch', '90 days default'],
+            ['Reopen confirmed', 'Restore links + history', 'no cold restart'],
+          ],
+        },
+        how: 'Stores each closed problem’s cluster signature (embeddings of linked incident titles + service) with a 90-day watch TTL. Incoming incidents are matched against closed-problem signatures; strong matches generate a reopen proposal citing the old RCA plus the new cluster. Humans confirm reopens — the AI only proves the case.',
+        commonMistakes: [
+          'Watching forever → watch list becomes noise. Fix: TTL archive.',
+          'Auto-reopening on any weak match → churn and distrust. Fix: reopen needs ≥0.85 or human review.',
+          'Reopening empty-handed → engineers relitigate from scratch. Fix: always attach new cluster + old RCA.',
+        ],
+        example: 'Closed PRB “DB pool exhaustion”: 5 weeks later 3× “checkout latency spike” score 0.88 to its signature → proposal: “Reopen PRB-1042 — same signature, here is why”, old RCA preloaded.',
       },
     ],
     color: 'bg-purple-500', icon: 'SearchX', order: 2, lane: 'cycle'

@@ -25,6 +25,15 @@ describe('managements data', () => {
       'Detect & log', 'Triage', 'Diagnose', 'Communicate', 'Resolve & restore', 'Close & learn',
     ])
   })
+  it('problem covers the full 6-stage cycle, one skill per stage, in order', () => {
+    const prb = managements.find(m => m.prefix === 'PRB-')!
+    expect(prb.skills).toHaveLength(6)
+    for (const s of prb.skills) expect(s.stage).toBeTruthy()
+    const stages = [...prb.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
+    expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
+      'Detect & cluster', 'Prioritize', 'Investigate (RCA)', 'Workaround', 'Verify fix', 'Close & watch',
+    ])
+  })
   it('has 5 default skills', () => {
     expect(defaultSkills).toHaveLength(5)
   })

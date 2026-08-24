@@ -25,4 +25,11 @@ describe('JourneyLoop', () => {
     expect(overlay).toBeTruthy()
     expect(within(overlay).queryByText(/Cycle coverage — one skill per stage/i)).not.toBeInTheDocument()
   })
+  it('shows cycle strip for Problem too', () => {
+    render(<JourneyLoop />)
+    fireEvent.click(screen.getByRole('button', { name: /Problem Management/ }))
+    expect(screen.getByText(/Cycle coverage — one skill per stage/i)).toBeInTheDocument()
+    expect(screen.getAllByText('01 · Detect & cluster').length).toBeGreaterThanOrEqual(2)
+    expect(screen.getAllByText('06 · Close & watch').length).toBeGreaterThanOrEqual(2)
+  })
 })
