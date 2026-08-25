@@ -2,7 +2,7 @@
 
 Maps services as a live graph to see dependencies and predict impact
 
-Lane: **foundation** · workflow coverage: 6/6 stages
+Lane: **foundation** · workflow coverage: 7/7 stages
 
 ## What it does
 
@@ -20,3 +20,4 @@ Lane: **foundation** · workflow coverage: 6/6 stages
 | 04 | 04 · Predict impact | Impact prediction | ./impact-prediction.md |
 | 05 | 05 · Score health | Graph health scorer | ./graph-health-scorer.md |
 | 06 | 06 · Retire & clean | Stale-node sweeper | ./stale-node-sweeper.md |
+| 07 | 07 · Reporting & records | Configuration records pack | ./configuration-records-pack.md |

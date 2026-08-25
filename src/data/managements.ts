@@ -226,6 +226,38 @@ export const managements: Management[] = [
         ],
         example: 'INC closes after rollback → pack: “504 checkout, 22 min, 12 orders affected, rollback v2.3” + “3rd occurrence in 30 days → propose PRB” + KB stub drafted from timeline, awaiting review.',
       },
+      {
+        name: 'Incident records pack',
+        stage: '07 · Reporting & records',
+        description: 'Use when nobody can say which documents an incident must produce, PIRs quietly stop happening after busy weeks, and audits ask for reports that were never written',
+        overview: 'Incident records pack defines the standard documents every incident yields — the incident report for the facts, the post-incident review for majors, the communications log for who was told what when. Core principle: an incident without its records never legally happened: no lessons, no compliance trail, no defense.',
+        whenToUse: [
+          'Major incident resolved — post-incident review due within 5 working days',
+          'Audit or customer asks for incident documentation',
+          'New coordinator unsure what to produce for each severity level',
+          'When NOT to use: trivial ticket closed with a lightweight resolution note — full pack is overkill',
+        ],
+        corePattern: {
+          before: '// Before: documentation = whatever anyone remembers later\nresolve(incident)\n// three months later: “do we have a report for that outage?” …no',
+          after: '// After: records generated to standard\nconst pack = buildRecords(incident)\n// {report: always, pir: p1OrP2 ? dueIn5Days : null, commsLog: warRoom}\nreturn attachToIncident(pack)',
+        },
+        quickReference: {
+          headers: ['Document', 'Trigger', 'Required sections'],
+          rows: [
+            ['Incident report', 'Every incident', 'summary · timeline · impact · actions · resolution'],
+            ['Post-incident review', 'P1/P2 or recurring', 'root cause · what worked · action items + owners'],
+            ['Comms log', 'War-room/major', 'timestamp · audience · message · channel'],
+            ['Waiver note', 'Pack skipped', 'who waived · why'],
+          ],
+        },
+        how: 'Templates are attached at incident creation by severity; the closure flow checks for required documents and offers an explicit waiver path (named human, stated reason) instead of silent gaps. Majors auto-schedule their PIR meeting. Reports stay extractive — assembled from timeline and comms, edited by humans, never ghostwritten opinions.',
+        commonMistakes: [
+          'PIR skipped under workload pressure → same outage returns undocumented. Fix: scheduled + waiver requires a name.',
+          'Reports written as novels → nobody reads them. Fix: structured sections, facts only.',
+          'Comms reconstructed from memory → timeline disputes. Fix: log entries at send time.',
+        ],
+        example: 'Checkout 504 P1 resolves → pack attaches report + opens PIR doc with timeline prefilled + comms log complete → PIR held day 3, two action items registered to problem management.',
+      },
     ],
     color: 'bg-red-500', icon: 'Siren', order: 1, lane: 'cycle'
   },
@@ -424,6 +456,38 @@ export const managements: Management[] = [
           'Automating a flaky manual process as-is → automated mess. Fix: flag process health before automation.',
         ],
         example: '90-day mine: “VPN token reset” × 34, 18 min each ≈ 10 hours handled manually → proposal: self-service reset flow, projected full automation of the cluster.',
+      },
+      {
+        name: 'Request records pack',
+        stage: '07 · Reporting & records',
+        description: 'Use when catalog items live without a written spec, SLA is a guess, and monthly fulfillment statistics do not exist when the business asks for them',
+        overview: 'Request records pack standardizes the documents every fulfilled request journey must leave: the catalog item spec, the SLA sheet, the monthly fulfillment report, the approval audit trail. Core principle: requests are not favors — they are measurable services; whatever is not defined and counted will be debated and ignored.',
+        whenToUse: [
+          'New catalog item added without its spec and approval rules documented',
+          'Monthly service review asks for volume, timing and satisfaction — nobody has numbers',
+          'Approval for costly access is questioned and no trail exists to defend it',
+          'When NOT to use: one-off exception request with no repeat value — note the trail only',
+        ],
+        corePattern: {
+          before: '// Before: records scattered\n// “catalog says depends on who wrote it”, MTTS = vibes\n// audit asks who approved REQ-42 → silence',
+          after: '// After: standardized records per request\nconst pack = buildRequestRecords(req)\n// {itemSpec, slaSheet, approvalTrail} → monthlyReport aggregates',
+        },
+        quickReference: {
+          headers: ['Document', 'Trigger', 'Required sections'],
+          rows: [
+            ['Catalog item spec', 'New catalog entry', 'what it is · who it is for · what you get · lead time'],
+            ['Approval audit trail', 'Any approved request', 'approvers · policy basis · decision dates'],
+            ['SLA sheet', 'Per catalog item', 'target time · measured median · breach rate'],
+            ['Monthly fulfillment report', 'End of month', 'volume · MTTS · satisfaction · top demands'],
+          ],
+        },
+        how: 'Catalog specs are templates enforced at catalog creation; approval trails auto-attach from approval router events; fulfillment records feed a monthly aggregation job that outputs the standard report structure — humans review and publish before it reaches stakeholders.',
+        commonMistakes: [
+          'Catalog specs written as marketing copy → nobody can fulfill to it. Fix: required structured sections.',
+          'Monthly report built manually → stale by publication day. Fix: auto-aggregation, human publishes.',
+          'Approval trails kept in email → unauditable. Fix: trail attached to request record.',
+        ],
+        example: 'New “laptop for contractors” item → spec drafted + SLA derived from MTT history → 6 weeks later monthly report shows 34 fulfilled, median 4.1 days, 2 approval waivers flagged.',
       },
     ],
     color: 'bg-sky-500', icon: 'ClipboardList', order: 0, lane: 'parallel'
@@ -625,6 +689,38 @@ export const managements: Management[] = [
         ],
         example: 'Closed PRB “DB pool exhaustion”: 5 weeks later 3× “checkout latency spike” score 0.88 to its signature → proposal: “Reopen PRB-1042 — same signature, here is why”, old RCA preloaded.',
       },
+      {
+        name: 'Problem records pack',
+        stage: '07 · Reporting & records',
+        description: 'Use when problems close as “fixed” with no documented statement, known errors hide in war-room chats, and recurrence trends are invisible to leadership',
+        overview: 'Problem records pack standardizes what every problem must produce: the problem statement, the RCA document, the known-error record, the recurrence and fix-effectiveness report. Core principle: a problem is not solved because its ticket says closed — it is solved when its records explain what happened, what worked, and what came back.',
+        whenToUse: [
+          'Problem investigated — RCA document due for review',
+          'Workaround exists but no known-error record pins it where agents can find it',
+          'Quarterly problem review needs recurrence curves across all open/closed problems',
+          'When NOT to use: single-incident PRB closed as no-fault — lean record suffices',
+        ],
+        corePattern: {
+          before: '// Before: records exist if someone felt like writing them\n// RCA blank, known error in a Slack thread\n// “did it come back?” unknown until the next outage',
+          after: '// After: records standardized per problem\nconst pack = buildProblemRecords(prb)\n// {rcaDoc, knownError?, recurrenceReport, fixVerdict?}',
+        },
+        quickReference: {
+          headers: ['Document', 'Trigger', 'Required sections'],
+          rows: [
+            ['Problem record', 'Every PRB', 'statement · scope · linked incidents'],
+            ['RCA document', 'Investigation confirmed', 'cause · contributors · evidence'],
+            ['Known-error record', 'Workaround published', 'cause · workaround · affected CIs'],
+            ['Recurrence & fix report', 'Post-fix window', 'before/after curves · verdict'],
+          ],
+        },
+        how: 'Problem creation seeds a record skeleton; RCA draft assist fills the RCA doc draft; known-error publisher and fix-effectiveness check contribute their outputs as linked records rather than scattered notes. Leadership reads recurrence/verification reports aggregated across the problem portfolio with one structure.',
+        commonMistakes: [
+          'RCA written as blame narrative → unusable. Fix: evidence-backed sections.',
+          'Workaround living in comments instead of the known-error record → repeat discovery. Fix: separate published document.',
+          'Fix declared effective without the report → recurrence surprises. Fix: gate closure on fix verdict.',
+        ],
+        example: 'PRB “pool exhaustion” → RCA doc published + KE record linked to checkout KB + 3-week fix report: 78% reduction, verdict partial — problem stays open with evidence.',
+      },
     ],
     color: 'bg-purple-500', icon: 'SearchX', order: 2, lane: 'cycle'
   },
@@ -822,6 +918,38 @@ export const managements: Management[] = [
           'Treating rolled-back changes as closures → wrong lessons archived. Fix: rollbacks route to problem/incident.',
         ],
         example: 'DB pool fix, monitoring done → report: held 30d · 0 related incidents · runbook §4 references old pool size → close with 1 doc follow-up assigned, evidence archived for future drafts.',
+      },
+      {
+        name: 'Change records pack',
+        stage: '07 · Reporting & records',
+        description: 'Use when changes ship with scattered intent, CAB decisions lack minutes, deployment checklists live in private notes, and no post-change report tells whether it held',
+        overview: 'Change records pack standardizes the documents every change leaves: the change plan/RFC, the CAB agenda and minutes, the deployment checklist, the post-implementation review. Core principle: a change without its records is an undocumented edit to production — unreviewable, unauditable, unlearnable.',
+        whenToUse: [
+          'Any prod change entering approval — CAB packet due before the meeting',
+          'Change deployed — PIR-change due after the monitoring period',
+          'Audit or incident review asks “who approved CHG-118 and why?”',
+          'When NOT to use: pre-approved Standard change with a fixed low-risk package — single record suffices',
+        ],
+        corePattern: {
+          before: '// Before: records exist in someone’s notes\ndocument(findIt()) // deployment checklist in a DM\n// 6 weeks later audit: “was this approved?” …who knows',
+          after: '// After: records standardized per change\nconst pack = buildChangeRecords(chg)\n// {plan, cabPacket{agenda,minutes}, checklist, pir}',
+        },
+        quickReference: {
+          headers: ['Document', 'Trigger', 'Required sections'],
+          rows: [
+            ['Change plan / RFC', 'Change creation', 'intent · risk · impact · rollback · verify steps'],
+            ['CAB packet', 'Before approval', 'agenda · risk score · conflicts · minutes + decision'],
+            ['Deployment checklist', 'At implement', 'steps · owner · sequence · rollback triggers'],
+            ['Post-implementation review', 'After monitoring', 'held/drift · related incidents · docs to update'],
+          ],
+        },
+        how: 'Change-request drafter seeds the plan, CAB evidence pack contributes risk/blast-radius/conflict pages, post-deploy sentinel contributes monitoring evidence; each document is a section of one linked packet rather than four orphan records. Standard changes use a condensed single-record variant.',
+        commonMistakes: [
+          'CAB minutes omitted → re-litigation forever. Fix: decision + reasons captured.',
+          'Deployment checklist kept privately → execution varies per shift. Fix: checklist is the record section.',
+          'No PIR-change because monitoring passed → drift invisible. Fix: due after the monitoring window, evidence attached.',
+        ],
+        example: 'High-risk DB change → plan + CAB packet with conflicts + checklist with owner sequence + PIR showing held 30 days → single auditable packet closure.',
       },
     ],
     color: 'bg-amber-500', icon: 'GitBranch', order: 3, lane: 'cycle'
@@ -1021,6 +1149,38 @@ export const managements: Management[] = [
         ],
         example: 'CI-042 replaced by CI-077 → watchdog flags “Runbook: DB pool exhausted” referencing deleted CI → proposes update to new topology or archive, routed to former author with diff evidence.',
       },
+      {
+        name: 'Knowledge records pack',
+        stage: '07 · Reporting & records',
+        description: 'Use when articles of wildly different shapes pass review, placement decisions vanish without a trail, and nobody can report on whether the knowledge base actually works',
+        overview: 'Knowledge records pack standardizes what knowledge produces: article templates per kbType, control effectiveness',
+        whenToUse: [
+          'New article drafted — must follow the template for its kbType before review',
+          'Article published or retired — placement/retirement decision needs a record',
+          'Quarterly review: which content to invest, fix, or archive?',
+          'When NOT to use: reference architecture decisions that follow a different record scheme',
+        ],
+        corePattern: {
+          before: '// Before: shape varies per author\nkb = freeText() // some have steps, some novelize\n// review = “can you fix the structure?”',
+          after: '// After: records standardized\nconst pack = knowledgeRecords(kb)\n// {templateScore, editorialCheck, placementRecord, scorecard, auditLine}',
+        },
+        quickReference: {
+          headers: ['Document', 'Trigger', 'Required sections'],
+          rows: [
+            ['Article by template', 'Every KB item', 'symptom · cause · steps · verification (per kbType)'],
+            ['Editorial checklist', 'At review', 'structure · tags · readability · owner domain'],
+            ['Placement record', 'At publish/retire', 'surfaces chosen · ACLs checked'],
+            ['Quality scorecard & audit', 'Quarterly', 'views · success rate · stale flags · decisions'],
+          ],
+        },
+        how: 'Structure & tagging assist records template coverage and editorial notes; context publisher records placements; usefulness tracker and freshness watchdog feed the quarterly scorecard and audit — one report structure per quarter, reviewed and archived.',
+        commonMistakes: [
+          'Template ignored → article unusable mid-incident. Fix: template enforced by record, not by habit.',
+          'Placement decisions undocumented → leaks and blind spots. Fix: record at publish and at retire.',
+          'Scorecard reduced to thumbs-up counts → popularity ≠ usefulness. Fix: outcome-linked metrics.',
+        ],
+        example: 'Runbook draft → template + checklist passed → placement on CI-042 slot recorded → quarterly scorecard: 40 views, 3 successes → rework proposal attached.',
+      },
     ],
     color: 'bg-indigo-500', icon: 'BookOpen', order: 4, lane: 'cycle'
   },
@@ -1214,6 +1374,38 @@ export const managements: Management[] = [
           'Embedding unverified improvements → standardizing a mistake. Fix: gate on verifier verdict.',
         ],
         example: 'Verified pool alerting → embedder drafts runbook §4 “check pool saturation first” + triage checklist line → used in next 3 checkout incidents → closed as adopted.',
+      },
+      {
+        name: 'Improvement records pack',
+        stage: '07 · Reporting & records',
+        description: 'Use when improvements exist as scattered board cards with no common record, status is vibes, and quarterly reviews cannot prove the program did anything',
+        overview: 'Improvement records pack standardizes what every improvement yields: the register entry, the business case for large items, the outcome verification report, the adoption record. Core principle: improvement is not a card on a board — it is a chain of documents that survives team changes and proves what became standard.',
+        whenToUse: [
+          'Improvement mined/drafted — register entry due with evidence and target metric',
+          'Large (L/XL) improvement needs a business case before effort is allocated',
+          'Outcome verifier completed — verification report attaches to the record',
+          'When NOT to use: tiny voluntary fixes done in a day — lean close is fine',
+        ],
+        corePattern: {
+          before: '// Before: board is the record\n// “Add pool alert — doing” → done → card gone → nothing to show\n// quarterly: “what did we improve?” …which board?',
+          after: '// After: records survive the board\nconst pack = buildImprovementRecords(imp)\n// {entry · businessCase? · verificationReport · adoptionRecord}',
+        },
+        quickReference: {
+          headers: ['Document', 'Trigger', 'Required sections'],
+          rows: [
+            ['Register entry', 'At intake', 'source evidence · target metric · owner · effort'],
+            ['Business case', 'L/XL pre-prioritize', 'options · cost · expected return'],
+            ['Verification report', 'At verify stage', 'baseline · delta · verdict + sample'],
+            ['Adoption record', 'At embed stage', 'artifacts updated · usage signal · close date'],
+          ],
+        },
+        how: 'Suggestion mining and trend detection seed the entry with evidence; impact-effort ranker contributes expected-return arithmetic; outcome verifier and practice embedder attach their reports as linked sections — the whole pack stays attached to the register entry permanently and feeds the quarterly program report.',
+        commonMistakes: [
+          'Entry without target metric → unverifiable later. Fix: required section, verifier blocks closure.',
+          'Business cases skipped under pressure → expensive guesses. Fix: gate L/XL at prioritize.',
+          'Adoption omitted → verified improvements forgotten. Fix: embed record required before pack closes.',
+        ],
+        example: '“Pool alert” → mined entry + ranked #1 (arithmetic shown) + verification: MTTR −21% (verified) + runbook adoption recorded → closed with full chain.',
       },
     ],
     color: 'bg-emerald-500', icon: 'TrendingUp', order: 5, lane: 'cycle'
@@ -1415,6 +1607,38 @@ export const managements: Management[] = [
         ],
         example: 'Planner lists 4 ThinkPads past support + 8 idle Adobe seats → checklists issued: wipes scheduled, seats reclaimed ($ saved), CI links removed, records closed cleanly.',
       },
+      {
+        name: 'Asset records pack',
+        stage: '07 · Reporting & records',
+        description: 'Use when inventory records diverge per typist, no procurement/disposal trail exists when finance asks, and warranty calendars live in private spreadsheets',
+        overview: 'Asset records pack standardizes what the inventory must maintain: the register standard (field set per category), the procurement and disposal logs, the renewal calendar, the reconciliation report. Core principle: assets are money, risk and data all at once; records are how finance, security and ops agree on what is real.',
+        whenToUse: [
+          'Finance or audit requests a trustworthy asset list',
+          'Hardware received or retired but the trail is one row someone typed',
+          'Planning the next quarter’s spend or security posture',
+          'When NOT to use: items below the accounting threshold handled elsewhere',
+        ],
+        corePattern: {
+          before: '// Before: records per habit\n// “laptop → in list?” depends on who bought it\n// warranties expiring — surprise at renewal failure',
+          after: '// After: records standardized\nconst pack = buildAssetRecords()\n// {registerSpec, procurementLog, disposalLog, renewalCalendar, lastReconciliation}',
+        },
+        quickReference: {
+          headers: ['Document', 'Trigger', 'Required sections'],
+          rows: [
+            ['Register standard', 'At setup/per review', 'field set per category · enum enforcement'],
+            ['Procurement log', 'At receive', 'PO · model · serials · cost · warranty start'],
+            ['Disposal log + wipe cert', 'At retire', 'disposal method · cert · license reclaim · CI unlink'],
+            ['Renewal calendar & reconciliation', 'Rolling', 'due dates + lead times · ghosts/zombies report'],
+          ],
+        },
+        how: 'Receiving registrar and retirement planner emit their logs as sections; lifecycle classifier enforces the register standard at record creation; status tracker and audit reconciler feed renewal dates and reconciliation reports — one rolling calendar plus one archived reconciliation per cycle.',
+        commonMistakes: [
+          'Disposal logged without wipe certificate → data exposure with a tidy row. Fix: certificate required section.',
+          'Renewals tracked per-person in calendars → missed scale. Fix: shared calendar with lead-time windows.',
+          'Reconciliation skipped between audits → drift rebuilt fully. Fix: scheduled cycle, archived reports.',
+        ],
+        example: 'Quarter-close: register standard enforced for 120 assets · 8 procured (5 ThinkPads), 4 retired with certs, reconciliation finds 1 ghost flagged for investigation.',
+      },
     ],
     color: 'bg-blue-500', icon: 'Package', order: 6, lane: 'foundation'
   },
@@ -1610,6 +1834,38 @@ export const managements: Management[] = [
           'Silent mass purges → teams stop trusting writes. Fix: visible proposals, named approver.',
         ],
         example: 'Sweeper finds 6 CIs whose assets retired in Q2 + 3 untouched since 2024 → archive proposals with evidence; graph sheds 9 dead nodes, impact lists get shorter and truer.',
+      },
+      {
+        name: 'Configuration records pack',
+        stage: '07 · Reporting & records',
+        description: 'Use when nobody can say which CI fields are authoritative, only some edges have evidence, and drift findings exist nowhere outside one engineer’s memory',
+        overview: 'Configuration records pack standardizes what the map must maintain: the CI schema (required field set per kind), the edge confidence policy, the graph health report, the drift findings log. Core principle: impact predictions inherit one thing from the map — its documented health. Records are how trust becomes a grade instead of a vibe.',
+        whenToUse: [
+          'New or stalky CI entry exists as a bare hostname',
+          'Teams argue whether the map can be trusted for this change’s blast radius',
+          'Planning map hygiene or an internal audit of the configuration estate',
+          'When NOT to use: items properly outside CMDB scope (ephemerals) — no record expected',
+        ],
+        corePattern: {
+          before: '// Before: map quality = vibes\n// schema per author, edges per hunch\n// “grade: trust me”',
+          after: '// After: records standardized\nconst pack = buildConfigRecords()\n// {ciSchema, edgePolicy, healthReport, driftLog}',
+        },
+        quickReference: {
+          headers: ['Document', 'Trigger', 'Required sections'],
+          rows: [
+            ['CI schema standard', 'At setup/per review', 'required fields per kind · description floor · app link'],
+            ['Edge confidence policy', 'At setup', 'auto vs suggested-only threshold · citation rule'],
+            ['Graph health report', 'Per review cycle', 'grade · orphans · unconfirmed % · stale count'],
+            ['Drift findings log', 'Continuous', 'signal · proposals with citations · dispositions'],
+          ],
+        },
+        how: 'CI capture assist and graph drift detector contribute their evidence packages as log entries; graph health scorer rolls them into the periodic grade. Schema and edge policy are reviewed documents, not tribal knowledge — they are where the strip stages derive their meaning.',
+        commonMistakes: [
+          'Schema per habit → incomparable records. Fix: documented required field set per kind.',
+          'Health report without cited evidence → grade distrusted. Fix: dimension details with source counts.',
+          'Drift findings kept off-record → map silently rots between cleanups. Fix: continuous log, archived.',
+        ],
+        example: 'Quarterly health report: C+ → 38% edges unconfirmed, 14 orphans → policy requires 0.7 cited edges, 9 confirmations queued via drift log — grade rises to B next quarter.',
       },
     ],
     color: 'bg-slate-500', icon: 'Network', order: 7, lane: 'foundation'

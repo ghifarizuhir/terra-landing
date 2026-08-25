@@ -2,7 +2,7 @@
 
 Turns lessons learned into improvements that actually get done
 
-Lane: **cycle** · cycle coverage: 6/6 stages
+Lane: **cycle** · cycle coverage: 7/7 stages
 
 ## What it does
 
@@ -20,3 +20,4 @@ Lane: **cycle** · cycle coverage: 6/6 stages
 | 04 | 04 · Implement & track | Progress tracker | ./progress-tracker.md |
 | 05 | 05 · Verify outcome | Outcome verifier | ./outcome-verifier.md |
 | 06 | 06 · Embed & close | Practice embedder | ./practice-embedder.md |
+| 07 | 07 · Reporting & records | Improvement records pack | ./improvement-records-pack.md |

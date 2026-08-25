@@ -2,7 +2,7 @@
 
 Fulfills approved user needs through a service catalog — not a disruption
 
-Lane: **parallel** · cycle coverage: 6/6 stages
+Lane: **parallel** · cycle coverage: 7/7 stages
 
 ## What it does
 
@@ -20,3 +20,4 @@ Lane: **parallel** · cycle coverage: 6/6 stages
 | 04 | 04 · Route & fulfill | Auto-routing | ./auto-routing.md |
 | 05 | 05 · Deliver & confirm | Status comms drafter | ./status-comms-drafter.md |
 | 06 | 06 · Close & mine demand | Demand miner | ./demand-miner.md |
+| 07 | 07 · Reporting & records | Request records pack | ./request-records-pack.md |

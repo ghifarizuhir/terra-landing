@@ -2,7 +2,7 @@
 
 Makes every fix reusable at the moment of need
 
-Lane: **cycle** · cycle coverage: 6/6 stages
+Lane: **cycle** · cycle coverage: 7/7 stages
 
 ## What it does
 
@@ -20,3 +20,4 @@ Lane: **cycle** · cycle coverage: 6/6 stages
 | 04 | 04 · Find & surface | Search relevance | ./search-relevance.md |
 | 05 | 05 · Use & feedback | Usefulness tracker | ./usefulness-tracker.md |
 | 06 | 06 · Maintain & retire | Freshness watchdog | ./freshness-watchdog.md |
+| 07 | 07 · Reporting & records | Knowledge records pack | ./knowledge-records-pack.md |

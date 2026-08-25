@@ -2,7 +2,7 @@
 
 Knows what is owned, where it is, and its lifecycle
 
-Lane: **foundation** · workflow coverage: 6/6 stages
+Lane: **foundation** · workflow coverage: 7/7 stages
 
 ## What it does
 
@@ -20,3 +20,4 @@ Lane: **foundation** · workflow coverage: 6/6 stages
 | 04 | 04 · Track & maintain | Status tracker | ./status-tracker.md |
 | 05 | 05 · Audit & reconcile | Audit reconciler | ./audit-reconciler.md |
 | 06 | 06 · Retire & dispose | Retirement planner | ./retirement-planner.md |
+| 07 | 07 · Reporting & records | Asset records pack | ./asset-records-pack.md |

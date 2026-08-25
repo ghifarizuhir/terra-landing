@@ -137,7 +137,7 @@ export default function JourneyLoop() {
                   {allStaged && (
                     <div className="mb-4">
                       <p className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98] mb-2">{active.lane === 'foundation' ? 'Workflow coverage — one skill per stage' : 'Cycle coverage — one skill per stage'}</p>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+                      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
                         {sortedSkills.map((s) => (
                           <div key={`strip-${s.name}`} className="border border-[#1a1d23] bg-white p-2">
                             <div className="flex items-center gap-1.5">

@@ -18,74 +18,74 @@ describe('managements data', () => {
   })
   it('incident covers the full 6-stage cycle, one skill per stage, in order', () => {
     const inc = managements.find(m => m.prefix === 'INC-')!
-    expect(inc.skills).toHaveLength(6)
+    expect(inc.skills).toHaveLength(7)
     for (const s of inc.skills) expect(s.stage).toBeTruthy()
     const stages = [...inc.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
     expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
-      'Detect & log', 'Triage', 'Diagnose', 'Communicate', 'Resolve & restore', 'Close & learn',
+      'Detect & log', 'Triage', 'Diagnose', 'Communicate', 'Resolve & restore', 'Close & learn', 'Reporting & records',
     ])
   })
   it('problem covers the full 6-stage cycle, one skill per stage, in order', () => {
     const prb = managements.find(m => m.prefix === 'PRB-')!
-    expect(prb.skills).toHaveLength(6)
+    expect(prb.skills).toHaveLength(7)
     for (const s of prb.skills) expect(s.stage).toBeTruthy()
     const stages = [...prb.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
     expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
-      'Detect & cluster', 'Prioritize', 'Investigate (RCA)', 'Workaround', 'Verify fix', 'Close & watch',
+      'Detect & cluster', 'Prioritize', 'Investigate (RCA)', 'Workaround', 'Verify fix', 'Close & watch', 'Reporting & records',
     ])
   })
   it('change covers the full 6-stage cycle, one skill per stage, in order', () => {
     const chg = managements.find(m => m.prefix === 'CHG-')!
-    expect(chg.skills).toHaveLength(6)
+    expect(chg.skills).toHaveLength(7)
     for (const s of chg.skills) expect(s.stage).toBeTruthy()
     const stages = [...chg.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
     expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
-      'Log & plan', 'Assess risk', 'Map blast radius', 'Approve & schedule', 'Deploy & verify', 'Close & learn',
+      'Log & plan', 'Assess risk', 'Map blast radius', 'Approve & schedule', 'Deploy & verify', 'Close & learn', 'Reporting & records',
     ])
   })
   it('request covers the full 6-stage cycle, one skill per stage, in order', () => {
     const req = managements.find(m => m.prefix === 'REQ-')!
-    expect(req.skills).toHaveLength(6)
+    expect(req.skills).toHaveLength(7)
     for (const s of req.skills) expect(s.stage).toBeTruthy()
     const stages = [...req.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
     expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
-      'Intake & classify', 'Validate', 'Approve', 'Route & fulfill', 'Deliver & confirm', 'Close & mine demand',
+      'Intake & classify', 'Validate', 'Approve', 'Route & fulfill', 'Deliver & confirm', 'Close & mine demand', 'Reporting & records',
     ])
   })
   it('knowledge covers the full 6-stage cycle, one skill per stage, in order', () => {
     const kb = managements.find(m => m.prefix === 'KB-')!
-    expect(kb.skills).toHaveLength(6)
+    expect(kb.skills).toHaveLength(7)
     for (const s of kb.skills) expect(s.stage).toBeTruthy()
     const stages = [...kb.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
     expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
-      'Capture', 'Structure & review', 'Publish & target', 'Find & surface', 'Use & feedback', 'Maintain & retire',
+      'Capture', 'Structure & review', 'Publish & target', 'Find & surface', 'Use & feedback', 'Maintain & retire', 'Reporting & records',
     ])
   })
   it('improvement covers the full 6-stage cycle, one skill per stage, in order', () => {
     const imp = managements.find(m => m.prefix === 'IMP-')!
-    expect(imp.skills).toHaveLength(6)
+    expect(imp.skills).toHaveLength(7)
     for (const s of imp.skills) expect(s.stage).toBeTruthy()
     const stages = [...imp.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
     expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
-      'Detect signal', 'Mine ideas', 'Prioritize', 'Implement & track', 'Verify outcome', 'Embed & close',
+      'Detect signal', 'Mine ideas', 'Prioritize', 'Implement & track', 'Verify outcome', 'Embed & close', 'Reporting & records',
     ])
   })
   it('asset covers the full 6-stage workflow, one skill per stage, in order', () => {
     const ast = managements.find(m => m.prefix === 'AST-')!
-    expect(ast.skills).toHaveLength(6)
+    expect(ast.skills).toHaveLength(7)
     for (const s of ast.skills) expect(s.stage).toBeTruthy()
     const stages = [...ast.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
     expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
-      'Receive & register', 'Categorize & tag', 'Link to operations', 'Track & maintain', 'Audit & reconcile', 'Retire & dispose',
+      'Receive & register', 'Categorize & tag', 'Link to operations', 'Track & maintain', 'Audit & reconcile', 'Retire & dispose', 'Reporting & records',
     ])
   })
   it('config covers the full 6-stage workflow, one skill per stage, in order', () => {
     const ci = managements.find(m => m.prefix === 'CI-')!
-    expect(ci.skills).toHaveLength(6)
+    expect(ci.skills).toHaveLength(7)
     for (const s of ci.skills) expect(s.stage).toBeTruthy()
     const stages = [...ci.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
     expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
-      'Register & describe', 'Map dependencies', 'Detect drift', 'Predict impact', 'Score health', 'Retire & clean',
+      'Register & describe', 'Map dependencies', 'Detect drift', 'Predict impact', 'Score health', 'Retire & clean', 'Reporting & records',
     ])
   })
   it('has 5 default skills', () => {

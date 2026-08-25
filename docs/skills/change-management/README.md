@@ -2,7 +2,7 @@
 
 Controls changes to services and infrastructure and verifies they hold
 
-Lane: **cycle** · cycle coverage: 6/6 stages
+Lane: **cycle** · cycle coverage: 7/7 stages
 
 ## What it does
 
@@ -20,3 +20,4 @@ Lane: **cycle** · cycle coverage: 6/6 stages
 | 04 | 04 · Approve & schedule | CAB evidence pack | ./cab-evidence-pack.md |
 | 05 | 05 · Deploy & verify | Post-deploy sentinel | ./post-deploy-sentinel.md |
 | 06 | 06 · Close & learn | Closure & drift report | ./closure-and-drift-report.md |
+| 07 | 07 · Reporting & records | Change records pack | ./change-records-pack.md |

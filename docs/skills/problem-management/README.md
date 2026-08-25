@@ -2,7 +2,7 @@
 
 Finds the cause behind repeating incidents so they stop recurring
 
-Lane: **cycle** · cycle coverage: 6/6 stages
+Lane: **cycle** · cycle coverage: 7/7 stages
 
 ## What it does
 
@@ -20,3 +20,4 @@ Lane: **cycle** · cycle coverage: 6/6 stages
 | 04 | 04 · Workaround | Known-error publisher | ./known-error-publisher.md |
 | 05 | 05 · Verify fix | Fix-effectiveness check | ./fix-effectiveness-check.md |
 | 06 | 06 · Close & watch | Recurrence watchdog | ./recurrence-watchdog.md |
+| 07 | 07 · Reporting & records | Problem records pack | ./problem-records-pack.md |
