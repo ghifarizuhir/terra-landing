@@ -104,7 +104,7 @@ export default function JourneyLoop() {
               initial={shouldReduceMotion ? false : { opacity: 0 }}
               animate={shouldReduceMotion ? undefined : { opacity: 1, transition: { delay: 0.18, duration: 0.22 } }}
             >
-            <div className="shrink-0 h-[52px] border-b border-[oklch(0.145_0_0)] bg-[oklch(0.985_0_0)] flex items-center px-4 lg:px-5 gap-3">
+            <div className="shrink-0 h-[52px] border-b border-[oklch(0.145_0_0)] bg-[oklch(0.985_0_0)] flex items-center px-4 lg:px-6 gap-3">
               <button onClick={() => setOpen(null)} className="h-8 px-3 border border-[oklch(0.145_0_0)] bg-[oklch(0.145_0_0)] text-white font-mono text-[11px] tracking-[0.12em] uppercase flex items-center gap-2">
                 ← All practices
               </button>
@@ -116,7 +116,7 @@ export default function JourneyLoop() {
             <div className="h-px bg-[oklch(0.145_0_0)] shrink-0" />
 
             <div className="flex-1 overflow-auto">
-              <div className="max-w-[1280px] mx-auto px-4 lg:px-5 py-5">
+              <div className="w-full px-4 lg:px-6 py-5">
                 <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.14em] uppercase text-[oklch(0.45_0_0)]">
                   <span className="h-px w-6 bg-[oklch(0.145_0_0)]" />
                   {active.lane === 'foundation' ? 'Foundation' : 'Lifecycle'} · {active.skills.length} stages

@@ -13,7 +13,7 @@ export default function App() {
         transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
         className="shrink-0 sticky top-0 z-20 bg-[oklch(0.985_0_0)] border-b border-[oklch(0.145_0_0)]"
       >
-        <div className="w-full px-4 lg:px-5 h-[52px] flex items-center justify-between">
+        <div className="w-full px-4 lg:px-6 h-[52px] flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-[26px] w-[26px] bg-[oklch(0.145_0_0)] text-white grid place-items-center font-semibold text-[13px]">T</div>
             <span className="font-mono text-[11px] tracking-[0.14em] uppercase font-medium">Terra — AI for ITSM</span>
@@ -28,7 +28,7 @@ export default function App() {
       </motion.header>
 
       {/* Structured hero — corporate, no serif, no italic */}
-      <section className="w-full px-4 lg:px-5 pt-7 pb-4 max-w-[1280px] mx-auto">
+      <section className="w-full px-4 lg:px-6 pt-7 pb-4">
         <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-6 items-end">
           <div>
             <div className="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.16em] uppercase text-[oklch(0.45_0_0)]">
@@ -58,11 +58,11 @@ export default function App() {
         <div className="h-px bg-[oklch(0.145_0_0/12%)]" />
       </section>
 
-      <main className="flex-1 flex flex-col w-full px-4 lg:px-5 py-4 max-w-[1280px] mx-auto">
+      <main className="flex-1 flex flex-col w-full px-4 lg:px-6 py-4">
         <JourneyLoop />
       </main>
 
-      <footer className="shrink-0 h-[28px] border-t border-[oklch(0.145_0_0)] bg-[oklch(0.145_0_0)] flex items-center px-4 lg:px-5">
+      <footer className="shrink-0 h-[28px] border-t border-[oklch(0.145_0_0)] bg-[oklch(0.145_0_0)] flex items-center px-4 lg:px-6">
         <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-white/70">© 2026 Terra · 8 practices · {totalSkills} AI skills</span>
         <span className="ml-auto hidden sm:inline font-mono text-[10px] tracking-[0.14em] uppercase text-white/30">AI proposes · humans confirm</span>
       </footer>
