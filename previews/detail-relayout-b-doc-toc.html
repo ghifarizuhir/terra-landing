@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Detail B — Doc with sticky TOC</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:oklch(0.985 0 0);--fg:oklch(0.145 0 0);--muted:oklch(0.45 0 0);--muted2:oklch(0.62 0 0);--border:oklch(0.145 0 0 / 12%);--strong:oklch(0.145 0 0)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Plus Jakarta Sans",system-ui,sans-serif;background:var(--bg);color:var(--fg)}
+.mono{font-family:"JetBrains Mono",monospace}
+.display{font-family:"Instrument Serif",Georgia,serif}
+.serif2{font-family:"Newsreader",Georgia,serif}
+.header{height:52px;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid var(--strong);position:sticky;top:0;background:var(--bg);z-index:10}
+.hero{max-width:1280px;margin:0 auto;padding:18px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.stage-strip{display:flex;gap:6px;overflow:auto;padding:12px 20px;border-bottom:1px solid var(--strong);max-width:1280px;margin:0 auto}
+.chip{font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border);padding:6px 8px;white-space:nowrap;background:#fff}
+.chip.on{background:var(--strong);color:#fff}
+.shell{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 280px;gap:0}
+@media(max-width:900px){.shell{grid-template-columns:1fr}}
+.doc{padding:24px 28px;max-width:760px;border-right:1px solid var(--border)}
+@media(max-width:900px){.doc{border-right:none}}
+.toc{position:sticky;top:52px;height:calc(100vh - 52px);overflow:auto;padding:16px;border-left:1px solid var(--strong);background:#fff}
+@media(max-width:900px){.toc{position:static;height:auto;border-left:none;border-top:1px solid var(--strong)}}
+.toc h4{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2)}
+.toc a{font-size:11px;display:block;padding:6px 0;border-bottom:1px solid var(--border);color:var(--muted);text-decoration:none}
+.toc a.active{color:var(--fg);font-weight:600}
+.sec{margin-top:22px;border-top:1px solid var(--border);padding-top:16px}
+.sec h3{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2)}
+</style>
+</head>
+<body>
+<div class="header mono"><span style="height:26px;width:26px;border:1.5px solid var(--strong);display:grid;place-items:center;font-family:'Instrument Serif',serif">T</span><b style="font-size:11px;letter-spacing:.14em">Terra — AI for ITSM</b><span style="margin-left:auto;font-size:10px;color:var(--muted)">B · Doc + sticky TOC · full-width article</span></div>
+<div class="hero">
+  <h2 class="display" style="font-size:28px">Incident <em class="serif2" style="color:var(--muted)">Management</em></h2>
+  <span class="mono" style="font-size:10px;border:1px solid var(--strong);background:var(--strong);color:#fff;padding:4px 8px">INC-</span>
+  <span class="mono" style="font-size:11px;color:var(--muted)">Restore service fast, keep comms honest.</span>
+</div>
+<div class="stage-strip mono">
+  <span class="chip">01 · Detect</span><span class="chip">02 · Triage</span><span class="chip">03 · Diagnose</span><span class="chip">04 · Comm</span><span class="chip">05 · Resolve</span><span class="chip">06 · Close</span><span class="chip on">07 · Reporting & records ★</span>
+</div>
+<div class="shell">
+  <article class="doc">
+    <p class="mono" style="font-size:10px;letter-spacing:.12em;color:var(--muted)">07 · Reporting & records — Incident records pack</p>
+    <h1 class="display" style="font-size:36px;line-height:.9;margin-top:6px">Incident records pack</h1>
+    <p class="mono" style="font-size:11px;background:#fff;border:1px solid var(--border);padding:10px;margin-top:12px">Use when close is “fixed” with no documented statement…</p>
+    <div class="sec" id="overview"><h3 class="mono">Overview</h3><p style="font-size:12.5px;line-height:1.6;margin-top:6px;color:var(--muted)">Standardizes what every incident must produce: incident report, PIR, comms log. An incident is not done when resolved — it is done when its records close the loop. Full-width article memberi ruang untuk QuickRef table tanpa cramped 2-col.</p></div>
+    <div class="sec" id="when"><h3 class="mono">When to use</h3><ul style="font-size:12px;padding-left:16px;margin-top:6px;color:var(--muted)"><li>War-room exists but no timestamped log</li><li>Report stays blank after work done</li><li>When NOT to use: no-fault lean record</li></ul></div>
+    <div class="sec" id="pattern"><h3 class="mono">Core Pattern</h3><div style="display:grid;gap:8px;margin-top:8px"><pre style="background:var(--strong);color:#fff;padding:10px;font-size:10px">// Before: truth in DMs</pre><pre style="background:#fff;border:1px solid var(--strong);padding:10px;font-size:10px">// After: pack is the close</pre></div></div>
+    <div class="sec" id="ref"><h3 class="mono">Quick Reference</h3><table style="width:100%;border:1px solid var(--border);font-size:11px;margin-top:8px;border-collapse:collapse"><tr style="background:var(--strong);color:#fff"><th style="padding:6px;text-align:left">Document</th><th style="padding:6px">Trigger</th><th style="padding:6px">Required</th></tr><tr><td style="padding:6px;border-top:1px solid var(--border)">Incident report</td><td style="padding:6px">Every INC-</td><td style="padding:6px">what · when · who</td></tr><tr><td style="padding:6px;border-top:1px solid var(--border)">PIR</td><td style="padding:6px">5d post-close</td><td style="padding:6px">cause · prevent</td></tr></table><p style="font-size:11px;color:var(--muted2);margin-top:6px">Table dapat full width 720px, tidak terjepit 2-col.</p></div>
+    <div class="sec" id="how"><h3 class="mono">Implementation</h3><p style="font-size:11px;background:var(--bg);border:1px solid var(--border);padding:10px" class="mono">Auto-log + war-room feed the pack; verifier blocks close.</p></div>
+  </article>
+  <aside class="toc mono">
+    <h4>On this skill</h4>
+    <a href="#overview" class="active">Overview</a><a href="#when">When to use</a><a href="#pattern">Core Pattern</a><a href="#ref">Quick Reference</a><a href="#how">Implementation</a><a href="#">Common Mistakes</a><a href="#">Example</a>
+    <div style="margin-top:16px;border:1px solid var(--border);padding:10px;background:var(--bg)"><p style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2)">Next skill</p><p style="font-size:11px;margin-top:4px">06 · Close & learn → Closure & handover</p></div>
+  </aside>
+</div>
+</body>
+</html>
