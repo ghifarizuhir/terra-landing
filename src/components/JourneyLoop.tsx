@@ -187,7 +187,7 @@ export default function JourneyLoop() {
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: shouldReduceMotion ? 0 : -6 }}
                           transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.22, ease: [0.16, 1, 0.3, 1] as const }}
-                          className="bg-white"
+                          className="bg-white max-w-[880px]"
                         >
                           <div className="p-4 border-b border-[oklch(0.145_0_0/12%)] bg-[oklch(0.985_0_0)]">
                             <div className="flex items-center gap-2 flex-wrap">
