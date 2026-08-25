@@ -22,6 +22,18 @@ export default function JourneyLoop() {
         hidden: { opacity: 0, y: 10 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] as const } },
       }
+  const stripContainerVariants = shouldReduceMotion
+    ? undefined
+    : { hidden: {}, visible: { transition: { staggerChildren: 0.04, delayChildren: 0.12 } } }
+  const stripItemVariants = shouldReduceMotion
+    ? undefined
+    : { hidden: { opacity: 0, y: 6 }, visible: { opacity: 1, y: 0, transition: { duration: 0.28, ease: [0.16, 1, 0.3, 1] as const } } }
+  const skillsContainerVariants = shouldReduceMotion
+    ? undefined
+    : { hidden: {}, visible: { transition: { staggerChildren: 0.06, delayChildren: 0.18 } } }
+  const skillCardVariants = shouldReduceMotion
+    ? undefined
+    : { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.36, ease: [0.16, 1, 0.3, 1] as const } } }
 
   return (
     <>
@@ -36,12 +48,17 @@ export default function JourneyLoop() {
           <motion.button
             key={m.id}
             layoutId={`card-${m.id}`}
+            layout="position"
             variants={cardVariants}
-            whileHover={shouldReduceMotion ? undefined : { y: -1 }}
-            whileTap={shouldReduceMotion ? undefined : { scale: 0.99 }}
+            whileHover={shouldReduceMotion ? undefined : { y: -2, transition: { duration: 0.14 } }}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
             onClick={() => setOpen(m.id)}
             className="text-left bg-white p-4 flex flex-col min-h-[214px] relative overflow-hidden text-[oklch(0.145_0_0)] hover:bg-[oklch(0_0_0/2%)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.145_0_0)] focus-visible:ring-inset"
-            transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.16 }}
+            transition={
+              shouldReduceMotion
+                ? { duration: 0 }
+                : { duration: 0.16, type: 'spring', stiffness: 600, damping: 30 } as const
+            }
           >
             <div className="flex items-center gap-2 shrink-0 font-mono text-[10px] tracking-[0.14em] uppercase text-[oklch(0.62_0_0)]">
               <span>{String(idx + 1).padStart(2, '0')} — {m.prefix}</span>
@@ -92,7 +109,11 @@ export default function JourneyLoop() {
             initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: shouldReduceMotion ? 0 : 8 }}
-            transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.28, ease: [0.16, 1, 0.3, 1] as const }}
+            transition={
+              shouldReduceMotion
+                ? { duration: 0 }
+                : { type: 'spring', stiffness: 340, damping: 28, mass: 0.8 } as unknown as Record<string, unknown>
+            }
             className="fixed inset-0 z-50 bg-[oklch(0.985_0_0)] flex flex-col overflow-hidden"
           >
             {/* Top bar — editorial */}
@@ -140,27 +161,48 @@ export default function JourneyLoop() {
                   </div>
 
                   {allStaged && (
-                    <div className="mb-4">
+                    <motion.div
+                      className="mb-4"
+                      initial={shouldReduceMotion ? false : { opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.22 }}
+                    >
                       <p className="font-mono text-[10px] tracking-[0.12em] uppercase font-semibold text-[oklch(0.45_0_0)] mb-2">{active.lane === 'foundation' ? 'Workflow coverage — one skill per stage' : 'Cycle coverage — one skill per stage'}</p>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+                      <motion.div
+                        className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2"
+                        variants={stripContainerVariants}
+                        initial="hidden"
+                        animate="visible"
+                      >
                         {sortedSkills.map((s) => (
-                          <div key={`strip-${s.name}`} className="border border-[oklch(0.145_0_0/12%)] bg-white p-2.5">
+                          <motion.div key={`strip-${s.name}`} variants={stripItemVariants} className="border border-[oklch(0.145_0_0/12%)] bg-white p-2.5">
                             <div className="font-mono text-[9px] tracking-[0.1em] uppercase font-bold">{s.stage}</div>
                             <p className="font-mono text-[9px] leading-[1.4] tracking-[0.06em] uppercase text-[oklch(0.45_0_0)] mt-1.5 line-clamp-2">{s.name}</p>
-                          </div>
+                          </motion.div>
                         ))}
-                      </div>
-                    </div>
+                      </motion.div>
+                    </motion.div>
                   )}
 
                   {/* Quote — editorial */}
-                  <div className="border-l-2 border-[oklch(0.145_0_0)] pl-3 py-1 mb-4">
+                  <motion.div
+                    className="border-l-2 border-[oklch(0.145_0_0)] pl-3 py-1 mb-4"
+                    initial={shouldReduceMotion ? false : { opacity: 0, x: -6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.34, delay: 0.18 }}
+                  >
                     <p className="font-serif2 italic text-[16px] leading-[1.4] text-[oklch(0.45_0_0)]">“A {active.lane === 'foundation' ? 'map' : 'ticket'} is not done when it says closed — it is done when its records explain what happened.”</p>
-                  </div>
+                  </motion.div>
 
-                  <div className="grid lg:grid-cols-2 gap-3">
+                  <motion.div
+                    className="grid lg:grid-cols-2 gap-3"
+                    variants={skillsContainerVariants}
+                    initial="hidden"
+                    animate="visible"
+                  >
                     {sortedSkills.map((s) => (
-                      <div key={s.name} className="border border-[oklch(0.145_0_0)] bg-white flex flex-col">
+                      <motion.div key={s.name} variants={skillCardVariants} className="border border-[oklch(0.145_0_0)] bg-white flex flex-col">
                         <div className="p-3 border-b border-[oklch(0.145_0_0/12%)] bg-[oklch(0.985_0_0)]">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="font-mono text-[11px] tracking-[0.1em] uppercase font-bold bg-[oklch(0.145_0_0)] text-white inline-block px-2 py-1">{s.name}</span>
@@ -239,9 +281,9 @@ export default function JourneyLoop() {
                             </div>
                           )}
                         </div>
-                      </div>
+                      </motion.div>
                     ))}
-                  </div>
+                  </motion.div>
                 </div>
               </div>
             </div>
