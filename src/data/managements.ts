@@ -1227,7 +1227,71 @@ export const managements: Management[] = [
     ],
     skills: [
       {
+        name: 'Receiving registrar',
+        stage: '01 · Receive & register',
+        description: 'Use when hardware arrives and sits unrecorded for weeks, or asset entries start life as “new laptop??” with no serial, cost or owner',
+        overview: 'Receiving registrar drafts the complete asset record at the moment of arrival from purchase and delivery evidence: model, serials, cost, warranty start, assigned location. Core principle: an asset that is not registered on day one will lie in every report forever. The AI extracts from documents; humans confirm the record.',
+        whenToUse: [
+          'Hardware delivered with a PO/packing list but no asset entry yet',
+          'New license purchased — needs its seat count and renewal date recorded',
+          'Bulk delivery (10 monitors) arriving as one box with one invoice',
+          'When NOT to use: asset already registered — update instead of duplicating',
+        ],
+        corePattern: {
+          before: '// Before: record typed later, if ever\n// laptop arrives Monday → registered “someday”\n// audit finds it in October as a mystery device',
+          after: '// After: draft from delivery evidence\nconst record = extractFromDocuments({ po, packingList })\n// {model, serials[], cost, warrantyStart} — gaps flagged\nreturn humanConfirms(record)',
+        },
+        quickReference: {
+          headers: ['Field', 'Source', 'Rule'],
+          rows: [
+            ['Model + serials', 'Packing list / device', 'verbatim, never guessed'],
+            ['Cost + currency', 'PO/invoice', 'required for lifecycle'],
+            ['Warranty start', 'Invoice date', 'drives expiry tracking'],
+            ['Missing field', 'Flagged gap', 'human fills'],
+          ],
+        },
+        how: 'Extracts structured fields from PO and delivery documents (text parsing; OCR where available), dedupes serials against existing inventory to catch double-registration, and stages a complete-or-flagged draft. Registration completes only with human confirmation; bulk deliveries expand into one record per serial.',
+        commonMistakes: [
+          'Typing serials by hand later → transposition errors poison matching forever. Fix: extract verbatim.',
+          'Registering “one laptop” for a 10-unit delivery → inventory lies by 9. Fix: per-serial expansion.',
+          'Skipping warranty dates → renewals lapse silently. Fix: required field, feeds status tracker.',
+        ],
+        example: 'Delivery of 5 ThinkPads → registrar extracts 5 serials + PO cost → 5 staged records, warranty starts invoice date, one click each to confirm.',
+      },
+      {
+        name: 'Lifecycle classifier',
+        stage: '02 · Categorize & tag',
+        description: 'Use when inventory mixes servers, licenses and “misc” because classification depends on whoever typed the row',
+        overview: 'Lifecycle classifier assigns each asset its category (server/license/service/other), environment and criticality from its description and context — mapping free text onto the fixed enum. Core principle: category decides the whole lifecycle (a license renews, a server depreciates); misclassification corrupts every downstream report.',
+        whenToUse: [
+          'Imported inventory arrives with free-text “type” columns (“box”, “subscrip”)',
+          'Assets lack environment tags so prod cannot be separated from dev in reports',
+          'Replacement planning needs criticality that nobody assigned',
+          'When NOT to use: asset already cleanly categorized — no signal needed',
+        ],
+        corePattern: {
+          before: '// Before: type = whatever was typed\n{kind: "subscription thing?"} // unreportable\n// licenses counted as hardware; budget reviews despair',
+          after: '// After: classify into enum\nconst cls = classify(description, {enum: [server, license, service, other]})\n// {kind: "license", env: "prod", criticality: "high", confidence: 0.9}\nreturn confidence >= 0.7 ? apply(cls) : askOnce(cls)',
+        },
+        quickReference: {
+          headers: ['Signal', 'Classification', 'Threshold'],
+          rows: [
+            ['“renewal”, “seats”, “per user”', 'license', 'confidence ≥0.7 auto'],
+            ['“rack”, “serial”, hostname', 'server', 'env from naming'],
+            ['Ambiguous text', 'Ask one question', 'below 0.7'],
+          ],
+        },
+        how: 'Classifies description text against the fixed asset enum with confidence scores, infers environment from naming conventions and location fields, and suggests criticality from what the asset’s linked CI serves (when linked). Below threshold it asks exactly one clarifying question. All assignments are suggestions until confirmed.',
+        commonMistakes: [
+          'Open-ended categories return → unreportable mess again. Fix: fixed enum, additions via governance.',
+          'Guessing prod/dev silently → wrong compliance reports. Fix: low-confidence asks, never assumes.',
+          'Criticality defaulting to “low” everywhere → replacement plans starve real workhorses. Fix: derive from linked CI impact when available.',
+        ],
+        example: '“Adobe subscription, 12 seats, renews March” → license / office / medium (0.93) applied; “old box in rack B2” → server / prod? asked once, then classified.',
+      },
+      {
         name: 'Inventory linking',
+        stage: '03 · Link to operations',
         description: 'Use when assets have a hostname or name that matches a CI but the link is missing and audits show mismatches',
         overview: 'Inventory linking suggests a link between an asset (inventory) and its running CI (operational graph). Core principle: the hostname is the key — asset.name ↔ CI.hostname should match.',
         whenToUse: [
@@ -1255,6 +1319,102 @@ export const managements: Management[] = [
         ],
         example: 'Asset “Web-042” hostname web-042 → suggests link to CI-042 (0.92).',
       },
+      {
+        name: 'Status tracker',
+        stage: '04 · Track & maintain',
+        description: 'Use when warranties lapse unnoticed, “locations” show a laptop in three cities at once, and renewal dates live in someone’s calendar reminders',
+        overview: 'Status tracker watches each asset’s lifecycle clock — warranty expiry, license renewals, location/status changes — and proposes record updates before things lapse silently or contradict themselves. Core principle: inventory truth decays daily; tracking is not a project, it is a pulse.',
+        whenToUse: [
+          'Warranty or license expiry within 30–60 days with no action yet',
+          'Asset status/location changed (assignment, office move) but record still old',
+          'Quarterly review needs the list of assets about to need attention',
+          'When NOT to use: asset already retired — retirement planner owns it now',
+        ],
+        corePattern: {
+          before: '// Before: decay discovered at renewal failure\nif (warrantyExpired) hopeForTheBest() // vendor refuses service\n// “location: Jakarta” while the device scans in Singapore',
+          after: '// After: clocks watched continuously\nwatchClocks(asset) // {warrantyEndsIn: 21d, renewalDue: 14d}\nonApproaching((a) => proposeUpdate(a)) // human confirms changes',
+        },
+        quickReference: {
+          headers: ['Signal', 'Lead time', 'Proposal'],
+          rows: [
+            ['Warranty ending', '30d before', 'renew / accept risk'],
+            ['License renewal due', '45d before', 'recount seats first'],
+            ['Status contradiction', 'immediately', 'ask owner once'],
+            ['No events 12 months', 'review flag', 'still in use?'],
+          ],
+        },
+        how: 'Maintains per-asset timelines from assignment events, scan data and document dates; detects approaching deadlines (warranty, renewals) and contradictions (status says assigned, scans say idle for months). Proposals arrive as one digest per owner rather than drip-feed pings; humans apply updates.',
+        commonMistakes: [
+          'Alerting on expiry day → decisions already impossible. Fix: lead-time windows.',
+          'Auto-updating status from single signals → wrong writes to record. Fix: propose with evidence.',
+          'Digesting everything weekly → noise fatigue. Fix: only assets needing a decision this week.',
+        ],
+        example: '12 Adobe licenses renew in 6 weeks → tracker proposes recount first (usage shows 9 active) → renewal adjusted, $ saved, record updated with decision.',
+      },
+      {
+        name: 'Audit reconciler',
+        stage: '05 · Audit & reconcile',
+        description: 'Use when audit season reveals devices on paper that nobody can find, servers running that exist in no spreadsheet, and everyone guessing which list is right',
+        overview: 'Audit reconciler compares inventory records against operational reality — discovery scans, spot checks, network evidence — and classifies every mismatch: ghost (recorded, absent) or zombie (running, unrecorded). Core principle: two sources of truth means zero; reconciliation is how inventory stays honest.',
+        whenToUse: [
+          'Periodic audit cycle or compliance check approaching',
+          'Discovery tooling reports devices the inventory never heard of',
+          'Reports disagree: finance counts ≠ ops counts',
+          'When NOT to use: asset mid-transfer between locations — expected temporary mismatch',
+        ],
+        corePattern: {
+          before: '// Before: reconciliation by spreadsheet duel\ndiff(financeList, opsList) // 200 rows of red\n// weeks of email archaeology per mismatch',
+          after: '// After: classified mismatches with evidence\nconst mismatches = reconcile(inventory, discovery)\n// [{type: "ghost", asset: AST-118}, {type: "zombie", host: "web-077"}]\nreturn triageList(mismatches)',
+        },
+        quickReference: {
+          headers: ['Mismatch', 'Meaning', 'Proposal'],
+          rows: [
+            ['Ghost (recorded, not found)', 'lost/stolen/uninstalled', 'investigate then retire'],
+            ['Zombie (found, unrecorded)', 'shadow IT / missed intake', 'register via registrar'],
+            ['Attribute drift', 'moved/upgraded silently', 'update record'],
+            ['Match', '-', 'no action'],
+          ],
+        },
+        how: 'Matches records against scan/discovery feeds using hostname, serial and fuzzy name matching (same matcher as inventory linking), then buckets differences by type with confidence and last-seen evidence. Produces a triage-ordered worklist — high-value ghosts first — where each resolution routes to the right stage (retire, register, update). Humans judge every disposition.',
+        commonMistakes: [
+          'Treating all mismatches equally → low-value noise blocks serious finds. Fix: value-ordered triage.',
+          'Deleting ghosts immediately → stolen assets vanish from books too. Fix: investigate-before-retire rule.',
+          'One-off cleanup → drift returns next quarter. Fix: schedule as recurring reconciliation.',
+        ],
+        example: 'Reconciliation finds 3 ghosts (2 retired laptops still licensed) + 1 zombie (web-077 running unrecorded) → zombie registered, ghosts investigated and retired, counts finally agree.',
+      },
+      {
+        name: 'Retirement planner',
+        stage: '06 · Retire & dispose',
+        description: 'Use when end-of-life hardware keeps running past support, licenses keep billing for leavers, and disposal happens without wipe certificates or record closure',
+        overview: 'Retirement planner surfaces assets at end of life — support ended, warranty expired, unused for months, linked person offboarded — and drafts the disposal checklist: data wipe, license reclaim, CI unlink, record close. Core principle: an asset’s exit matters as much as its entry; sloppy exits leak money and data.',
+        whenToUse: [
+          'Vendor support/warranty ended — device now an uninsured risk',
+          'License seats bill for people who left months ago',
+          'Storage closet filling with “we’ll deal with those later”',
+          'When NOT to use: asset still actively serving prod despite age — flag risk instead of retiring',
+        ],
+        corePattern: {
+          before: '// Before: retirement = forgetting harder\n// old laptops pile up; Adobe bills 12 seats, 4 employees remain\n// one wiped-later-found-unwiped incident away from headlines',
+          after: '// After: planned exits\nconst candidates = findEOL({supportEnded, unusedMonths, offboarded})\nplan(candidates[0]) // [wipe+cert, reclaimSeats, unlink CI, close record]',
+        },
+        quickReference: {
+          headers: ['Candidate signal', 'Check first', 'Exit steps'],
+          rows: [
+            ['Support ended', 'still serving traffic?', 'wipe cert → retire'],
+            ['Unused >6 months', 'confirmed with owner', 'wipe → dispose'],
+            ['Offboarded user license', 'seat truly idle', 'reclaim → downgrade plan'],
+            ['Prod-critical but EOL', 'risk accepted?', 'flag, do NOT retire'],
+          ],
+        },
+        how: 'Ranks retirement candidates from lifecycle signals (dates from receiving, usage from tracking, links from inventory linking), generates a per-asset checklist covering data destruction with certificate, license seat reclamation, CI link removal and final record state. Each completed step is recorded; nothing closes until the checklist does.',
+        commonMistakes: [
+          'Retiring prod workhorses because they are old. Fix: usage + criticality gate before any exit.',
+          'Skipping wipe certificates → data leaves with the hardware. Fix: certificate is a required step.',
+          'Forgetting seat reclamation → zombie spend continues forever. Fix: license exits include vendor-side action.',
+        ],
+        example: 'Planner lists 4 ThinkPads past support + 8 idle Adobe seats → checklists issued: wipes scheduled, seats reclaimed ($ saved), CI links removed, records closed cleanly.',
+      },
     ],
     color: 'bg-blue-500', icon: 'Package', order: 6, lane: 'foundation'
   },
@@ -1267,7 +1427,40 @@ export const managements: Management[] = [
     ],
     skills: [
       {
+        name: 'CI capture assist',
+        stage: '01 · Register & describe',
+        description: 'Use when services run in production that the map has never heard of, or CI entries start life as a bare hostname with no kind, environment or app link',
+        overview: 'CI capture assist drafts configuration records from operational evidence — deploy events, service descriptions, app associations — so the graph learns about services when they are born, not after their first outage. Core principle: every unrecorded service is a blind spot in the next impact prediction; capture is the graph’s immune system.',
+        whenToUse: [
+          'New service deployed but no CI exists for it yet',
+          'CI entry has only a hostname — no kind, environment or owning app',
+          'Team mentions “the queue worker” that no one can find on the map',
+          'When NOT to use: ephemeral build containers / short-lived jobs — noise, not configuration',
+        ],
+        corePattern: {
+          before: '// Before: map learns from incidents\n// “what is payment-worker?” asked during SEV1\ncreateCiBarebones({name}) // impact analysis useless',
+          after: '// After: drafted from deployment evidence\nconst draft = draftFromSignals({deploys, descriptions, apps})\n// {kind: "service", env: "prod", app: APP-004}\nreturn humanConfirms(draft)',
+        },
+        quickReference: {
+          headers: ['Signal', 'Drafted field', 'Rule'],
+          rows: [
+            ['Deploy event', 'name, kind, env', 'prod deploys first'],
+            ['Service README/description', 'purpose summary', 'verbatim excerpt'],
+            ['App association', 'app link', 'from repo/org mapping'],
+            ['Ephemeral workload', 'skip', 'not configuration'],
+          ],
+        },
+        how: 'Watches deployment and infrastructure events plus existing app structures to propose new CI records with kind (server/service), environment and owning application; enriches descriptions from documentation excerpts. Drafts stage for human confirmation — the graph of record only grows through approved writes.',
+        commonMistakes: [
+          'Capturing every ephemeral container → graph drowns in noise. Fix: filter by persistence signals.',
+          'Bare-bones records (“web-9”) → technically present, analytically useless. Fix: require kind+env before confirm.',
+          'Guessing the owning app silently → wrong blast-radius reports. Fix: suggest with evidence, human confirms.',
+        ],
+        example: 'payment-worker deploys to prod 3× this week → draft CI: service/prod/APP-004 + purpose excerpt → confirmed in one click → visible to impact analysis immediately.',
+      },
+      {
         name: 'Dependency mapping',
+        stage: '02 · Map dependencies',
         description: 'Use when a new CI is created or a description mentions depends on and the graph has isolated nodes or empty impact analysis',
         overview: 'Dependency mapping suggests dependency edges between CIs from descriptions and app links. Core principle: the description already says it — “depends on / calls / uses” are the signals.',
         whenToUse: [
@@ -1297,6 +1490,7 @@ export const managements: Management[] = [
       },
       {
         name: 'Impact prediction',
+        stage: '04 · Predict impact',
         description: 'Use when an incident or change touches a CI and impact is discovered after, not before',
         overview: 'Impact prediction lists all downstream apps and CIs that would be affected if this CI fails. Core principle: the graph already knows — traverse it downstream from the touched CI.',
         whenToUse: [
@@ -1321,6 +1515,101 @@ export const managements: Management[] = [
           'Only direct deps → misses transitive. Fix: traverse full downstream.',
         ],
         example: 'Incident on CI-017 DB → predicts: checkout-service, payment-api, 2 apps.',
+      },
+      {
+        name: 'Graph drift detector',
+        stage: '03 · Detect drift',
+        description: 'Use when the map says a service has no dependencies yet incidents keep proving otherwise, and nobody remembers what changed since someone last drew the graph',
+        overview: 'Graph drift detector compares the configuration graph against signals of operational reality — new services in deploys, dependency mentions in incident notes, edges implied by traffic — and proposes the missing nodes and edges. Core principle: maps do not drift loudly; they rot quietly until an impact prediction lies to you at the worst time.',
+        whenToUse: [
+          'Incident revealed “X actually calls Y” but no edge exists',
+          'Deploy logs mention services absent from the graph',
+          'Impact prediction results contradict what responders saw',
+          'When NOT to use: intentional isolation confirmed by owner — document, don’t chase',
+        ],
+        corePattern: {
+          before: '// Before: drift found by victims\nimpact(CI-042) // “no downstream”\n// reality: three services scream when it dies — map was stale for months',
+          after: '// After: reality compared continuously\nconst drift = diffAgainstSignals({deploys, incidentNotes, traffic})\n// {missingEdges: [checkout → payment-worker], missingNodes: [...]} \nreturnPropose(drift) // human confirms each write',
+        },
+        quickReference: {
+          headers: ['Signal', 'Drift type', 'Confidence'],
+          rows: [
+            ['“calls X” in incident note', 'missing edge', 'high — cite incident'],
+            ['New deploy target', 'missing node', 'route via capture assist'],
+            ['No events + no mentions', 'possible ghost', 'low — verify first'],
+          ],
+        },
+        how: 'Mines deployment records, incident timelines and postmortem text for dependency statements (“calls”, “depends on”, “broke when”), then diffs them against current ci_dependencies. Strong evidence becomes edge proposals citing its source; weak signals batch into a review digest. Every proposed write cites where it came from.',
+        commonMistakes: [
+          'Writing inferred edges silently → graph confidently wrong. Fix: propose with citations only.',
+          'Treating one ambiguous mention as fact → phantom dependencies. Fix: confidence thresholds.',
+          'One-time cleanup project → drift resumes next sprint. Fix: continuous signal watching.',
+        ],
+        example: 'Postmortem says “payment-worker died when DB failed” → proposes edge payment-worker → CI-017 citing PRB-1042 → confirmed → impact predictions finally include it.',
+      },
+      {
+        name: 'Graph health scorer',
+        stage: '05 · Score health',
+        description: 'Use when leadership asks “can we trust the map?” and the honest answer is a shrug, while impact predictions get quietly ignored by engineers who got burned before',
+        overview: 'Graph health scorer grades the configuration map’s trustworthiness: completeness of nodes, share of confirmed vs inferred edges, orphan count, description coverage — one score with the reasons behind it. Core principle: impact answers inherit the graph’s health; a B-grade map gives B-grade blast radii, and everyone should know which grade they are reading.',
+        whenToUse: [
+          'Periodic CMDB/data-quality review',
+          'Teams bypass the map because “it’s always wrong” — quantify what is wrong',
+          'Before trusting impact analysis for a high-stakes change',
+          'When NOT to use: freshly seeded graph still in bulk import — scores mislead during bootstrap',
+        ],
+        corePattern: {
+          before: '// Before: trust is vibes\n“the map is fine” // nobody checked\n// engineer ignores predicted blast radius, gets surprised anyway',
+          after: '// After: grade with reasons\nconst h = scoreHealth(graph)\n// {grade: "C+", orphans: 14, unconfirmedEdges: "38%", thinDescriptions: 22}\nreturn fixList(h)',
+        },
+        quickReference: {
+          headers: ['Dimension', 'Signal', 'Fix route'],
+          rows: [
+            ['Orphan nodes', 'no app, no edges', 'capture/link stages'],
+            ['Unconfirmed edges', 'still suggested-only', 'review queue'],
+            ['Thin descriptions', '<20 chars purpose', 'enrichment pass'],
+            ['Stale untouched', 'no events 12mo', 'retire sweeper'],
+          ],
+        },
+        how: 'Computes per-dimension metrics across all CIs and edges (completeness, confirmation ratio, connectivity, freshness), combines into a weighted grade, and emits a prioritized fix list routed back to earlier workflow stages. Scores are tracked over time so improvement investments show up as rising grades, not anecdotes.',
+        commonMistakes: [
+          'One vanity number with no breakdown → nobody knows what to fix. Fix: grade plus dimension detail.',
+          'Punishing legitimately isolated CIs as orphans. Fix: confirmed-isolation flag respected.',
+          'Scoring once a year → trust erodes between reviews. Fix: scheduled cadence, trend visible.',
+        ],
+        example: 'Score: C+ — 38% edges unconfirmed, 14 orphans → fix list queues 9 edge confirmations and routes ghosts; two quarters later the map reads A− and engineers cite it in change packs.',
+      },
+      {
+        name: 'Stale-node sweeper',
+        stage: '06 · Retire & clean',
+        description: 'Use when the map accumulates ghosts of decommissioned servers and dead services, and every traversal drags outdated baggage into impact answers',
+        overview: 'Stale-node sweeper proposes archiving configuration items that no longer exist operationally: no recent events, linked asset retired, nothing references them anymore. Core principle: a clean graph is not a bigger graph — every dead node dilutes the signal for everything that is alive.',
+        whenToUse: [
+          'Linked asset retired/disposed but the CI still sits on the map',
+          'CI untouched for many months with zero incident/change references',
+          'Traversal results feel polluted with things everyone knows are gone',
+          'When NOT to use: seasonal or rarely-active components — dormancy is not death; verify first',
+        ],
+        corePattern: {
+          before: '// Before: nothing ever leaves\ngraph.nodes // 2019 servers, deleted projects, ex-vendor APIs\n// impact lists grow; trust shrinks',
+          after: '// After: exits like entries — planned\nconst candidates = findStale({noEventsMonths: 12, assetRetired, unreferenced})\nproposeArchive(candidates) // evidence attached, reversible',
+        },
+        quickReference: {
+          headers: ['Signal', 'Weight', 'Action'],
+          rows: [
+            ['Linked asset retired', 'strong', 'propose archive'],
+            ['No events 12+ months', 'medium', 'verify with owner'],
+            ['Zero inbound references', 'supporting', 'strengthens case'],
+            ['Owner objects', '-', 'keep, tag dormant'],
+          ],
+        },
+        how: 'Ranks archival candidates from lifecycle evidence — retirement planner outputs, event recency, reference counts from edges and documents — and packages each proposal with proof plus a one-click restore path if the node turns out alive. Archives preserve history for audits instead of hard-deleting; humans approve every exit.',
+        commonMistakes: [
+          'Hard-deleting nodes → audit history gone. Fix: archive, always reversible.',
+          'Sweeping by age alone → rare-but-critical components vanish. Fix: multi-signal requirement.',
+          'Silent mass purges → teams stop trusting writes. Fix: visible proposals, named approver.',
+        ],
+        example: 'Sweeper finds 6 CIs whose assets retired in Q2 + 3 untouched since 2024 → archive proposals with evidence; graph sheds 9 dead nodes, impact lists get shorter and truer.',
       },
     ],
     color: 'bg-slate-500', icon: 'Network', order: 7, lane: 'foundation'

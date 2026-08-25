@@ -11,7 +11,7 @@ describe('JourneyLoop', () => {
     render(<JourneyLoop />)
     expect(screen.getByText(/Foundation — always visible/i)).toBeInTheDocument()
   })
-  it('shows cycle strip for Incident (all stages covered), none for non-staged management', () => {
+  it('shows cycle strip for Incident, workflow strip for Asset', () => {
     render(<JourneyLoop />)
     fireEvent.click(screen.getByRole('button', { name: /Incident Management/ }))
     expect(screen.getByText(/Cycle coverage — one skill per stage/i)).toBeInTheDocument()
@@ -20,10 +20,17 @@ describe('JourneyLoop', () => {
 
     fireEvent.click(screen.getByRole('button', { name: '← Back to grid' }))
     fireEvent.click(screen.getByRole('button', { name: /Asset Management/ }))
-    const reqHeading = screen.getAllByText('Asset Management').find((el) => el.tagName === 'H2')!
-    const overlay = reqHeading.closest('.fixed') as HTMLElement
+    const astHeading = screen.getAllByText('Asset Management').find((el) => el.tagName === 'H2')!
+    const overlay = astHeading.closest('.fixed') as HTMLElement
     expect(overlay).toBeTruthy()
-    expect(within(overlay).queryByText(/Cycle coverage — one skill per stage/i)).not.toBeInTheDocument()
+    expect(within(overlay).getByText(/Workflow coverage — one skill per stage/i)).toBeInTheDocument()
+  })
+  it('shows workflow strip for Service Configuration too', () => {
+    render(<JourneyLoop />)
+    fireEvent.click(screen.getByRole('button', { name: /Service Configuration/ }))
+    expect(screen.getByText(/Workflow coverage — one skill per stage/i)).toBeInTheDocument()
+    expect(screen.getAllByText('01 · Register & describe').length).toBeGreaterThanOrEqual(2)
+    expect(screen.getAllByText('06 · Retire & clean').length).toBeGreaterThanOrEqual(2)
   })
   it('shows cycle strip for Problem too', () => {
     render(<JourneyLoop />)

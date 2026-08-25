@@ -136,7 +136,7 @@ export default function JourneyLoop() {
                   {/* Cycle strip — Andon rail, one node per lifecycle stage */}
                   {allStaged && (
                     <div className="mb-4">
-                      <p className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98] mb-2">Cycle coverage — one skill per stage</p>
+                      <p className="font-mono text-[10px] tracking-widest uppercase font-semibold text-[#8a8f98] mb-2">{active.lane === 'foundation' ? 'Workflow coverage — one skill per stage' : 'Cycle coverage — one skill per stage'}</p>
                       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
                         {sortedSkills.map((s) => (
                           <div key={`strip-${s.name}`} className="border border-[#1a1d23] bg-white p-2">

@@ -70,6 +70,24 @@ describe('managements data', () => {
       'Detect signal', 'Mine ideas', 'Prioritize', 'Implement & track', 'Verify outcome', 'Embed & close',
     ])
   })
+  it('asset covers the full 6-stage workflow, one skill per stage, in order', () => {
+    const ast = managements.find(m => m.prefix === 'AST-')!
+    expect(ast.skills).toHaveLength(6)
+    for (const s of ast.skills) expect(s.stage).toBeTruthy()
+    const stages = [...ast.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
+    expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
+      'Receive & register', 'Categorize & tag', 'Link to operations', 'Track & maintain', 'Audit & reconcile', 'Retire & dispose',
+    ])
+  })
+  it('config covers the full 6-stage workflow, one skill per stage, in order', () => {
+    const ci = managements.find(m => m.prefix === 'CI-')!
+    expect(ci.skills).toHaveLength(6)
+    for (const s of ci.skills) expect(s.stage).toBeTruthy()
+    const stages = [...ci.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
+    expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
+      'Register & describe', 'Map dependencies', 'Detect drift', 'Predict impact', 'Score health', 'Retire & clean',
+    ])
+  })
   it('has 5 default skills', () => {
     expect(defaultSkills).toHaveLength(5)
   })
