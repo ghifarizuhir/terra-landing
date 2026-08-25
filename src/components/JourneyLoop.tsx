@@ -38,11 +38,13 @@ export default function JourneyLoop() {
         animate="visible"
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[oklch(0.145_0_0)] border border-[oklch(0.145_0_0)]"
       >
-        {managements.map((m, idx) => (
+        {managements.map((m, idx) =>
+          m.id === open ? (
+            <div key={m.id} aria-hidden className="bg-white min-h-[200px]" />
+          ) : (
           <motion.button
             key={m.id}
             layoutId={`card-${m.id}`}
-            layout="position"
             variants={cardVariants}
             whileHover={shouldReduceMotion ? undefined : { y: -2, transition: { duration: 0.14 } }}
             whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
@@ -77,7 +79,8 @@ export default function JourneyLoop() {
             </div>
             <span className="mt-auto pt-2 font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)] shrink-0">Read skills →</span>
           </motion.button>
-        ))}
+          )
+        )}
       </motion.div>
 
       <div className="shrink-0 pt-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.14em] uppercase text-[oklch(0.45_0_0)]">
@@ -92,12 +95,15 @@ export default function JourneyLoop() {
           <motion.div
             key={active.id}
             layoutId={`card-${active.id}`}
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: shouldReduceMotion ? 0 : 8 }}
+            exit={shouldReduceMotion ? undefined : { opacity: 0 }}
             transition={shouldReduceMotion ? { duration: 0 } : ({ type: 'spring', stiffness: 340, damping: 28, mass: 0.8 } as unknown as Record<string, unknown>)}
             className="fixed inset-0 z-50 bg-[oklch(0.985_0_0)] flex flex-col overflow-hidden"
           >
+            <motion.div
+              className="flex-1 min-h-0 flex flex-col"
+              initial={shouldReduceMotion ? false : { opacity: 0 }}
+              animate={shouldReduceMotion ? undefined : { opacity: 1, transition: { delay: 0.18, duration: 0.22 } }}
+            >
             <div className="shrink-0 h-[52px] border-b border-[oklch(0.145_0_0)] bg-[oklch(0.985_0_0)] flex items-center px-4 lg:px-5 gap-3">
               <button onClick={() => setOpen(null)} className="h-8 px-3 border border-[oklch(0.145_0_0)] bg-[oklch(0.145_0_0)] text-white font-mono text-[11px] tracking-[0.12em] uppercase flex items-center gap-2">
                 ← All practices
@@ -272,6 +278,7 @@ export default function JourneyLoop() {
                 </div>
               </div>
             </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
