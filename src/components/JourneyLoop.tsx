@@ -53,12 +53,12 @@ export default function JourneyLoop() {
             <div className="flex items-center gap-2 shrink-0 font-mono text-[10px] tracking-[0.14em] uppercase text-[oklch(0.62_0_0)]">
               <span>{String(idx + 1).padStart(2, '0')} — {m.prefix}</span>
               <span className="h-px flex-1 bg-[oklch(0.145_0_0/12%)]" />
-              <span className="border border-[oklch(0.145_0_0/25%)] px-1.5 py-0.5 bg-white text-[oklch(0.45_0_0)] text-[9px] tracking-[0.12em] hidden xl:inline">{m.lane}</span>
+              <span className="border border-[oklch(0.145_0_0/25%)] px-1.5 py-0.5 bg-white text-[oklch(0.45_0_0)] text-[9px] tracking-[0.12em] hidden xl:inline">{m.lane === 'foundation' ? 'Foundation' : 'Lifecycle'}</span>
             </div>
             <h3 className="font-semibold text-[13px] tracking-[-0.01em] leading-tight mt-2 shrink-0">{m.title}</h3>
             <p className="text-[12.5px] leading-[1.4] mt-1 text-[oklch(0.45_0_0)] shrink-0 line-clamp-2">{m.oneLiner}</p>
             <div className="mt-2 space-y-1 shrink-0">
-              <p className="font-mono text-[9px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">Does</p>
+              <p className="font-mono text-[9px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">What it does</p>
               <p className="text-[11.5px] leading-[1.45] text-[oklch(0.45_0_0)] line-clamp-2">{m.bullets[0]}</p>
               <p className="hidden lg:block text-[11.5px] leading-[1.45] text-[oklch(0.45_0_0)] line-clamp-1 opacity-80">{m.bullets[1]}</p>
             </div>
@@ -75,14 +75,14 @@ export default function JourneyLoop() {
                 </span>
               )}
             </div>
-            <span className="mt-auto pt-2 font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)] shrink-0">Details →</span>
+            <span className="mt-auto pt-2 font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)] shrink-0">Read skills →</span>
           </motion.button>
         ))}
       </motion.div>
 
       <div className="shrink-0 pt-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.14em] uppercase text-[oklch(0.45_0_0)]">
         <span className="h-px flex-1 bg-[oklch(0.145_0_0/12%)]" />
-        Foundation — always visible · 8 stations · {totalSkills} AI skills · 1px rule
+        8 practices · {totalSkills} AI skills · Assets &amp; configuration as the foundation
         <span className="h-px flex-1 bg-[oklch(0.145_0_0/12%)]" />
       </div>
 
@@ -100,13 +100,12 @@ export default function JourneyLoop() {
           >
             <div className="shrink-0 h-[52px] border-b border-[oklch(0.145_0_0)] bg-[oklch(0.985_0_0)] flex items-center px-4 lg:px-5 gap-3">
               <button onClick={() => setOpen(null)} className="h-8 px-3 border border-[oklch(0.145_0_0)] bg-[oklch(0.145_0_0)] text-white font-mono text-[11px] tracking-[0.12em] uppercase flex items-center gap-2">
-                ← Back to grid
+                ← All practices
               </button>
               <span className="h-8 w-px bg-[oklch(0.145_0_0/12%)] hidden sm:block" />
               <span className="font-mono text-[11px] tracking-[0.12em] uppercase font-medium bg-[oklch(0.145_0_0)] text-white px-2 py-1 hidden sm:inline">{active.prefix}</span>
               <span className="text-[13px] font-semibold tracking-[-0.01em] hidden sm:inline">{active.title}</span>
-              <span className="ml-auto font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.45_0_0)] hidden lg:inline">Rail + Reader · 1 skill focus</span>
-              <span className="ml-auto lg:hidden font-mono text-[10px] tracking-[0.12em] uppercase border border-[oklch(0.145_0_0/25%)] bg-white px-2 py-1">Full page</span>
+              <span className="ml-auto font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.45_0_0)]">{active.skills.length} stages · select one to read</span>
             </div>
             <div className="h-px bg-[oklch(0.145_0_0)] shrink-0" />
 
@@ -114,7 +113,7 @@ export default function JourneyLoop() {
               <div className="max-w-[1280px] mx-auto px-4 lg:px-5 py-5">
                 <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.14em] uppercase text-[oklch(0.45_0_0)]">
                   <span className="h-px w-6 bg-[oklch(0.145_0_0)]" />
-                  {active.lane === 'foundation' ? 'Foundation workflow' : 'Cycle'} · {active.skills.length} stages
+                  {active.lane === 'foundation' ? 'Foundation' : 'Lifecycle'} · {active.skills.length} stages
                 </div>
                 <h2 className="font-display font-semibold text-[28px] lg:text-[38px] leading-[1.05] tracking-[-0.02em] mt-2">{active.title}</h2>
                 <p className="text-[15px] leading-[1.5] mt-2 text-[oklch(0.45_0_0)] max-w-[720px]">{active.oneLiner}</p>
@@ -129,12 +128,12 @@ export default function JourneyLoop() {
                 </div>
 
                 <div className="mt-6 flex items-center gap-3">
-                  <h3 className="font-display font-semibold text-[17px] tracking-[-0.01em]">AI skills — real skills</h3>
+                  <h3 className="font-display font-semibold text-[17px] tracking-[-0.01em]">AI skills for this practice</h3>
                   <span className="font-mono text-[10px] tracking-[0.12em] uppercase bg-[oklch(0.145_0_0)] text-white px-2 py-1">{active.skills.length} skills</span>
                   {allStaged && <span className="font-mono text-[10px] tracking-[0.12em] uppercase border border-[oklch(0.145_0_0/25%)] bg-white px-2 py-1 font-medium">{active.skills.length}/{active.skills.length} stages</span>}
                   <span className="h-px flex-1 bg-[oklch(0.145_0_0/12%)]" />
                 </div>
-                {allStaged && <p className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.45_0_0)] mt-2">{active.lane === 'foundation' ? 'Workflow coverage — one skill per stage' : 'Cycle coverage — one skill per stage'}</p>}
+                {allStaged && <p className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.45_0_0)] mt-2">{active.lane === 'foundation' ? 'Always-on foundation — one skill per stage' : 'Full lifecycle coverage — one skill per stage'}</p>}
 
                 {/* Rail + Reader shell */}
                 <div className="mt-3 grid lg:grid-cols-[240px_1fr] gap-0 border border-[oklch(0.145_0_0)] bg-white overflow-hidden">
@@ -147,8 +146,8 @@ export default function JourneyLoop() {
                     aria-label="Stage rail"
                   >
                     <div className="p-3 border-b border-[oklch(0.145_0_0/12%)] bg-[oklch(0.985_0_0)]">
-                      <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)]">Stages</p>
-                      <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.45_0_0)] mt-1">{active.skills.length} stages · click to read</p>
+                      <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)]">Lifecycle stages</p>
+                      <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.45_0_0)] mt-1">{active.skills.length} stages · select to read</p>
                     </div>
                     <div className="p-2 flex lg:flex-col gap-1.5 overflow-auto lg:overflow-visible">
                       {sortedSkills.map((s) => {
@@ -261,9 +260,9 @@ export default function JourneyLoop() {
                             )}
                             <div className="flex gap-2 pt-2 border-t border-[oklch(0.145_0_0/12%)]">
                               <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)]">
-                                {sortedSkills.findIndex((s) => s.name === selectedSkill.name) + 1} / {sortedSkills.length}
+                                Stage {sortedSkills.findIndex((s) => s.name === selectedSkill.name) + 1} of {sortedSkills.length}
                               </span>
-                              <span className="ml-auto font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)]">Click stage in rail to switch</span>
+                              <span className="ml-auto font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)]">Select another stage in the rail</span>
                             </div>
                           </div>
                         </motion.div>
@@ -271,8 +270,6 @@ export default function JourneyLoop() {
                     </AnimatePresence>
                   </div>
                 </div>
-
-                <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)] mt-3 text-center">Rail holds {sortedSkills.length} stages · reader shows 1 skill — structured monochrome</p>
               </div>
             </div>
           </motion.div>
