@@ -5,6 +5,7 @@ import { managements } from '../data/managements'
 export default function JourneyLoop() {
   const [open, setOpen] = useState<string | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
   const active = open ? managements.find((m) => m.id === open) ?? null : null
   const shouldReduceMotion = useReducedMotion()
   const totalSkills = managements.reduce((n, m) => n + m.skills.length, 0)
@@ -36,6 +37,7 @@ export default function JourneyLoop() {
         variants={gridVariants}
         initial="hidden"
         animate="visible"
+        onMouseLeave={() => setHoveredId(null)}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[oklch(0.145_0_0)] border border-[oklch(0.145_0_0)]"
       >
         {managements.map((m, idx) =>
@@ -48,10 +50,21 @@ export default function JourneyLoop() {
             variants={cardVariants}
             whileHover={shouldReduceMotion ? undefined : { y: -2, transition: { duration: 0.14 } }}
             whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
+            onHoverStart={() => setHoveredId(m.id)}
             onClick={() => setOpen(m.id)}
-            className="text-left bg-white p-4 flex flex-col min-h-[200px] relative overflow-hidden text-[oklch(0.145_0_0)] hover:bg-[oklch(0_0_0/2%)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.145_0_0)] focus-visible:ring-inset"
+            className="text-left bg-white p-4 flex flex-col min-h-[200px] relative overflow-hidden text-[oklch(0.145_0_0)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.145_0_0)] focus-visible:ring-inset"
             transition={shouldReduceMotion ? { duration: 0 } : ({ duration: 0.16, type: 'spring', stiffness: 600, damping: 30 } as const)}
           >
+            {!shouldReduceMotion && hoveredId === m.id && (
+              <motion.div
+                layoutId="grid-hover"
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: 'oklch(0 0 0 / 4%)' }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={shouldReduceMotion ? { duration: 0 } : ({ type: 'spring', stiffness: 480, damping: 38 } as const)}
+              />
+            )}
             <div className="flex items-center gap-2 shrink-0 font-mono text-[10px] tracking-[0.14em] uppercase text-[oklch(0.62_0_0)]">
               <span>{String(idx + 1).padStart(2, '0')} — {m.prefix}</span>
               <span className="h-px flex-1 bg-[oklch(0.145_0_0/12%)]" />
