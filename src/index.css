@@ -1,47 +1,34 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --color-graphite: #1a1d23;
-  --color-steel: #8a8f98;
-  --color-steel-20: #e8e9eb;
-  --color-offwhite: #fafaf7;
-  --color-hazard: #facc15;
-  --color-incident: #ef4444;
-  --color-problem: #a855f7;
-  --color-change: #f59e0b;
-  --color-knowledge: #6366f1;
-  --color-improvement: #10b981;
-  --color-asset: #3b82f6;
-  --color-request: #0ea5e9;
-  --color-ci: #475569;
-  --font-display: "Oswald", sans-serif;
-  --font-body: "Public Sans", system-ui, sans-serif;
+  --color-bg: oklch(0.985 0 0);
+  --color-fg: oklch(0.145 0 0);
+  --color-muted: oklch(0.45 0 0);
+  --color-muted-2: oklch(0.62 0 0);
+  --color-border: oklch(0.145 0 0 / 12%);
+  --color-border-strong: oklch(0.145 0 0);
+  --color-card: #ffffff;
+  --color-wash: oklch(0 0 0 / 4%);
+  --color-wash-strong: oklch(0 0 0 / 7%);
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
+  --font-serif2: "Newsreader", Georgia, serif;
 }
 
-/* Base */
 html { scrollbar-gutter: stable; }
 body {
   font-family: var(--font-body);
-  background: var(--color-offwhite);
-  color: var(--color-graphite);
+  background: oklch(0.985 0 0);
+  color: oklch(0.145 0 0);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
-
-/* Browser surfaces — cheap signal of craft */
-::selection { background: #1a1d23; color: #fafaf7; }
-* { caret-color: #ef4444; }
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: #e8e9eb; }
-::-webkit-scrollbar-thumb { background: #8a8f98; border-radius: 999px; }
-::-webkit-scrollbar-thumb:hover { background: #1a1d23; }
-:focus-visible { outline: 2px solid #f59e0b; outline-offset: 2px; }
-a { text-underline-offset: 3px; }
+::selection { background: oklch(0.145 0 0); color: oklch(0.985 0 0); }
+:focus-visible { outline: 2px solid oklch(0.145 0 0); outline-offset: 2px; }
 :where(.font-mono) { font-variant-numeric: tabular-nums; }
-
-/* Andon utilities */
-.andon-rail {
-  background: linear-gradient(to right, #1a1d23 0, #1a1d23 100%) 0 50% / 100% 2px no-repeat;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: oklch(0.145 0 0 / 12%); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: oklch(0.45 0 0); }

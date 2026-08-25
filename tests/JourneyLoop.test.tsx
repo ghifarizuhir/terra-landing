@@ -20,7 +20,7 @@ describe('JourneyLoop', () => {
 
     fireEvent.click(screen.getByRole('button', { name: '← Back to grid' }))
     fireEvent.click(screen.getByRole('button', { name: /Asset Management/ }))
-    const astHeading = screen.getAllByText('Asset Management').find((el) => el.tagName === 'H2')!
+    const astHeading = screen.getByRole('heading', { level: 2, name: /Asset Management/ })
     const overlay = astHeading.closest('.fixed') as HTMLElement
     expect(overlay).toBeTruthy()
     expect(within(overlay).getByText(/Workflow coverage — one skill per stage/i)).toBeInTheDocument()
