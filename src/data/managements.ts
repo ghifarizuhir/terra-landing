@@ -1034,6 +1034,7 @@ export const managements: Management[] = [
     skills: [
       {
         name: 'Trend detection',
+        stage: '01 · Detect signal',
         description: 'Use when many improvements share the same source or keywords but are treated as isolated and no systemic fix is created',
         overview: 'Trend detection spots repeating improvement themes across retro notes and postmortems. Core principle: repetition is the systemic signal — five “onboarding docs” improvements should become one.',
         whenToUse: [
@@ -1061,6 +1062,7 @@ export const managements: Management[] = [
       },
       {
         name: 'Suggestion mining',
+        stage: '02 · Mine ideas',
         description: 'Use when postmortems contain what could be better but no improvement is created and lessons stay in comments',
         overview: 'Suggestion mining extracts improvement candidates from incident comments and postmortems. Core principle: the postmortem already contains the improvement — “should / could / need to” are the signals.',
         whenToUse: [
@@ -1085,6 +1087,133 @@ export const managements: Management[] = [
           'Too long draft → not actionable. Fix: keep title <10 words + effort.',
         ],
         example: 'Comment “should add DB pool alert” → draft IMP “Add DB pool alert (effort S)”.',
+      },
+      {
+        name: 'Impact-effort ranker',
+        stage: '03 · Prioritize',
+        description: 'Use when the improvement backlog is ordered by whoever shouted last, tiny pet ideas outrank systemic fixes, and nobody can say why the top item is on top',
+        overview: 'Impact-effort ranker orders the improvement backlog by expected impact × confidence ÷ effort, where impact comes from evidence attached to each idea — how often the pain recurred, how many people or tickets it touches. Core principle: a backlog is a bet portfolio; rank it by expected return, not by recency or volume of complaining.',
+        whenToUse: [
+          'Improvement backlog exceeds what the team can do this quarter',
+          'Two ideas compete and the debate is opinion vs opinion',
+          'Small easy wins crowd out systemic improvements quarter after quarter',
+          'When NOT to use: compliance/security-mandated changes — they skip the queue by policy',
+        ],
+        corePattern: {
+          before: '// Before: loudest voice sorts the board\nbacklog.sort((a, b) => b.insistence - a.insistence)\n// systemic fix starves behind 12 quick cosmetic wins',
+          after: '// After: expected-return ranking\nconst ranked = backlog.map((i) => ({\n  id: i.id,\n  score: (evidence(i).recurrence * usersTouched(i) * i.confidence) / effortDays(i),\n})).sort((a, b) => b.score - a.score)\nreturn reviewTop(ranked.slice(0, 5))',
+        },
+        quickReference: {
+          headers: ['Factor', 'Source', 'Weight'],
+          rows: [
+            ['Recurrence of pain', 'Linked incidents/trends', '×3'],
+            ['People/tickets touched', 'Records', '×2'],
+            ['Confidence in effect', 'Author + history', '×1'],
+            ['Effort', 'Estimate S/M/L/XL', '÷ divisor'],
+          ],
+        },
+        how: 'Joins each improvement with its source evidence (mined suggestions carry incident links; trends carry cluster size), computes expected-return score with all factors shown inline, and presents the ranked top slice for human confirmation. Scores are transparent arithmetic — every factor is inspectable so the order can be argued and overridden.',
+        commonMistakes: [
+          'Opaque scoring → team distrusts and ignores the order. Fix: show factors next to every score.',
+          'Impact without recurrence evidence → popularity contest returns. Fix: require linked signals.',
+          'Ranking as auto-reordering → planners bypassed. Fix: propose order, humans commit to it.',
+        ],
+        example: '“DB pool alert” (S, 9 recurrences, 40 users) outscores “restyle status page” (S, 0 links) → ranked #1 for the sprint with its arithmetic shown.',
+      },
+      {
+        name: 'Progress tracker',
+        stage: '04 · Implement & track',
+        description: 'Use when improvement items enter the board full of energy and die there silently — proposed forever, in_progress with no commits, done meaning nothing happened',
+        overview: 'Progress tracker watches each improvement for actual motion across proposed → in_progress → done and surfaces stalled work with age-and-owner evidence before it fossilizes. Core principle: an improvement board works only if stale entries are embarrassing — visibility with gentle pressure is the whole mechanism.',
+        whenToUse: [
+          'Items sit proposed/in_progress past their due dates with no updates',
+          'Weekly sync spends its time asking “what happened to that one?”',
+          'Board shows 40% done but nothing measurably changed',
+          'When NOT to use: item is actively moving with fresh updates — no signal needed',
+        ],
+        corePattern: {
+          before: '// Before: silent rot\nimprovements.filter(i => i.status === "proposed") // 23 items, oldest: 14 months\n// nobody remembers why any of them mattered',
+          after: '// After: stall detection with context\nwatchProgress(improvements, {staleAfterDays: 21})\nonStall((item) => flagWith({ageDays, owner, lastEvent})) // unblock or close honestly',
+        },
+        quickReference: {
+          headers: ['Signal', 'Flag', 'Proposal'],
+          rows: [
+            ['No update >21d', 'Stalled', 'unblock or descope'],
+            ['Due date passed', 'Overdue', 're-commit or drop'],
+            ['In_progress >2× estimate', 'Bleeding', 'split or re-estimate'],
+            ['Done but unverified', 'Pretend-done', 'route to verifier'],
+          ],
+        },
+        how: 'Tracks state transitions and event freshness per item; when staleness thresholds trip, attaches the evidence package (age, owner, last event, original rationale link from mining) and proposes one of three honest exits: unblock, re-commit with new date, or close as won’t-do. Humans choose — the tracker only makes drift visible.',
+        commonMistakes: [
+          'Nagging daily → flags muted like approval spam. Fix: one well-evidenced flag per threshold.',
+          'Closing stalled items silently → ideas vanish without learning. Fix: closure requires a reason.',
+          'Tracking activity instead of progress (“updated docs” ≠ moved metric). Fix: events tied to stages.',
+        ],
+        example: '“Add DB pool alert” stuck in_progress 34 days → flagged with owner + last event → team splits alerting from dashboard work, first half ships next sprint.',
+      },
+      {
+        name: 'Outcome verifier',
+        stage: '05 · Verify outcome',
+        description: 'Use when improvements get marked done the moment the task closes, while nobody checks whether the metric they promised actually moved',
+        overview: 'Outcome verifier compares the target metric after implementation against the pre-improvement baseline and issues a verdict: verified, partial, or no effect. Core principle: task completion is not improvement — the metric is the only judge, and it votes after, not before.',
+        whenToUse: [
+          'Implementation marked done with a stated target (“cut MTTR”, “fewer misrouted requests”)',
+          'Quarterly review: which shipped improvements actually paid off?',
+          'Deciding whether to double down, adjust, or abandon an approach',
+          'When NOT to use: improvement has no measurable target defined — send back to planning with a metric requirement',
+        ],
+        corePattern: {
+          before: '// Before: done means done\nimp.close() // “alert added” ✓\n// MTTR unchanged; nobody noticed because nobody looked',
+          after: '// After: metric decides\nconst v = verify({\n  metric: imp.target,           // e.g. MTTR for APP-004\n  baseline: windowBefore(imp.doneDate, 30),\n  after: windowAfter(imp.doneDate, 30),\n}) // {verdict: "verified", delta: "-22%"}\nreturn attachEvidence(v)',
+        },
+        quickReference: {
+          headers: ['Metric delta vs baseline', 'Verdict', 'Next'],
+          rows: [
+            ['Improved ≥20%', 'Verified', 'propose embed + close'],
+            ['Improved <20%', 'Partial', 'iterate or accept'],
+            ['Flat / worse', 'No effect', 'reopen investigation'],
+            ['No target metric', 'Unverifiable', 'return to planning'],
+          ],
+        },
+        how: 'Resolves each improvement’s target to a measurable series (incident metrics, request volumes, KB success rates), builds a pre/post window around completion, and reports the delta with sample sizes so noise is visible. Verdicts attach to the record permanently — feeding practice embedder on success and progress tracker on failure. Humans decide iteration vs acceptance.',
+        commonMistakes: [
+          'Short windows read noise as victory. Fix: symmetric 30-day windows minimum.',
+          'Ignoring confounders (another fix landed same week). Fix: note overlapping changes in evidence.',
+          'Verifying only successes → survivorship bias in the board. Fix: verdict required for every done.',
+        ],
+        example: '“DB pool alert” done → MTTR for checkout incidents: 42 min → 33 min over matched 30-day windows = −21% → verified, forwarded for embedding into runbooks.',
+      },
+      {
+        name: 'Practice embedder',
+        stage: '06 · Embed & close',
+        description: 'Use when verified improvements stay personal wins — the person who fixed it leaves, and six months later the same problem needs the same heroics again',
+        overview: 'Practice embedder converts a verified improvement into the default way of working: runbook steps, checklists, policy lines, catalog defaults — then closes with adoption evidence. Core principle: improvement is not finished when it works once; it is finished when working that way is unavoidable.',
+        whenToUse: [
+          'Improvement verified by outcome data and ready to become standard',
+          'A fix lives in one engineer’s muscle memory or private notes',
+          'Similar work keeps being done differently per shift or per person',
+          'When NOT to use: outcome unverified — embed facts only after the verifier says they hold',
+        ],
+        corePattern: {
+          before: '// Before: heroics are the process\nimp.close() // alert lives in Dina’s head\n// Dina leaves → next pool exhaustion repeats the discovery, full price',
+          after: '// After: standardize, then rest\nembed({\n  runbookUpdates: [steps §4],\n  checklistAdds: ["check pool saturation"],\n}) // adoption confirmed → close with evidence',
+        },
+        quickReference: {
+          headers: ['Target', 'Artifact', 'Adoption proof'],
+          rows: [
+            ['Incident response', 'Runbook section', 'used in next N incidents'],
+            ['Request handling', 'Catalog default/checklist', 'fulfillers follow it'],
+            ['Recurring risk', 'Policy/checklist line', 'audit passes'],
+          ],
+        },
+        how: 'Proposes concrete artifact edits — which runbook section, which checklist line, which policy paragraph — derived from the implemented change and its verified evidence. After edits land, tracks early adoption (artifacts referenced in real work) and only then proposes closure. Humans write and approve artifacts; the embedder keeps them from evaporating.',
+        commonMistakes: [
+          'Embedding by memo (“team please start doing X”) → memory-hole. Fix: edit the actual artifact.',
+          'Closing at embed proposal, before adoption evidence. Fix: close requires usage signal.',
+          'Embedding unverified improvements → standardizing a mistake. Fix: gate on verifier verdict.',
+        ],
+        example: 'Verified pool alerting → embedder drafts runbook §4 “check pool saturation first” + triage checklist line → used in next 3 checkout incidents → closed as adopted.',
       },
     ],
     color: 'bg-emerald-500', icon: 'TrendingUp', order: 5, lane: 'cycle'

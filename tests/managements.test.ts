@@ -61,6 +61,15 @@ describe('managements data', () => {
       'Capture', 'Structure & review', 'Publish & target', 'Find & surface', 'Use & feedback', 'Maintain & retire',
     ])
   })
+  it('improvement covers the full 6-stage cycle, one skill per stage, in order', () => {
+    const imp = managements.find(m => m.prefix === 'IMP-')!
+    expect(imp.skills).toHaveLength(6)
+    for (const s of imp.skills) expect(s.stage).toBeTruthy()
+    const stages = [...imp.skills].map(s => s.stage!).sort((a, b) => a.localeCompare(b))
+    expect(stages.map(s => s.replace(/^0[0-9] · /, ''))).toEqual([
+      'Detect signal', 'Mine ideas', 'Prioritize', 'Implement & track', 'Verify outcome', 'Embed & close',
+    ])
+  })
   it('has 5 default skills', () => {
     expect(defaultSkills).toHaveLength(5)
   })

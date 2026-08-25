@@ -53,4 +53,11 @@ describe('JourneyLoop', () => {
     expect(screen.getAllByText('01 · Capture').length).toBeGreaterThanOrEqual(2)
     expect(screen.getAllByText('06 · Maintain & retire').length).toBeGreaterThanOrEqual(2)
   })
+  it('shows cycle strip for Continual Improvement too', () => {
+    render(<JourneyLoop />)
+    fireEvent.click(screen.getByRole('button', { name: /Continual Improvement/ }))
+    expect(screen.getByText(/Cycle coverage — one skill per stage/i)).toBeInTheDocument()
+    expect(screen.getAllByText('01 · Detect signal').length).toBeGreaterThanOrEqual(2)
+    expect(screen.getAllByText('06 · Embed & close').length).toBeGreaterThanOrEqual(2)
+  })
 })
