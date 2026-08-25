@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -9,12 +9,9 @@
   --color-border: oklch(0.145 0 0 / 12%);
   --color-border-strong: oklch(0.145 0 0);
   --color-card: #ffffff;
-  --color-wash: oklch(0 0 0 / 4%);
-  --color-wash-strong: oklch(0 0 0 / 7%);
-  --font-display: "Instrument Serif", Georgia, serif;
-  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-  --font-serif2: "Newsreader", Georgia, serif;
+  --font-display: "IBM Plex Sans", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
 }
 
 html { scrollbar-gutter: stable; }
@@ -30,5 +27,5 @@ body {
 :where(.font-mono) { font-variant-numeric: tabular-nums; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: oklch(0.145 0 0 / 12%); border-radius: 999px; }
+::-webkit-scrollbar-thumb { background: oklch(0.145 0 0 / 12%); border-radius: 0; }
 ::-webkit-scrollbar-thumb:hover { background: oklch(0.45 0 0); }

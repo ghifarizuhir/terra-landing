@@ -31,7 +31,7 @@ export default function JourneyLoop() {
 
   return (
     <>
-      {/* Editorial grid — 1px rule system, numerics 01—08, wash hover */}
+      {/* Structured grid — 1px rule system, numerics 01—08, flat cards */}
       <motion.div
         variants={gridVariants}
         initial="hidden"
@@ -47,33 +47,30 @@ export default function JourneyLoop() {
             whileHover={shouldReduceMotion ? undefined : { y: -2, transition: { duration: 0.14 } }}
             whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
             onClick={() => setOpen(m.id)}
-            className="text-left bg-white p-4 flex flex-col min-h-[214px] relative overflow-hidden text-[oklch(0.145_0_0)] hover:bg-[oklch(0_0_0/2%)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.145_0_0)] focus-visible:ring-inset"
+            className="text-left bg-white p-4 flex flex-col min-h-[200px] relative overflow-hidden text-[oklch(0.145_0_0)] hover:bg-[oklch(0_0_0/2%)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.145_0_0)] focus-visible:ring-inset"
             transition={shouldReduceMotion ? { duration: 0 } : ({ duration: 0.16, type: 'spring', stiffness: 600, damping: 30 } as const)}
           >
             <div className="flex items-center gap-2 shrink-0 font-mono text-[10px] tracking-[0.14em] uppercase text-[oklch(0.62_0_0)]">
               <span>{String(idx + 1).padStart(2, '0')} — {m.prefix}</span>
               <span className="h-px flex-1 bg-[oklch(0.145_0_0/12%)]" />
-              <span className="border border-[oklch(0.145_0_0)] px-1.5 py-0.5 bg-white text-[oklch(0.145_0_0)] text-[9px] tracking-[0.12em] hidden xl:inline">{m.lane}</span>
+              <span className="border border-[oklch(0.145_0_0/25%)] px-1.5 py-0.5 bg-white text-[oklch(0.45_0_0)] text-[9px] tracking-[0.12em] hidden xl:inline">{m.lane}</span>
             </div>
-            <h3 className="font-mono text-[11px] font-bold tracking-[0.1em] uppercase leading-tight mt-2 shrink-0">{m.title}</h3>
-            <p className="font-serif2 text-[19px] leading-[1.22] tracking-[-0.02em] mt-1 shrink-0">
-              {m.oneLiner.replace(/\.$/, '')}
-              <em className="italic text-[oklch(0.45_0_0)]">.</em>
-            </p>
+            <h3 className="font-semibold text-[13px] tracking-[-0.01em] leading-tight mt-2 shrink-0">{m.title}</h3>
+            <p className="text-[12.5px] leading-[1.4] mt-1 text-[oklch(0.45_0_0)] shrink-0 line-clamp-2">{m.oneLiner}</p>
             <div className="mt-2 space-y-1 shrink-0">
-              <p className="font-mono text-[9px] tracking-[0.12em] uppercase font-semibold text-[oklch(0.62_0_0)]">Does</p>
-              <p className="text-[11.5px] leading-[1.5] text-[oklch(0.45_0_0)] line-clamp-2">{m.bullets[0]}</p>
-              <p className="hidden lg:block text-[11.5px] leading-[1.5] text-[oklch(0.45_0_0)] line-clamp-1 opacity-80">{m.bullets[1]}</p>
+              <p className="font-mono text-[9px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">Does</p>
+              <p className="text-[11.5px] leading-[1.45] text-[oklch(0.45_0_0)] line-clamp-2">{m.bullets[0]}</p>
+              <p className="hidden lg:block text-[11.5px] leading-[1.45] text-[oklch(0.45_0_0)] line-clamp-1 opacity-80">{m.bullets[1]}</p>
             </div>
             <div className="mt-3 flex flex-wrap gap-1.5 shrink-0 border-t border-[oklch(0.145_0_0/12%)] pt-2.5">
               <span className="font-mono text-[9px] tracking-[0.1em] uppercase text-[oklch(0.62_0_0)] w-full">AI skills →</span>
               {m.skills.slice(0, 2).map((s) => (
-                <span key={s.name} className="font-mono text-[9px] tracking-[0.1em] uppercase bg-[oklch(0.145_0_0)] text-white px-2 py-1 rounded-full">
+                <span key={s.name} className="font-mono text-[9px] tracking-[0.08em] uppercase bg-[oklch(0.145_0_0)] text-white px-1.5 py-1">
                   {s.name}
                 </span>
               ))}
               {m.skills.length > 2 && (
-                <span className="font-mono text-[9px] tracking-[0.1em] uppercase border border-[oklch(0.145_0_0/12%)] bg-white px-2 py-1 rounded-full font-semibold">
+                <span className="font-mono text-[9px] tracking-[0.08em] uppercase border border-[oklch(0.145_0_0/25%)] bg-white px-1.5 py-1 font-medium">
                   +{m.skills.length - 2}
                 </span>
               )}
@@ -89,7 +86,7 @@ export default function JourneyLoop() {
         <span className="h-px flex-1 bg-[oklch(0.145_0_0/12%)]" />
       </div>
 
-      {/* Detail A — Rail + Reader */}
+      {/* Detail — Rail + Reader */}
       <AnimatePresence>
         {active && (
           <motion.div
@@ -106,10 +103,10 @@ export default function JourneyLoop() {
                 ← Back to grid
               </button>
               <span className="h-8 w-px bg-[oklch(0.145_0_0/12%)] hidden sm:block" />
-              <span className="font-mono text-[11px] tracking-[0.12em] uppercase font-semibold bg-[oklch(0.145_0_0)] text-white px-2 py-1 hidden sm:inline">{active.prefix}</span>
-              <span className="font-display text-[13px] tracking-[0.08em] uppercase font-bold hidden sm:inline">{active.title}</span>
+              <span className="font-mono text-[11px] tracking-[0.12em] uppercase font-medium bg-[oklch(0.145_0_0)] text-white px-2 py-1 hidden sm:inline">{active.prefix}</span>
+              <span className="text-[13px] font-semibold tracking-[-0.01em] hidden sm:inline">{active.title}</span>
               <span className="ml-auto font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.45_0_0)] hidden lg:inline">Rail + Reader · 1 skill focus</span>
-              <span className="ml-auto lg:hidden font-mono text-[10px] tracking-[0.12em] uppercase border border-[oklch(0.145_0_0)] bg-white px-2 py-1">Full page</span>
+              <span className="ml-auto lg:hidden font-mono text-[10px] tracking-[0.12em] uppercase border border-[oklch(0.145_0_0/25%)] bg-white px-2 py-1">Full page</span>
             </div>
             <div className="h-px bg-[oklch(0.145_0_0)] shrink-0" />
 
@@ -119,27 +116,25 @@ export default function JourneyLoop() {
                   <span className="h-px w-6 bg-[oklch(0.145_0_0)]" />
                   {active.lane === 'foundation' ? 'Foundation workflow' : 'Cycle'} · {active.skills.length} stages
                 </div>
-                <h2 className="font-display text-[32px] lg:text-[42px] leading-[0.9] tracking-[-0.03em] mt-2">
-                  {active.title.replace(' Management', '')} <em className="font-serif2 italic font-light text-[oklch(0.45_0_0)]">Management</em>
-                </h2>
-                <p className="font-serif2 text-[18px] leading-[1.4] mt-2 text-[oklch(0.45_0_0)] max-w-[720px]">{active.oneLiner}</p>
+                <h2 className="font-display font-semibold text-[28px] lg:text-[38px] leading-[1.05] tracking-[-0.02em] mt-2">{active.title}</h2>
+                <p className="text-[15px] leading-[1.5] mt-2 text-[oklch(0.45_0_0)] max-w-[720px]">{active.oneLiner}</p>
 
                 <div className="mt-5 grid lg:grid-cols-3 gap-px bg-[oklch(0.145_0_0/12%)] border border-[oklch(0.145_0_0/12%)]">
                   {active.bullets.map((b, i) => (
                     <div key={b} className="bg-white p-3">
-                      <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-semibold text-[oklch(0.62_0_0)]">0{i + 1} — What it does</div>
+                      <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">0{i + 1} — What it does</div>
                       <p className="text-[12.5px] leading-[1.55] mt-1">{b}</p>
                     </div>
                   ))}
                 </div>
 
                 <div className="mt-6 flex items-center gap-3">
-                  <h3 className="font-display text-[18px] font-bold tracking-tight">AI skills — real skills</h3>
+                  <h3 className="font-display font-semibold text-[17px] tracking-[-0.01em]">AI skills — real skills</h3>
                   <span className="font-mono text-[10px] tracking-[0.12em] uppercase bg-[oklch(0.145_0_0)] text-white px-2 py-1">{active.skills.length} skills</span>
-                  {allStaged && <span className="font-mono text-[10px] tracking-[0.12em] uppercase border border-[oklch(0.145_0_0)] bg-white px-2 py-1 font-semibold">{active.skills.length}/{active.skills.length} stages</span>}
+                  {allStaged && <span className="font-mono text-[10px] tracking-[0.12em] uppercase border border-[oklch(0.145_0_0/25%)] bg-white px-2 py-1 font-medium">{active.skills.length}/{active.skills.length} stages</span>}
                   <span className="h-px flex-1 bg-[oklch(0.145_0_0/12%)]" />
                 </div>
-                {allStaged && <p className="font-mono text-[10px] tracking-[0.12em] uppercase font-semibold text-[oklch(0.45_0_0)] mt-2">{active.lane === 'foundation' ? 'Workflow coverage — one skill per stage' : 'Cycle coverage — one skill per stage'}</p>}
+                {allStaged && <p className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.45_0_0)] mt-2">{active.lane === 'foundation' ? 'Workflow coverage — one skill per stage' : 'Cycle coverage — one skill per stage'}</p>}
 
                 {/* Rail + Reader shell */}
                 <div className="mt-3 grid lg:grid-cols-[240px_1fr] gap-0 border border-[oklch(0.145_0_0)] bg-white overflow-hidden">
@@ -165,16 +160,15 @@ export default function JourneyLoop() {
                             onClick={() => setSelected(s.name)}
                             className={`text-left border p-2.5 shrink-0 lg:shrink font-mono min-w-[180px] lg:min-w-0 ${isActive ? 'bg-[oklch(0.145_0_0)] text-white border-[oklch(0.145_0_0)]' : 'bg-white border-[oklch(0.145_0_0/12%)] hover:bg-[oklch(0_0_0/3%)]'}`}
                           >
-                            <div className="text-[9px] tracking-[0.1em] uppercase font-bold">{s.stage}</div>
+                            <div className="text-[9px] tracking-[0.1em] uppercase font-medium">{s.stage}</div>
                             <div className={`text-[10px] leading-[1.4] mt-1 line-clamp-2 ${isActive ? 'text-white/80' : 'text-[oklch(0.45_0_0)]'}`}>{s.name}</div>
                           </motion.button>
                         )
                       })}
                     </div>
                     <div className="hidden lg:block mt-auto border-t border-[oklch(0.145_0_0/12%)] p-3">
-                      <div className="border-l-2 border-[oklch(0.145_0_0)] pl-2.5 py-1">
-                        <p className="font-serif2 italic text-[12px] leading-[1.4] text-[oklch(0.45_0_0)]">“A {active.lane === 'foundation' ? 'map' : 'ticket'} is not done when it says closed — it is done when its records explain what happened.”</p>
-                      </div>
+                      <p className="font-mono text-[9px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">Principle</p>
+                      <p className="text-[11.5px] leading-[1.5] text-[oklch(0.45_0_0)] mt-1">A {active.lane === 'foundation' ? 'map' : 'ticket'} is not done when it says closed — it is done when its records explain what happened.</p>
                     </div>
                   </motion.nav>
 
@@ -192,18 +186,18 @@ export default function JourneyLoop() {
                         >
                           <div className="p-4 border-b border-[oklch(0.145_0_0/12%)] bg-[oklch(0.985_0_0)]">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-mono text-[11px] tracking-[0.1em] uppercase font-bold bg-[oklch(0.145_0_0)] text-white inline-block px-2 py-1">{selectedSkill.name}</span>
-                              {selectedSkill.stage && <span className="font-mono text-[9px] tracking-[0.1em] uppercase font-semibold border border-[oklch(0.145_0_0)] bg-white px-1.5 py-0.5">{selectedSkill.stage}</span>}
+                              <span className="font-mono text-[11px] tracking-[0.1em] uppercase font-medium bg-[oklch(0.145_0_0)] text-white inline-block px-2 py-1">{selectedSkill.name}</span>
+                              {selectedSkill.stage && <span className="font-mono text-[9px] tracking-[0.1em] uppercase font-medium border border-[oklch(0.145_0_0/25%)] bg-white px-1.5 py-0.5">{selectedSkill.stage}</span>}
                             </div>
                             {selectedSkill.description && <p className="font-mono text-[11px] leading-[1.45] mt-2 bg-white border border-[oklch(0.145_0_0/12%)] p-2">{selectedSkill.description}</p>}
                           </div>
                           <div className="p-4 space-y-4">
                             <div>
-                              <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-semibold text-[oklch(0.62_0_0)]">Overview</div>
+                              <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">Overview</div>
                               <p className="text-[12.5px] leading-[1.6] mt-1">{selectedSkill.overview}</p>
                             </div>
                             <div>
-                              <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-semibold text-[oklch(0.62_0_0)]">When to use</div>
+                              <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">When to use</div>
                               {Array.isArray(selectedSkill.whenToUse) ? (
                                 <ul className="mt-1 space-y-1 list-disc pl-4 text-[11px] leading-[1.6] text-[oklch(0.45_0_0)]">
                                   {selectedSkill.whenToUse.map((w) => (
@@ -216,7 +210,7 @@ export default function JourneyLoop() {
                             </div>
                             {selectedSkill.corePattern && (
                               <div>
-                                <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-semibold text-[oklch(0.62_0_0)]">Core Pattern</div>
+                                <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">Core Pattern</div>
                                 <div className="mt-1 grid gap-2">
                                   <pre className="bg-[oklch(0.145_0_0)] text-white p-2.5 text-[10px] leading-[1.45] overflow-auto">{selectedSkill.corePattern.before}</pre>
                                   <pre className="bg-white border border-[oklch(0.145_0_0)] p-2.5 text-[10px] leading-[1.45] overflow-auto">{selectedSkill.corePattern.after}</pre>
@@ -225,12 +219,12 @@ export default function JourneyLoop() {
                             )}
                             {selectedSkill.quickReference && (
                               <div>
-                                <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-semibold text-[oklch(0.62_0_0)]">Quick Reference</div>
+                                <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">Quick Reference</div>
                                 <table className="mt-1 w-full border border-[oklch(0.145_0_0/12%)] text-[11px]">
                                   <thead>
                                     <tr className="bg-[oklch(0.145_0_0)] text-white">
                                       {selectedSkill.quickReference.headers.map((h) => (
-                                        <th key={h} className="text-left px-2 py-1.5 font-mono text-[10px] tracking-[0.12em] uppercase">{h}</th>
+                                        <th key={h} className="text-left px-2 py-1.5 font-mono text-[10px] tracking-[0.12em] uppercase font-medium">{h}</th>
                                       ))}
                                     </tr>
                                   </thead>
@@ -247,12 +241,12 @@ export default function JourneyLoop() {
                               </div>
                             )}
                             <div>
-                              <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-semibold text-[oklch(0.62_0_0)]">Implementation</div>
+                              <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">Implementation</div>
                               <p className="text-[11px] leading-[1.6] text-[oklch(0.45_0_0)] font-mono mt-1 bg-[oklch(0.985_0_0)] border border-[oklch(0.145_0_0/12%)] p-2.5">{selectedSkill.how}</p>
                             </div>
                             {selectedSkill.commonMistakes && (
                               <div>
-                                <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-semibold text-[oklch(0.62_0_0)]">Common Mistakes</div>
+                                <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">Common Mistakes</div>
                                 <ul className="mt-1 space-y-1 list-disc pl-4 text-[11px] leading-[1.6] text-[oklch(0.45_0_0)]">
                                   {selectedSkill.commonMistakes.map((mm) => (
                                     <li key={mm}>{mm}</li>
@@ -278,7 +272,7 @@ export default function JourneyLoop() {
                   </div>
                 </div>
 
-                <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)] mt-3 text-center">Rail holds 7 stages · reader shows 1 skill — monochrome 1px rule</p>
+                <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)] mt-3 text-center">Rail holds {sortedSkills.length} stages · reader shows 1 skill — structured monochrome</p>
               </div>
             </div>
           </motion.div>
