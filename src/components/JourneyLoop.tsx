@@ -42,6 +42,16 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
   const [copied, setCopied] = useState<string | null>(null)
   const active = open ? managements.find((m) => m.id === open) ?? null : null
   const shouldReduceMotion = useReducedMotion()
+  const tipById: Record<string, string> = {
+    incident: 'Restore first, then learn — triage → war-room → close hands off to Problem & Knowledge.',
+    request: 'Requests ≠ incidents — validate completeness once, route by policy, confirm delivery explicitly.',
+    problem: 'From repeats to root cause — cluster → RCA draft → known error until fix is verified.',
+    change: 'Plan → risk score → approve → verify — every change leaves an audit trail.',
+    knowledge: 'Capture from resolutions, structure for findability, retire stale — search quality is the test.',
+    improvement: 'Trends → suggestions → backlog → impact review — improvement is a loop, not a ticket.',
+    asset: 'Receive → classify → operate → audit → retire — if it’s not in the register, it doesn’t exist.',
+    'service-map': 'Register CIs, map dependencies, predict blast radius — the map is the foundation for impact.',
+  }
 
   const copy = async (text: string, key: string) => {
     try { await navigator.clipboard.writeText(text) } catch { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove() }
@@ -207,7 +217,7 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                 <span className="h-6 w-px bg-[#eaeaea] hidden sm:block" />
                 <span className="font-mono text-[11px] tracking-wide uppercase bg-black text-white px-2 py-1 rounded-full hidden sm:inline">{active.prefix}</span>
                 <span className="text-[13px] font-medium tracking-tight hidden sm:inline">{active.title}</span>
-              <span className="ml-auto font-mono text-[11px] text-[#999]">{active.skills.length} stages · select one to read</span>
+              <span className="ml-auto font-mono text-[11px] text-[#999]">{active.skills.length} stages</span>
               </div>
             </div>
 
@@ -249,12 +259,9 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                 <div className="mt-4 grid lg:grid-cols-[240px_1fr] gap-0 rounded-xl border border-[#eaeaea] overflow-hidden bg-white shadow-sm">
                   {/* Rail — sticky on both */}
                   <nav className="sticky top-0 z-10 lg:static border-b lg:border-b-0 lg:border-r border-[#eaeaea] bg-white flex flex-col max-lg:overflow-hidden" aria-label="Stage rail">
-                    <div className="px-3 py-3 border-b border-[#eaeaea] bg-[#fafafa] flex items-center justify-between gap-3">
-                      <div>
-                        <p className="font-mono text-[11px] tracking-wide uppercase text-[#999]">Stages</p>
-                        <p className="font-mono text-[11px] text-[#111] mt-0.5">{sortedSkills.findIndex((s) => s.name === selectedSkill?.name) + 1} / {active.skills.length} · tap to switch</p>
-                      </div>
-                      <span className="hidden sm:inline-flex font-mono text-[10px] tracking-wide uppercase bg-white border border-[#eaeaea] px-2 py-1 rounded-full text-[#666]">Scrollable →</span>
+                    <div className="px-3 py-3 border-b border-[#eaeaea] bg-[#fafafa]">
+                      <p className="font-mono text-[11px] tracking-wide uppercase text-[#999]">Stages</p>
+                      <p className="font-mono text-[11px] text-[#111] mt-0.5">{sortedSkills.findIndex((s) => s.name === selectedSkill?.name) + 1} / {active.skills.length} · {active.skills.length} stages</p>
                     </div>
                     <div className="p-2 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible snap-x snap-mandatory scrollbar-thin">
                       {sortedSkills.map((s) => {
@@ -277,8 +284,8 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                       })}
                     </div>
                     <div className="hidden lg:block mt-auto border-t border-[#eaeaea] p-3 bg-[#fafafa]">
-                      <p className="font-mono text-[11px] tracking-wide uppercase text-[#999]">Tip</p>
-                      <p className="text-[12px] leading-[1.5] text-[#666] mt-1">Start at 01 and read forward — each stage builds on the previous. Use ← → to navigate.</p>
+                      <p className="font-mono text-[11px] tracking-wide uppercase text-[#999]">In practice</p>
+                      <p className="text-[12px] leading-[1.5] text-[#666] mt-1">{active ? tipById[active.id] ?? tipById.incident : ''}</p>
                     </div>
                   </nav>
 
