@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import JourneyLoop from './components/JourneyLoop'
+import SkillsFlowDiagram from './components/SkillsFlowDiagram'
 import { managements } from './data/managements'
 
 export default function App() {
@@ -115,6 +116,8 @@ export default function App() {
           </div>
         </div>
       </section>
+
+      <SkillsFlowDiagram />
 
       {/* Controls search + tabs like skills.sh leaderboard */}
       <div className="max-w-[1100px] mx-auto w-full px-6 pt-6">

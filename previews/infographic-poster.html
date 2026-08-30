@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, initial-scale=1" />
+<title>Terra — Infographic Poster 1080×1350</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Oswald:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--yellow:#FAFF00;--graphite:#0a0a0a;--steel:#141414;--line:#EAEAEA}
+  body{background:#fff;margin:0;padding:0;font-family:'Public Sans',system-ui,sans-serif;overflow:hidden}
+  .sheet{
+    width:1080px;height:1350px;background:#fff;overflow:hidden;display:flex;flex-direction:column;
+  }
+  /* top rail */
+  .rail{height:28px;background:#141414;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0}
+  .rail-left{display:flex;align-items:center;gap:10px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);box-shadow:0 0 10px rgba(250,255,0,.6)}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .oswald{font-family:'Oswald',sans-serif}
+  .cord{height:7px;background:#1a1a1a;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:14px;padding:0 18px;overflow:hidden;flex-shrink:0}
+  .cord i{display:block;height:7px;width:18px;background:var(--yellow);transform:skewX(-18deg);flex-shrink:0}
+  /* header */
+  .header{padding:22px 36px 18px;background:#0a0a0a;color:#fff;position:relative}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow)}
+  .h1{font-family:'Oswald',sans-serif;font-weight:700;font-size:42px;letter-spacing:-.03em;line-height:.95;margin-top:10px}
+  .h1 em{font-style:normal;color:rgba(255,255,255,.55);font-weight:500}
+  .sub{font-size:14px;line-height:1.55;color:rgba(255,255,255,.58);max-width:720px;margin-top:12px}
+  .meta-row{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+  .pill{font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7);background:rgba(255,255,255,.04)}
+  .pill.yellow{background:var(--yellow);color:#000;border-color:#000;font-weight:600}
+  .pill.white{background:#fff;color:#000;border-color:#fff}
+  /* 8 grid */
+  .grid-wrap{padding:18px 24px 14px;background:#fff;flex:1}
+  .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .section-head b{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#999}
+  .section-head span{font-family:'JetBrains Mono',monospace;font-size:11px;color:#999}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .card{border:1px solid #EAEAEA;border-radius:14px;padding:14px 14px 12px;background:#fff;position:relative;overflow:hidden}
+  .card-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .prefix{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;border:1px solid #EAEAEA;background:#fff;padding:3px 6px;border-radius:6px;color:#666}
+  .lane{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#999;margin-left:auto}
+  .title{font-weight:700;font-size:15px;letter-spacing:-.01em;line-height:1}
+  .oneLiner{font-size:12.5px;line-height:1.5;color:#666;margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .skills{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+  .skill{font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:4px 8px;border-radius:999px;background:#000;color:#fff}
+  .skill.ghost{background:#fff;border:1px solid #EAEAEA;color:#666}
+  .dot-c{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  /* flow */
+  .flow{margin-top:14px;border:1px solid #111;border-radius:14px;overflow:hidden}
+  .flow-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#FAFAFA;border-bottom:1px solid #EAEAEA}
+  .flow-head b{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#111}
+  .flow-head i{font-family:'JetBrains Mono',monospace;font-size:11px;color:#999;font-style:normal}
+  .flow-body{padding:14px 14px 12px;background:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:6px;position:relative}
+  .flow-body::before{content:'';position:absolute;left:30px;right:30px;top:28px;height:2px;background:#111}
+  .flow-step{width:108px;display:flex;flex-direction:column;align-items:center;gap:7px;position:relative;z-index:1;text-align:center}
+  .num{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;border:2px solid #111;background:#fff}
+  .num.active{background:var(--yellow)}
+  .num.past{background:#111;color:#fff}
+  .step-label{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;line-height:1}
+  .step-sub{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#999}
+  .flow-example{margin:0 14px 12px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .ex{border:1px solid #EAEAEA;background:#FAFAFA;border-radius:10px;padding:8px;text-align:center}
+  .ex b{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#999;display:block}
+  .ex span{font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.35;display:block;margin-top:4px;color:#111}
+  /* before after */
+  .ba{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;border:1px solid #111;border-radius:14px;overflow:hidden}
+  .ba>div{padding:14px 16px}
+  .ba b{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .ba ul{margin-top:10px;list-style:none;display:grid;gap:6px}
+  .ba li{font-size:12.5px;line-height:1.45;display:flex;gap:8px}
+  .ba-left{background:#fff;color:#111}
+  .ba-right{background:var(--yellow);color:#000}
+  .footnote{margin-top:10px;display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#999}
+  .footnote i{flex:1;height:1px;background:#EAEAEA;display:block}
+  /* footer */
+  .footer{height:36px;border-top:1px solid #EAEAEA;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#999;flex-shrink:0}
+  .tag{position:absolute;top:22px;right:36px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:var(--yellow);color:#000;padding:6px 10px;border-radius:999px;border:1px solid #000}
+  @media print{.sheet{box-shadow:none;border:none}}
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="rail">
+      <div class="rail-left">
+        <span class="dot"></span>
+        <span class="mono" style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)">How a skill works</span>
+        <span class="mono" style="font-size:11px;color:rgba(255,255,255,.25)">·</span>
+        <span class="mono" style="font-size:11px;color:rgba(255,255,255,.4)">Signal → Skill → Human → Learn</span>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <span style="height:6px;width:32px;border-radius:99px;background:rgba(255,255,255,.12)"></span>
+        <span style="height:6px;width:6px;border-radius:50%;background:rgba(255,255,255,.2)"></span>
+        <span style="height:6px;width:6px;border-radius:50%;background:rgba(255,255,255,.2)"></span>
+      </div>
+    </div>
+    <div class="cord" aria-hidden>
+      <i></i><i style="opacity:.35"></i><i style="opacity:.35"></i><i></i><i style="opacity:.35"></i><i style="opacity:.35"></i><i></i><i style="opacity:.35"></i><i style="opacity:.35"></i><i></i><i style="opacity:.35"></i><i style="opacity:.35"></i><i></i><i style="opacity:.35"></i><i style="opacity:.35"></i><i></i><i style="opacity:.35"></i><i style="opacity:.35"></i><i></i><i style="opacity:.35"></i><i style="opacity:.35"></i><i></i><i style="opacity:.35"></i><i style="opacity:.35"></i><i></i><i style="opacity:.35"></i><i style="opacity:.35"></i><i></i><i style="opacity:.35"></i><i style="opacity:.35"></i><i></i>
+    </div>
+
+    <div class="header">
+      <div class="eyebrow">Terra Platform · AI for ITSM · The Open ITSM Knowledge</div>
+      <div class="h1">What each<br>management does<br><em>and what AI skill<br>it needs.</em></div>
+      <div class="sub">The 8 practices your team lives every day — triaging incidents, fulfilling requests, shipping changes, and keeping knowledge current — each paired with one AI skill that handles the busywork so humans decide faster.</div>
+      <div class="meta-row">
+        <span class="pill yellow">8 managements</span>
+        <span class="pill white">56 AI skills</span>
+        <span class="pill">AI proposes · humans confirm</span>
+        <span class="pill">One skill per stage · audit-ready</span>
+      </div>
+      <div class="tag">Infographic · 1-pager</div>
+    </div>
+
+    <div class="grid-wrap">
+      <div class="section-head"><b>8 managements — what they do + key skills</b><span>7 stages each</span></div>
+      <div class="grid">
+        <div class="card">
+          <div class="card-top"><span class="dot-c" style="background:#EF4444"></span><span class="prefix">INC-</span><span class="lane">Lifecycle</span></div>
+          <div class="title">Incident Management</div>
+          <div class="oneLiner">Restores disrupted service as fast as possible while keeping users informed.</div>
+          <div class="skills"><span class="skill">Auto-triage</span><span class="skill">War-room summary</span><span class="skill ghost">+5</span></div>
+        </div>
+        <div class="card">
+          <div class="card-top"><span class="dot-c" style="background:#8B5CF6"></span><span class="prefix">PRB-</span><span class="lane">Lifecycle</span></div>
+          <div class="title">Problem Management</div>
+          <div class="oneLiner">Finds the cause behind repeating incidents so they stop recurring.</div>
+          <div class="skills"><span class="skill">Pattern clustering</span><span class="skill">RCA draft</span><span class="skill ghost">+5</span></div>
+        </div>
+        <div class="card">
+          <div class="card-top"><span class="dot-c" style="background:#F59E0B"></span><span class="prefix">CHG-</span><span class="lane">Lifecycle</span></div>
+          <div class="title">Change Management</div>
+          <div class="oneLiner">Plans, assesses risk and ships changes with an audit trail.</div>
+          <div class="skills"><span class="skill">Risk scoring</span><span class="skill">Impact prediction</span><span class="skill ghost">+5</span></div>
+        </div>
+        <div class="card">
+          <div class="card-top"><span class="dot-c" style="background:#0EA5E9"></span><span class="prefix">REQ-</span><span class="lane">Lifecycle</span></div>
+          <div class="title">Service Request</div>
+          <div class="oneLiner">Fulfills approved user needs through a catalog — not a disruption.</div>
+          <div class="skills"><span class="skill">Intent classify</span><span class="skill">Auto-routing</span><span class="skill ghost">+5</span></div>
+        </div>
+        <div class="card">
+          <div class="card-top"><span class="dot-c" style="background:#10B981"></span><span class="prefix">KNO-</span><span class="lane">Lifecycle</span></div>
+          <div class="title">Knowledge Management</div>
+          <div class="oneLiner">Captures resolutions, structures them, and retires stale articles.</div>
+          <div class="skills"><span class="skill">Auto-generate</span><span class="skill">Search relevance</span><span class="skill ghost">+5</span></div>
+        </div>
+        <div class="card">
+          <div class="card-top"><span class="dot-c" style="background:#06B6D4"></span><span class="prefix">CFG-</span><span class="lane">Foundation</span></div>
+          <div class="title">Service Configuration</div>
+          <div class="oneLiner">Maps CIs and dependencies to predict blast radius.</div>
+          <div class="skills"><span class="skill">Dependency map</span><span class="skill">Blast radius</span><span class="skill ghost">+5</span></div>
+        </div>
+        <div class="card">
+          <div class="card-top"><span class="dot-c" style="background:#F97316"></span><span class="prefix">AST-</span><span class="lane">Foundation</span></div>
+          <div class="title">Asset Management</div>
+          <div class="oneLiner">Tracks lifecycle of every asset — if it's not in the register, it doesn't exist.</div>
+          <div class="skills"><span class="skill">Inventory link</span><span class="skill">Lifecycle trace</span><span class="skill ghost">+5</span></div>
+        </div>
+        <div class="card">
+          <div class="card-top"><span class="dot-c" style="background:#EC4899"></span><span class="prefix">IMP-</span><span class="lane">Lifecycle</span></div>
+          <div class="title">Continual Improvement</div>
+          <div class="oneLiner">Turns trends into improvements — a loop, not a ticket.</div>
+          <div class="skills"><span class="skill">Trend detection</span><span class="skill">Suggestion mining</span><span class="skill ghost">+5</span></div>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-head"><b>How a skill works — 5 steps</b><i>AI proposes · human confirms · no silent overwrite</i></div>
+        <div class="flow-body">
+          <div class="flow-step"><span class="num">01</span><span class="step-label">Signal</span><span class="step-sub">Ingest</span></div>
+          <div class="flow-step"><span class="num">02</span><span class="step-label">Detect</span><span class="step-sub">Match</span></div>
+          <div class="flow-step"><span class="num active">03</span><span class="step-label">Draft</span><span class="step-sub">AI proposes</span></div>
+          <div class="flow-step"><span class="num">04</span><span class="step-label">Confirm</span><span class="step-sub">Gate</span></div>
+          <div class="flow-step"><span class="num">05</span><span class="step-label">Learn</span><span class="step-sub">Audit trail</span></div>
+        </div>
+        <div class="flow-example">
+          <div class="ex"><b>Signal</b><span>“Checkout timeout 504”</span></div>
+          <div class="ex"><b>Detect</b><span>Auto-triage skill</span></div>
+          <div class="ex" style="background:#FAFF00;border-color:#111"><b>Draft</b><span>P1 · Payments · 0.82</span></div>
+          <div class="ex"><b>Confirm</b><span>Lead approves</span></div>
+          <div class="ex"><b>Learn</b><span>3 similar linked</span></div>
+        </div>
+      </div>
+
+      <div class="ba">
+        <div class="ba-left">
+          <b><span style="width:8px;height:8px;border-radius:50%;background:#EF4444;display:inline-block"></span> Before — without skills</b>
+          <ul>
+            <li><span style="color:#EF4444">✕</span> Guess priority, wrong routing, 3× bounces</li>
+            <li><span style="color:#EF4444">✕</span> Scroll 200 comments, repeated handovers</li>
+            <li><span style="color:#EF4444">✕</span> Close as “fixed” — lessons lost</li>
+          </ul>
+        </div>
+        <div class="ba-right">
+          <b><span style="width:8px;height:8px;border-radius:50%;background:#000;display:inline-block"></span> After — with skills</b>
+          <ul>
+            <li><span>✓</span> Auto-triage 0.82 → P1, suggests not assigns</li>
+            <li><span>✓</span> 3-bullet summary, timeline stays source</li>
+            <li><span>✓</span> Closure pack → problem/knowledge, auditable</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footnote"><i></i> Terra · 8 practices · 56 skills · copy → use → audit <i></i></div>
+    </div>
+
+    <div class="footer">
+      <span>© 2026 Terra Platform · Knowledge first</span>
+      <span style="display:flex;gap:8px;align-items:center"><span style="width:6px;height:6px;border-radius:50%;background:#10B981;display:inline-block"></span> AI proposes · humans confirm <span style="width:1px;height:12px;background:#EAEAEA;display:inline-block;margin:0 4px"></span> terra.example.com</span>
+    </div>
+  </div>
+</body>
+</html>
