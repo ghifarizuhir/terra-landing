@@ -1,31 +1,34 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --color-bg: oklch(0.985 0 0);
-  --color-fg: oklch(0.145 0 0);
-  --color-muted: oklch(0.45 0 0);
-  --color-muted-2: oklch(0.62 0 0);
-  --color-border: oklch(0.145 0 0 / 12%);
-  --color-border-strong: oklch(0.145 0 0);
+  --color-bg: #ffffff;
+  --color-fg: #000000;
+  --color-muted: #666666;
+  --color-muted-2: #999999;
+  --color-border: #eaeaea;
+  --color-border-strong: #000000;
   --color-card: #ffffff;
-  --font-display: "IBM Plex Sans", system-ui, sans-serif;
-  --font-body: "IBM Plex Sans", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", monospace;
+  --color-subtle: #fafafa;
+  --font-display: "Geist", "Instrument Sans", system-ui, sans-serif;
+  --font-body: "Geist", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
 }
 
-html { scrollbar-gutter: stable; }
+html { scrollbar-gutter: stable; overflow-x: hidden; }
 body {
   font-family: var(--font-body);
-  background: oklch(0.985 0 0);
-  color: oklch(0.145 0 0);
+  background: #ffffff;
+  color: #000000;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
-::selection { background: oklch(0.145 0 0); color: oklch(0.985 0 0); }
-:focus-visible { outline: 2px solid oklch(0.145 0 0); outline-offset: 2px; }
+::selection { background: #000000; color: #ffffff; }
+:focus-visible { outline: 2px solid #000000; outline-offset: 2px; }
 :where(.font-mono) { font-variant-numeric: tabular-nums; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: oklch(0.145 0 0 / 12%); border-radius: 0; }
-::-webkit-scrollbar-thumb:hover { background: oklch(0.45 0 0); }
+::-webkit-scrollbar-thumb { background: #eaeaea; }
+::-webkit-scrollbar-thumb:hover { background: #999999; }

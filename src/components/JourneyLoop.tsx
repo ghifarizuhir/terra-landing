@@ -1,287 +1,357 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { managements } from '../data/managements'
 
-export default function JourneyLoop() {
+type Props = {
+  q?: string
+  filter?: 'all' | 'lifecycle' | 'foundation'
+}
+
+export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
   const [open, setOpen] = useState<string | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
   const active = open ? managements.find((m) => m.id === open) ?? null : null
   const shouldReduceMotion = useReducedMotion()
-  const totalSkills = managements.reduce((n, m) => n + m.skills.length, 0)
-  const sortedSkills = active ? [...active.skills].sort((a, b) => (a.stage ?? '').localeCompare(b.stage ?? '')) : []
+
+  const sortedSkills = useMemo(
+    () => (active ? [...active.skills].sort((a, b) => (a.stage ?? '').localeCompare(b.stage ?? '')) : []),
+    [active]
+  )
   const allStaged = !!active && active.skills.length > 0 && active.skills.every((s) => !!s.stage)
-  const selectedSkill = selected ? sortedSkills.find((s) => s.name === selected) ?? sortedSkills[sortedSkills.length - 1] : sortedSkills[sortedSkills.length - 1]
+  const selectedSkill = selected
+    ? sortedSkills.find((s) => s.name === selected) ?? sortedSkills[0]
+    : sortedSkills[0]
 
   useEffect(() => {
-    if (active) setSelected(sortedSkills[sortedSkills.length - 1]?.name ?? null)
+    if (active) setSelected(sortedSkills[0]?.name ?? null)
   }, [active?.id])
 
-  const gridVariants = shouldReduceMotion
-    ? undefined
-    : { hidden: {}, visible: { transition: { staggerChildren: 0.05, delayChildren: 0.08 } } }
-  const cardVariants = shouldReduceMotion
-    ? undefined
-    : { hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] as const } } }
-  const railContainerVariants = shouldReduceMotion
-    ? undefined
-    : { hidden: {}, visible: { transition: { staggerChildren: 0.03, delayChildren: 0.1 } } }
-  const railItemVariants = shouldReduceMotion
-    ? undefined
-    : { hidden: { opacity: 0, x: -6 }, visible: { opacity: 1, x: 0, transition: { duration: 0.26, ease: [0.16, 1, 0.3, 1] as const } } }
+  // keep active rail pill visible on mobile horizontal scroll
+  useEffect(() => {
+    if (!selected) return
+    const el = document.querySelector(`[data-rail='${CSS.escape(selected)}']`)
+    if (el && 'scrollIntoView' in el) (el as HTMLElement).scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
+  }, [selected])
+
+  // filter + search like skills.sh
+  const filtered = useMemo(() => {
+    const needle = q.trim().toLowerCase()
+    return managements.filter((m) => {
+      if (filter === 'lifecycle' && m.lane !== 'cycle' && m.lane !== 'parallel') return false
+      if (filter === 'foundation' && m.lane !== 'foundation') return false
+      if (!needle) return true
+      const hay = `${m.title} ${m.prefix} ${m.oneLiner} ${m.skills.map((s) => s.name).join(' ')}`.toLowerCase()
+      return hay.includes(needle)
+    })
+  }, [q, filter])
 
   return (
     <>
-      {/* Structured grid — 1px rule system, numerics 01—08, flat cards */}
-      <motion.div
-        variants={gridVariants}
-        initial="hidden"
-        animate="visible"
-        onMouseLeave={() => setHoveredId(null)}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[oklch(0.145_0_0)] border border-[oklch(0.145_0_0)]"
-      >
-        {managements.map((m, idx) =>
-          m.id === open ? (
-            <div key={m.id} aria-hidden className="bg-white min-h-[200px]" />
-          ) : (
-          <motion.button
-            key={m.id}
-            layoutId={`card-${m.id}`}
-            variants={cardVariants}
-            whileHover={shouldReduceMotion ? undefined : { y: -2, transition: { duration: 0.14 } }}
-            whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
-            onHoverStart={() => setHoveredId(m.id)}
-            onClick={() => setOpen(m.id)}
-            className="text-left bg-white p-4 flex flex-col min-h-[200px] relative overflow-hidden text-[oklch(0.145_0_0)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.145_0_0)] focus-visible:ring-inset"
-            transition={shouldReduceMotion ? { duration: 0 } : ({ duration: 0.16, type: 'spring', stiffness: 600, damping: 30 } as const)}
-          >
-            {!shouldReduceMotion && hoveredId === m.id && (
-              <motion.div
-                layoutId="grid-hover"
-                className="absolute inset-0 pointer-events-none"
-                style={{ background: 'oklch(0 0 0 / 4%)' }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={shouldReduceMotion ? { duration: 0 } : ({ type: 'spring', stiffness: 480, damping: 38 } as const)}
-              />
-            )}
-            <div className="flex items-center gap-2 shrink-0 font-mono text-[10px] tracking-[0.14em] uppercase text-[oklch(0.62_0_0)]">
-              <span>{String(idx + 1).padStart(2, '0')} — {m.prefix}</span>
-              <span className="h-px flex-1 bg-[oklch(0.145_0_0/12%)]" />
-              <span className="border border-[oklch(0.145_0_0/25%)] px-1.5 py-0.5 bg-white text-[oklch(0.45_0_0)] text-[9px] tracking-[0.12em] hidden xl:inline">{m.lane === 'foundation' ? 'Foundation' : 'Lifecycle'}</span>
-            </div>
-            <h3 className="font-semibold text-[13px] tracking-[-0.01em] leading-tight mt-2 shrink-0">{m.title}</h3>
-            <p className="text-[12.5px] leading-[1.4] mt-1 text-[oklch(0.45_0_0)] shrink-0 line-clamp-2">{m.oneLiner}</p>
-            <div className="mt-2 space-y-1 shrink-0">
-              <p className="font-mono text-[9px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">What it does</p>
-              <p className="text-[11.5px] leading-[1.45] text-[oklch(0.45_0_0)] line-clamp-2">{m.bullets[0]}</p>
-              <p className="hidden lg:block text-[11.5px] leading-[1.45] text-[oklch(0.45_0_0)] line-clamp-1 opacity-80">{m.bullets[1]}</p>
-            </div>
-            <div className="mt-3 flex flex-wrap gap-1.5 shrink-0 border-t border-[oklch(0.145_0_0/12%)] pt-2.5">
-              <span className="font-mono text-[9px] tracking-[0.1em] uppercase text-[oklch(0.62_0_0)] w-full">AI skills →</span>
-              {m.skills.slice(0, 2).map((s) => (
-                <span key={s.name} className="font-mono text-[9px] tracking-[0.08em] uppercase bg-[oklch(0.145_0_0)] text-white px-1.5 py-1">
-                  {s.name}
-                </span>
-              ))}
-              {m.skills.length > 2 && (
-                <span className="font-mono text-[9px] tracking-[0.08em] uppercase border border-[oklch(0.145_0_0/25%)] bg-white px-1.5 py-1 font-medium">
-                  +{m.skills.length - 2}
-                </span>
-              )}
-            </div>
-            <span className="mt-auto pt-2 font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)] shrink-0">Read skills →</span>
-          </motion.button>
-          )
-        )}
-      </motion.div>
+      {/* Leaderboard — skills.sh style */}
+      <div className="rounded-lg border border-[#eaeaea] overflow-hidden bg-white">
+        {/* table header — like skills.sh */}
+        <div className="hidden sm:grid grid-cols-[44px_1fr_140px_90px] gap-0 border-b border-[#eaeaea] bg-[#fafafa] px-4 py-2 font-mono text-[11px] tracking-wide uppercase text-[#999]">
+          <span>#</span>
+          <span>Practice</span>
+          <span className="text-right">AI skills</span>
+          <span className="text-right">Type</span>
+        </div>
 
-      <div className="shrink-0 pt-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.14em] uppercase text-[oklch(0.45_0_0)]">
-        <span className="h-px flex-1 bg-[oklch(0.145_0_0/12%)]" />
-        8 practices · {totalSkills} AI skills · Assets &amp; configuration as the foundation
-        <span className="h-px flex-1 bg-[oklch(0.145_0_0/12%)]" />
+        <div className="divide-y divide-[#eaeaea]">
+          {filtered.map((m, idx) => {
+            const isOpen = m.id === open
+            if (isOpen) {
+              return <div key={m.id} aria-hidden className="h-0" />
+            }
+            const rank = String(managements.indexOf(m) + 1).padStart(2, '0')
+            return (
+              <button
+                key={m.id}
+                onClick={() => setOpen(m.id)}
+                className="w-full text-left grid grid-cols-1 sm:grid-cols-[44px_1fr_140px_90px] gap-1 sm:gap-0 items-center px-4 py-4 hover:bg-[#fafafa] transition-colors focus:outline-none focus-visible:bg-[#fafafa]"
+              >
+                {/* rank + prefix */}
+                <span className="hidden sm:block font-mono text-[13px] text-[#999] tabular-nums">#{rank}</span>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-mono text-[11px] tracking-wide uppercase border border-[#eaeaea] bg-white px-1.5 py-0.5 text-[#666]">{m.prefix}</span>
+                    <span className="sm:hidden font-mono text-[11px] text-[#999]">#{rank}</span>
+                    <span className="hidden sm:inline h-3 w-px bg-[#eaeaea]" />
+                    <span className="font-mono text-[11px] tracking-wide uppercase text-[#999] hidden sm:inline">{m.lane === 'foundation' ? 'Foundation' : 'Lifecycle'}</span>
+                  </div>
+                  <h3 className="font-medium text-[15px] tracking-[-0.01em] leading-tight mt-1">{m.title}</h3>
+                  <p className="text-[13px] leading-[1.4] text-[#666] mt-0.5 line-clamp-2 sm:line-clamp-1">{m.oneLiner}</p>
+                  {/* mobile skills */}
+                  <div className="mt-2 flex flex-wrap gap-1.5 sm:hidden">
+                    {m.skills.slice(0, 2).map((s) => (
+                      <span key={s.name} className="font-mono text-[11px] bg-black text-white px-2 py-1 rounded-full">{s.name}</span>
+                    ))}
+                    {m.skills.length > 2 && <span className="font-mono text-[11px] border border-[#eaeaea] bg-white px-2 py-1 rounded-full">+{m.skills.length - 2}</span>}
+                  </div>
+                </div>
+
+                {/* skills — desktop */}
+                <div className="hidden sm:flex flex-wrap justify-end gap-1.5">
+                  {m.skills.slice(0, 2).map((s) => (
+                    <span key={s.name} className="font-mono text-[11px] bg-black text-white px-2 py-1 rounded-full max-w-[120px] truncate">{s.name}</span>
+                  ))}
+                  {m.skills.length > 2 && <span className="font-mono text-[11px] border border-[#eaeaea] bg-white px-2 py-1 rounded-full text-[#666]">+{m.skills.length - 2}</span>}
+                </div>
+
+                <div className="hidden sm:flex items-center justify-end gap-2">
+                  <span className="font-mono text-[11px] text-[#999] border border-[#eaeaea] rounded-full px-2 py-1 bg-white">{m.skills.length} stages</span>
+                  <span className="text-[#999]">›</span>
+                </div>
+                <span className="sm:hidden font-mono text-[11px] text-[#999] mt-1">{m.skills.length} AI skills · {m.lane === 'foundation' ? 'Foundation' : 'Lifecycle'} →</span>
+              </button>
+            )
+          })}
+          {filtered.length === 0 && (
+            <div className="px-4 py-12 text-center font-mono text-[13px] text-[#999]">No matches for “{q}”</div>
+          )}
+        </div>
       </div>
 
-      {/* Detail — Rail + Reader */}
+      <div className="pt-3 flex items-center gap-3 font-mono text-[11px] text-[#999]">
+        <span className="h-px flex-1 bg-[#eaeaea]" />
+        8 practices · {managements.reduce((n, m) => n + m.skills.length, 0)} AI skills · Assets &amp; configuration as the foundation
+        <span className="h-px flex-1 bg-[#eaeaea]" />
+      </div>
+
+      {/* Detail — Rail + Reader — clean */}
       <AnimatePresence>
         {active && (
           <motion.div
             key={active.id}
-            layoutId={`card-${active.id}`}
-            exit={shouldReduceMotion ? undefined : { opacity: 0 }}
-            transition={shouldReduceMotion ? { duration: 0 } : ({ type: 'spring', stiffness: 340, damping: 28, mass: 0.8 } as unknown as Record<string, unknown>)}
-            className="fixed inset-0 z-50 bg-[oklch(0.985_0_0)] flex flex-col overflow-hidden"
+            initial={shouldReduceMotion ? undefined : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            className="fixed inset-0 z-50 bg-white flex flex-col overflow-hidden"
           >
-            <motion.div
-              className="flex-1 min-h-0 flex flex-col"
-              initial={shouldReduceMotion ? false : { opacity: 0 }}
-              animate={shouldReduceMotion ? undefined : { opacity: 1, transition: { delay: 0.18, duration: 0.22 } }}
-            >
-            <div className="shrink-0 h-[52px] border-b border-[oklch(0.145_0_0)] bg-[oklch(0.985_0_0)] flex items-center px-4 lg:px-6 gap-3">
-              <button onClick={() => setOpen(null)} className="h-8 px-3 border border-[oklch(0.145_0_0)] bg-[oklch(0.145_0_0)] text-white font-mono text-[11px] tracking-[0.12em] uppercase flex items-center gap-2">
+            <div className="shrink-0 min-h-[49px] py-2 border-b border-[#eaeaea] bg-white flex items-center px-4 lg:px-6 gap-3">
+              <button onClick={() => setOpen(null)} className="h-9 px-4 border border-black bg-black text-white font-mono text-[12px] flex items-center gap-2 rounded-full hover:bg-[#111] shrink-0">
                 ← All practices
               </button>
-              <span className="h-8 w-px bg-[oklch(0.145_0_0/12%)] hidden sm:block" />
-              <span className="font-mono text-[11px] tracking-[0.12em] uppercase font-medium bg-[oklch(0.145_0_0)] text-white px-2 py-1 hidden sm:inline">{active.prefix}</span>
-              <span className="text-[13px] font-semibold tracking-[-0.01em] hidden sm:inline">{active.title}</span>
-              <span className="ml-auto font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.45_0_0)]">{active.skills.length} stages · select one to read</span>
+              <span className="h-6 w-px bg-[#eaeaea] hidden sm:block" />
+              <span className="font-mono text-[11px] tracking-wide uppercase bg-black text-white px-2 py-1 rounded-full hidden sm:inline">{active.prefix}</span>
+              <span className="text-[13px] font-medium tracking-tight hidden sm:inline">{active.title}</span>
+              <span className="ml-auto font-mono text-[11px] text-[#999]">{active.skills.length} stages · select one to read</span>
             </div>
-            <div className="h-px bg-[oklch(0.145_0_0)] shrink-0" />
 
             <div className="flex-1 overflow-auto">
-              <div className="w-full px-4 lg:px-6 py-5">
-                <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.14em] uppercase text-[oklch(0.45_0_0)]">
-                  <span className="h-px w-6 bg-[oklch(0.145_0_0)]" />
+              <div className="max-w-[1100px] mx-auto w-full px-6 py-6">
+                <div className="flex items-center gap-2 font-mono text-[11px] tracking-wide uppercase text-[#999]">
+                  <span className="h-px w-6 bg-black" />
                   {active.lane === 'foundation' ? 'Foundation' : 'Lifecycle'} · {active.skills.length} stages
                 </div>
-                <h2 className="font-display font-semibold text-[28px] lg:text-[38px] leading-[1.05] tracking-[-0.02em] mt-2">{active.title}</h2>
-                <p className="text-[15px] leading-[1.5] mt-2 text-[oklch(0.45_0_0)] max-w-[720px]">{active.oneLiner}</p>
+                <h2 className="font-display font-semibold text-[28px] lg:text-[34px] leading-[1.05] tracking-[-0.02em] mt-2">{active.title}</h2>
+                <p className="text-[14px] leading-[1.6] mt-2 text-[#666] max-w-[720px]">{active.oneLiner}</p>
 
-                <div className="mt-5 grid lg:grid-cols-3 gap-px bg-[oklch(0.145_0_0/12%)] border border-[oklch(0.145_0_0/12%)]">
+                <div className="mt-5 grid sm:grid-cols-3 gap-3">
                   {active.bullets.map((b, i) => (
-                    <div key={b} className="bg-white p-3">
-                      <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">0{i + 1} — What it does</div>
-                      <p className="text-[12.5px] leading-[1.55] mt-1">{b}</p>
+                    <div key={b} className="rounded-lg border border-[#eaeaea] bg-[#fafafa] p-3">
+                      <div className="font-mono text-[11px] tracking-wide uppercase text-[#999]">0{i + 1} — What it does</div>
+                      <p className="text-[13px] leading-[1.5] mt-1">{b}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-6 flex items-center gap-3">
-                  <h3 className="font-display font-semibold text-[17px] tracking-[-0.01em]">AI skills for this practice</h3>
-                  <span className="font-mono text-[10px] tracking-[0.12em] uppercase bg-[oklch(0.145_0_0)] text-white px-2 py-1">{active.skills.length} skills</span>
-                  {allStaged && <span className="font-mono text-[10px] tracking-[0.12em] uppercase border border-[oklch(0.145_0_0/25%)] bg-white px-2 py-1 font-medium">{active.skills.length}/{active.skills.length} stages</span>}
-                  <span className="h-px flex-1 bg-[oklch(0.145_0_0/12%)]" />
+                <div className="mt-6 flex flex-wrap items-center gap-2 sm:gap-3">
+                  <h3 className="font-semibold text-[16px] tracking-tight">AI skills for this practice</h3>
+                  <span className="font-mono text-[11px] bg-black text-white px-2 py-1 rounded-full shrink-0">{active.skills.length} skills</span>
+                  {allStaged && (
+                    <span className="font-mono text-[11px] border border-[#eaeaea] bg-white px-2 py-1 rounded-full text-[#666] shrink-0">
+                      {active.skills.length}/{active.skills.length} stages
+                    </span>
+                  )}
+                  <span className="h-px flex-1 bg-[#eaeaea] hidden sm:block min-w-[40px]" />
                 </div>
-                {allStaged && <p className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.45_0_0)] mt-2">{active.lane === 'foundation' ? 'Always-on foundation — one skill per stage' : 'Full lifecycle coverage — one skill per stage'}</p>}
+                {allStaged && (
+                  <p className="font-mono text-[11px] text-[#999] mt-2">
+                    {active.lane === 'foundation' ? 'Always-on foundation — one skill per stage' : 'Full lifecycle coverage — one skill per stage'}
+                  </p>
+                )}
 
-                {/* Rail + Reader shell */}
-                <div className="mt-3 grid lg:grid-cols-[240px_1fr] gap-0 border border-[oklch(0.145_0_0)] bg-white overflow-hidden">
-                  {/* Rail */}
-                  <motion.nav
-                    variants={railContainerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="border-b lg:border-b-0 lg:border-r border-[oklch(0.145_0_0)] bg-white flex flex-col min-h-0 lg:sticky lg:top-0 lg:h-[min(72vh,760px)] lg:overflow-auto"
-                    aria-label="Stage rail"
-                  >
-                    <div className="p-3 border-b border-[oklch(0.145_0_0/12%)] bg-[oklch(0.985_0_0)]">
-                      <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)]">Lifecycle stages</p>
-                      <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.45_0_0)] mt-1">{active.skills.length} stages · select to read</p>
+                {/* Rail + Reader — mobile: sticky horizontal pills, desktop: vertical rail */}
+                <div className="mt-4 grid lg:grid-cols-[240px_1fr] gap-0 rounded-xl border border-[#eaeaea] overflow-hidden bg-white shadow-sm">
+                  {/* Rail — sticky on both */}
+                  <nav className="sticky top-0 z-10 lg:static border-b lg:border-b-0 lg:border-r border-[#eaeaea] bg-white flex flex-col max-lg:overflow-hidden" aria-label="Stage rail">
+                    <div className="px-3 py-3 border-b border-[#eaeaea] bg-[#fafafa] flex items-center justify-between gap-3">
+                      <div>
+                        <p className="font-mono text-[11px] tracking-wide uppercase text-[#999]">Stages</p>
+                        <p className="font-mono text-[11px] text-[#111] mt-0.5">{sortedSkills.findIndex((s) => s.name === selectedSkill?.name) + 1} / {active.skills.length} · tap to switch</p>
+                      </div>
+                      <span className="hidden sm:inline-flex font-mono text-[10px] tracking-wide uppercase bg-white border border-[#eaeaea] px-2 py-1 rounded-full text-[#666]">Scrollable →</span>
                     </div>
-                    <div className="p-2 flex lg:flex-col gap-1.5 overflow-auto lg:overflow-visible">
+                    <div className="p-2 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible snap-x snap-mandatory scrollbar-thin">
                       {sortedSkills.map((s) => {
                         const isActive = s.name === selectedSkill?.name
+                        const idx = sortedSkills.indexOf(s) + 1
                         return (
-                          <motion.button
+                          <button
                             key={s.name}
-                            variants={railItemVariants}
+                            data-rail={s.name}
                             onClick={() => setSelected(s.name)}
-                            className={`text-left border p-2.5 shrink-0 lg:shrink font-mono min-w-[180px] lg:min-w-0 ${isActive ? 'bg-[oklch(0.145_0_0)] text-white border-[oklch(0.145_0_0)]' : 'bg-white border-[oklch(0.145_0_0/12%)] hover:bg-[oklch(0_0_0/3%)]'}`}
+                            aria-selected={isActive}
+                            className={`text-left snap-start rounded-xl border p-3 shrink-0 lg:shrink min-w-[176px] lg:min-w-0 flex lg:block items-center lg:items-start gap-3 transition-all ${isActive ? 'bg-black text-white border-black shadow-sm' : 'bg-white border-[#eaeaea] hover:border-[#ccc] hover:bg-[#fafafa] active:bg-[#f5f5f5]'}`}
                           >
-                            <div className="text-[9px] tracking-[0.1em] uppercase font-medium">{s.stage}</div>
-                            <div className={`text-[10px] leading-[1.4] mt-1 line-clamp-2 ${isActive ? 'text-white/80' : 'text-[oklch(0.45_0_0)]'}`}>{s.name}</div>
-                          </motion.button>
+                            <span className={`hidden lg:block font-mono text-[10px] tracking-wide uppercase ${isActive ? 'text-white/60' : 'text-[#999]'}`}>{s.stage}</span>
+                            <span className={`lg:hidden font-mono text-[10px] leading-none px-1.5 py-1 rounded-full border ${isActive ? 'bg-white/15 border-white/20 text-white' : 'bg-[#fafafa] border-[#eaeaea] text-[#999]'}`}>{String(idx).padStart(2, '0')}</span>
+                            <span className={`text-[13px] leading-[1.35] font-medium line-clamp-2 ${isActive ? 'text-white' : 'text-[#111]'}`}>{s.name}</span>
+                            {isActive && <span className="ml-auto lg:hidden h-2 w-2 rounded-full bg-white shrink-0" aria-hidden />}
+                          </button>
                         )
                       })}
                     </div>
-                    <div className="hidden lg:block mt-auto border-t border-[oklch(0.145_0_0/12%)] p-3">
-                      <p className="font-mono text-[9px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">Principle</p>
-                      <p className="text-[11.5px] leading-[1.5] text-[oklch(0.45_0_0)] mt-1">A {active.lane === 'foundation' ? 'map' : 'ticket'} is not done when it says closed — it is done when its records explain what happened.</p>
+                    <div className="hidden lg:block mt-auto border-t border-[#eaeaea] p-3 bg-[#fafafa]">
+                      <p className="font-mono text-[11px] tracking-wide uppercase text-[#999]">Tip</p>
+                      <p className="text-[12px] leading-[1.5] text-[#666] mt-1">Start at 01 and read forward — each stage builds on the previous. Use ← → to navigate.</p>
                     </div>
-                  </motion.nav>
+                  </nav>
 
-                  {/* Reader — single skill */}
-                  <div className="min-h-[420px] bg-[oklch(0.985_0_0)] flex justify-center">
+                  {/* Reader — roomy, high readability */}
+                  <div className="min-h-[420px] bg-white flex justify-center">
                     <AnimatePresence mode="wait">
                       {selectedSkill && (
                         <motion.div
                           key={selectedSkill.name}
-                          initial={shouldReduceMotion ? false : { opacity: 0, x: 8 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: shouldReduceMotion ? 0 : -6 }}
-                          transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.22, ease: [0.16, 1, 0.3, 1] as const }}
-                          className="bg-white max-w-[880px] w-full"
+                          initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -6 }}
+                          transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] as const }}
+                          className="bg-white max-w-[720px] w-full"
                         >
-                          <div className="p-4 border-b border-[oklch(0.145_0_0/12%)] bg-[oklch(0.985_0_0)]">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-mono text-[11px] tracking-[0.1em] uppercase font-medium bg-[oklch(0.145_0_0)] text-white inline-block px-2 py-1">{selectedSkill.name}</span>
-                              {selectedSkill.stage && <span className="font-mono text-[9px] tracking-[0.1em] uppercase font-medium border border-[oklch(0.145_0_0/25%)] bg-white px-1.5 py-0.5">{selectedSkill.stage}</span>}
+                          {/* skill header — larger, clearer */}
+                          <div className="px-4 sm:px-6 py-5 border-b border-[#eaeaea] bg-[#fafafa]/60">
+                            <div className="flex items-start gap-3">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-wide uppercase bg-black text-white px-2.5 py-1 rounded-full">{selectedSkill.stage?.split('·')[0]?.trim() ?? 'STAGE'}</span>
+                                  <span className="font-mono text-[11px] text-[#999]">{selectedSkill.stage}</span>
+                                </div>
+                                <h3 className="font-semibold text-[20px] sm:text-[22px] leading-[1.25] tracking-[-0.02em] mt-2">{selectedSkill.name}</h3>
+                              </div>
                             </div>
-                            {selectedSkill.description && <p className="font-mono text-[11px] leading-[1.45] mt-2 bg-white border border-[oklch(0.145_0_0/12%)] p-2">{selectedSkill.description}</p>}
+                            {selectedSkill.description && (
+                              <p className="text-[13px] sm:text-[14px] leading-[1.6] mt-3 text-[#444] bg-white border border-[#eaeaea] rounded-xl p-3.5">{selectedSkill.description}</p>
+                            )}
                           </div>
-                          <div className="p-4 space-y-4">
-                            <div>
-                              <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">Overview</div>
-                              <p className="text-[12.5px] leading-[1.6] mt-1">{selectedSkill.overview}</p>
-                            </div>
-                            <div>
-                              <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">When to use</div>
+                          <div className="px-4 sm:px-6 py-6 space-y-7">
+                            <section>
+                              <h4 className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#999] flex items-center gap-2"><span className="h-px w-4 bg-[#eaeaea]" /> Overview</h4>
+                              <p className="text-[14px] sm:text-[15px] leading-[1.7] mt-3 text-[#111]">{selectedSkill.overview}</p>
+                            </section>
+                            <section>
+                              <h4 className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#999] flex items-center gap-2"><span className="h-px w-4 bg-[#eaeaea]" /> When to use</h4>
                               {Array.isArray(selectedSkill.whenToUse) ? (
-                                <ul className="mt-1 space-y-1 list-disc pl-4 text-[11px] leading-[1.6] text-[oklch(0.45_0_0)]">
+                                <ul className="mt-3 space-y-2">
                                   {selectedSkill.whenToUse.map((w) => (
-                                    <li key={w}>{w}</li>
+                                    <li key={w} className="flex gap-3 text-[13px] sm:text-[14px] leading-[1.6] text-[#333]"><span className="mt-[7px] h-1.5 w-1.5 rounded-full bg-black shrink-0" /><span>{w}</span></li>
                                   ))}
                                 </ul>
                               ) : (
-                                <p className="text-[11px] leading-[1.6] text-[oklch(0.45_0_0)] mt-1">{selectedSkill.whenToUse}</p>
+                                <p className="text-[14px] leading-[1.7] text-[#333] mt-3">{selectedSkill.whenToUse}</p>
                               )}
-                            </div>
+                            </section>
                             {selectedSkill.corePattern && (
-                              <div>
-                                <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">Core Pattern</div>
-                                <div className="mt-1 grid gap-2">
-                                  <pre className="bg-[oklch(0.145_0_0)] text-white p-2.5 text-[10px] leading-[1.45] overflow-auto">{selectedSkill.corePattern.before}</pre>
-                                  <pre className="bg-white border border-[oklch(0.145_0_0)] p-2.5 text-[10px] leading-[1.45] overflow-auto">{selectedSkill.corePattern.after}</pre>
+                              <section>
+                                <h4 className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#999] flex items-center gap-2"><span className="h-px w-4 bg-[#eaeaea]" /> Core Pattern</h4>
+                                <div className="mt-3 grid gap-3">
+                                  <div className="rounded-xl overflow-hidden border border-[#222] bg-[#0a0a0a]">
+                                    <div className="flex items-center justify-between px-3 py-2 border-b border-white/10 bg-white/[0.03]"><span className="font-mono text-[10px] tracking-wide uppercase text-white/60">Before</span><span className="font-mono text-[10px] text-white/30">manual</span></div>
+                                    <pre className="text-[#fafafa] p-3 sm:p-4 text-[12px] sm:text-[12.5px] leading-[1.55] overflow-x-auto whitespace-pre">{selectedSkill.corePattern.before}</pre>
+                                  </div>
+                                  <div className="rounded-xl overflow-hidden border border-[#eaeaea] bg-white">
+                                    <div className="flex items-center justify-between px-3 py-2 border-b border-[#eaeaea] bg-[#fafafa]"><span className="font-mono text-[10px] tracking-wide uppercase text-[#999]">After</span><span className="font-mono text-[10px] text-[#999]">AI-assisted</span></div>
+                                    <pre className="p-3 sm:p-4 text-[12px] sm:text-[12.5px] leading-[1.55] overflow-x-auto whitespace-pre text-[#111]">{selectedSkill.corePattern.after}</pre>
+                                  </div>
                                 </div>
-                              </div>
+                              </section>
                             )}
                             {selectedSkill.quickReference && (
-                              <div>
-                                <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">Quick Reference</div>
-                                <table className="mt-1 w-full border border-[oklch(0.145_0_0/12%)] text-[11px]">
-                                  <thead>
-                                    <tr className="bg-[oklch(0.145_0_0)] text-white">
-                                      {selectedSkill.quickReference.headers.map((h) => (
-                                        <th key={h} className="text-left px-2 py-1.5 font-mono text-[10px] tracking-[0.12em] uppercase font-medium">{h}</th>
-                                      ))}
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {selectedSkill.quickReference.rows.map((row, i) => (
-                                      <tr key={i} className="border-t border-[oklch(0.145_0_0/12%)] bg-white">
-                                        {row.map((cell) => (
-                                          <td key={cell} className="px-2 py-1.5">{cell}</td>
+                              <section>
+                                <h4 className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#999] flex items-center gap-2"><span className="h-px w-4 bg-[#eaeaea]" /> Quick Reference</h4>
+                                {/* desktop table */}
+                                <div className="mt-3 hidden sm:block rounded-xl border border-[#eaeaea] overflow-hidden overflow-x-auto">
+                                  <table className="w-full text-[13px]">
+                                    <thead>
+                                      <tr className="bg-black text-white">
+                                        {selectedSkill.quickReference.headers.map((h) => (
+                                          <th key={h} className="text-left px-3.5 py-2.5 font-mono text-[11px] tracking-wide uppercase font-medium whitespace-nowrap">{h}</th>
                                         ))}
                                       </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
+                                    </thead>
+                                    <tbody className="divide-y divide-[#eaeaea]">
+                                      {selectedSkill.quickReference.rows.map((row, i) => (
+                                        <tr key={i} className="bg-white even:bg-[#fafafa]">
+                                          {row.map((cell) => (
+                                            <td key={cell} className="px-3.5 py-2.5 text-[#222] leading-[1.5]">{cell}</td>
+                                          ))}
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                {/* mobile cards */}
+                                <div className="mt-3 grid gap-2 sm:hidden">
+                                  {selectedSkill.quickReference.rows.map((row, i) => (
+                                    <div key={i} className="rounded-xl border border-[#eaeaea] bg-[#fafafa] p-3">
+                                      <div className="grid gap-1.5">
+                                        {row.map((cell, j) => (
+                                          <div key={cell} className="flex gap-2 text-[13px] leading-[1.5]"><span className="font-mono text-[10px] tracking-wide uppercase text-[#999] min-w-[70px] pt-[2px]">{selectedSkill.quickReference!.headers[j]}</span><span className="text-[#111] flex-1">{cell}</span></div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </section>
                             )}
-                            <div>
-                              <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">Implementation</div>
-                              <p className="text-[11px] leading-[1.6] text-[oklch(0.45_0_0)] font-mono mt-1 bg-[oklch(0.985_0_0)] border border-[oklch(0.145_0_0/12%)] p-2.5">{selectedSkill.how}</p>
-                            </div>
+                            <section>
+                              <h4 className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#999] flex items-center gap-2"><span className="h-px w-4 bg-[#eaeaea]" /> Implementation</h4>
+                              <p className="text-[13px] sm:text-[14px] leading-[1.65] text-[#222] font-mono mt-3 bg-[#fafafa] border border-[#eaeaea] rounded-xl p-4">{selectedSkill.how}</p>
+                            </section>
                             {selectedSkill.commonMistakes && (
-                              <div>
-                                <div className="font-mono text-[10px] tracking-[0.12em] uppercase font-medium text-[oklch(0.62_0_0)]">Common Mistakes</div>
-                                <ul className="mt-1 space-y-1 list-disc pl-4 text-[11px] leading-[1.6] text-[oklch(0.45_0_0)]">
+                              <section>
+                                <h4 className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#999] flex items-center gap-2"><span className="h-px w-4 bg-[#eaeaea]" /> Common Mistakes</h4>
+                                <ul className="mt-3 rounded-xl border border-amber-200 bg-amber-50/60 p-4 space-y-2.5">
                                   {selectedSkill.commonMistakes.map((mm) => (
-                                    <li key={mm}>{mm}</li>
+                                    <li key={mm} className="flex gap-3 text-[13px] sm:text-[14px] leading-[1.6] text-[#7c4d00]"><span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0" /><span>{mm}</span></li>
                                   ))}
                                 </ul>
-                              </div>
+                              </section>
                             )}
                             {selectedSkill.example && (
-                              <div className="bg-[oklch(0.145_0_0)] text-white p-2.5 font-mono text-[11px] leading-[1.45]">
-                                <span className="text-white/60">Example →</span> {selectedSkill.example}
+                              <div className="rounded-xl bg-black text-white p-4 sm:p-5">
+                                <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-white/50">Example</div>
+                                <p className="font-mono text-[13px] sm:text-[14px] leading-[1.6] mt-2 text-white">{selectedSkill.example}</p>
                               </div>
                             )}
-                            <div className="flex gap-2 pt-2 border-t border-[oklch(0.145_0_0/12%)]">
-                              <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)]">
-                                Stage {sortedSkills.findIndex((s) => s.name === selectedSkill.name) + 1} of {sortedSkills.length}
-                              </span>
-                              <span className="ml-auto font-mono text-[10px] tracking-[0.12em] uppercase text-[oklch(0.62_0_0)]">Select another stage in the rail</span>
+                            <div className="flex items-center gap-2 pt-4 border-t border-[#eaeaea]">
+                              {(() => {
+                                const idx = sortedSkills.findIndex((s) => s.name === selectedSkill.name)
+                                const prev = idx > 0 ? sortedSkills[idx - 1] : null
+                                const next = idx < sortedSkills.length - 1 ? sortedSkills[idx + 1] : null
+                                return (
+                                  <>
+                                    <button
+                                      disabled={!prev}
+                                      onClick={() => prev && setSelected(prev.name)}
+                                      className={`h-9 px-4 rounded-full border font-mono text-[12px] ${prev ? 'bg-white border-[#eaeaea] hover:border-black hover:bg-[#fafafa] text-black' : 'bg-[#fafafa] border-[#eaeaea] text-[#999] cursor-not-allowed'}`}
+                                    >
+                                      ← {prev ? prev.name.slice(0, 18) : 'Prev'}
+                                    </button>
+                                    <span className="flex-1 text-center font-mono text-[11px] text-[#999]">{idx + 1} / {sortedSkills.length}</span>
+                                    <button
+                                      disabled={!next}
+                                      onClick={() => next && setSelected(next.name)}
+                                      className={`h-9 px-4 rounded-full border font-mono text-[12px] ${next ? 'bg-black border-black text-white hover:bg-[#111]' : 'bg-[#fafafa] border-[#eaeaea] text-[#999] cursor-not-allowed'}`}
+                                    >
+                                      {next ? next.name.slice(0, 18) : 'Next'} →
+                                    </button>
+                                  </>
+                                )
+                              })()}
                             </div>
                           </div>
                         </motion.div>
@@ -291,7 +361,6 @@ export default function JourneyLoop() {
                 </div>
               </div>
             </div>
-            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
