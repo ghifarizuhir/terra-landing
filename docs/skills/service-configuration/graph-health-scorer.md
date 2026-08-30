@@ -13,14 +13,14 @@ description: Use when leadership asks “can we trust the map?” and the honest
 
 ## Overview
 
-Graph health scorer grades the configuration map’s trustworthiness: completeness of nodes, share of confirmed vs inferred edges, orphan count, description coverage — one score with the reasons behind it. Core principle: impact answers inherit the graph’s health; a B-grade map gives B-grade blast radii, and everyone should know which grade they are reading.
+Graph health scorer grades the configuration map’s trustworthiness: completeness of nodes, share of confirmed vs inferred edges, orphan count, description coverage one score with the reasons behind it. Core principle: impact answers inherit the graph’s health; a B-grade map gives B-grade blast radii, and everyone should know which grade they are reading.
 
 ## When to Use
 
 - Periodic CMDB/data-quality review
-- Teams bypass the map because “it’s always wrong” — quantify what is wrong
+- Teams bypass the map because “it’s always wrong” quantify what is wrong
 - Before trusting impact analysis for a high-stakes change
-- When NOT to use: freshly seeded graph still in bulk import — scores mislead during bootstrap
+- When NOT to use: freshly seeded graph still in bulk import scores mislead during bootstrap
 
 ## Core Pattern
 
@@ -62,4 +62,4 @@ Computes per-dimension metrics across all CIs and edges (completeness, confirmat
 
 ## Example
 
-Score: C+ — 38% edges unconfirmed, 14 orphans → fix list queues 9 edge confirmations and routes ghosts; two quarters later the map reads A− and engineers cite it in change packs.
+Score: C+ 38% edges unconfirmed, 14 orphans → fix list queues 9 edge confirmations and routes ghosts; two quarters later the map reads A− and engineers cite it in change packs.

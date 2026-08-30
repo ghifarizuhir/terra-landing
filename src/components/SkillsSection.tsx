@@ -10,7 +10,7 @@ export default function SkillsSection() {
             AI Skills per Management
           </h2>
           <p className="mt-2 text-[13px] leading-[1.6] text-[#3a3f4a] max-w-[64ch]">
-            Each management has one AI skill that makes it better — an Andon call bound to its station. Knowledge first, then augmentation.
+            Each management has one AI skill that makes it better an Andon call bound to its station. Knowledge first, then augmentation.
           </p>
         </div>
         <span className="hidden lg:inline-flex font-mono text-[10px] tracking-widest uppercase bg-[#facc15] text-[#1a1d23] px-2 py-1 font-bold shrink-0">AI-augmented</span>
@@ -38,7 +38,7 @@ export default function SkillsSection() {
             </span>
             <span className="font-display text-[13px] font-semibold tracking-widest uppercase">Create custom skill</span>
           </div>
-           <div className="font-mono text-[11px] leading-[1.5] text-[#8a8f98]">Add your own — define when it triggers and what it checks. The line learns your standard work.</div>
+           <div className="font-mono text-[11px] leading-[1.5] text-[#8a8f98]">Add your own define when it triggers and what it checks. The line learns your standard work.</div>
         </div>
       </div>
     </section>

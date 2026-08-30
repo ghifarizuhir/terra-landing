@@ -13,14 +13,14 @@ description: Use when responders ask “has this happened before?”, duplicate 
 
 ## Overview
 
-Similar-incident detection surfaces past incidents that resemble the current one — by title, symptom and affected service. Core principle: if it happened before, the fastest path to restore is what worked last time. The AI links candidates, it never merges; humans decide whether two incidents are truly the same.
+Similar-incident detection surfaces past incidents that resemble the current one by title, symptom and affected service. Core principle: if it happened before, the fastest path to restore is what worked last time. The AI links candidates, it never merges; humans decide whether two incidents are truly the same.
 
 ## When to Use
 
 - New incident looks familiar (“same 504 as last week”) but nobody remembers the INC number
-- Multiple reporters file separate tickets for one outage — duplicates flood the queue
+- Multiple reporters file separate tickets for one outage duplicates flood the queue
 - Major incident needs known workarounds from previous occurrences, fast
-- When NOT to use: similarity below threshold or different affected service — a false link actively misleads restoration
+- When NOT to use: similarity below threshold or different affected service a false link actively misleads restoration
 
 ## Core Pattern
 
@@ -50,7 +50,7 @@ function findSimilar(incident) {
 | Match | Action | Rule |
 | --- | --- | --- |
 | sim ≥0.85 + same service | Suggest as duplicate | merge only with confirm |
-| sim 0.75–0.85 | Suggest as related | link both directions |
+| sim 0.750.85 | Suggest as related | link both directions |
 | sim <0.75 | No suggestion | avoid false leads |
 | Duplicate confirmed | Carry over workaround + comms | restore faster |
 

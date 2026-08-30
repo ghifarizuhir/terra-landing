@@ -13,14 +13,14 @@ description: Use when changes close the moment monitoring ends, related incident
 
 ## Overview
 
-Closure & drift report closes the loop: it checks whether the change held after the monitoring period (no related incidents, config still matches intent) and lists what should be updated — runbooks, architecture docs, the CI record. Core principle: a change is done when it stopped generating work, not when it deployed green.
+Closure & drift report closes the loop: it checks whether the change held after the monitoring period (no related incidents, config still matches intent) and lists what should be updated runbooks, architecture docs, the CI record. Core principle: a change is done when it stopped generating work, not when it deployed green.
 
 ## When to Use
 
-- Monitoring period completed without rollback — candidate for closure review
+- Monitoring period completed without rollback candidate for closure review
 - Incident appears days/weeks later touching a recently changed CI
 - Docs and diagrams that reference this service may now be stale
-- When NOT to use: change was rolled back — it feeds problem/incident records instead
+- When NOT to use: change was rolled back it feeds problem/incident records instead
 
 ## Core Pattern
 

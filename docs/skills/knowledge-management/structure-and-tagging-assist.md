@@ -13,14 +13,14 @@ description: Use when KB drafts are wall-of-text with no sections or tags, revie
 
 ## Overview
 
-Structure & tagging assist shapes a raw draft into a reviewable article: sections per kbType template, suggested tags pulled from content, a readability pass, then routes it to the right technical reviewer. Core principle: reviewers should spend attention on whether the fix is right — not on reformatting. The AI structures; meaning stays with the author.
+Structure & tagging assist shapes a raw draft into a reviewable article: sections per kbType template, suggested tags pulled from content, a readability pass, then routes it to the right technical reviewer. Core principle: reviewers should spend attention on whether the fix is right not on reformatting. The AI structures; meaning stays with the author.
 
 ## When to Use
 
-- Draft has no symptom/cause/steps separation — hard to follow mid-incident
+- Draft has no symptom/cause/steps separation hard to follow mid-incident
 - Tagging is inconsistent, so search misses articles that exist
 - Review cycles waste time on “can you restructure this?” feedback
-- When NOT to use: postmortem with required legal/compliance wording — template may break format rules
+- When NOT to use: postmortem with required legal/compliance wording template may break format rules
 
 ## Core Pattern
 
@@ -46,7 +46,7 @@ return routeForReview(shaped, domainExpert)
 | Pass | Input | Output |
 | --- | --- | --- |
 | Template sections | Raw draft | kbType-shaped article |
-| Tags | Entities in text (CI, app, error) | 5–10 consistent tags |
+| Tags | Entities in text (CI, app, error) | 510 consistent tags |
 | Readability | Full text | flags long steps, jargon |
 | Reviewer route | Domain of content | named technical reviewer |
 

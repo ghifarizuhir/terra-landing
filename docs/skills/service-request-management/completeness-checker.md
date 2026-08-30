@@ -13,14 +13,14 @@ description: Use when requests reach fulfillers missing fields or attachments, a
 
 ## Overview
 
-Completeness checker validates a request against its catalog item’s requirements before it enters a queue — missing laptop model, no manager name, absent justification — and asks the requester one consolidated question covering everything at once. Core principle: a request that cannot be fulfilled yet should not look fulfillable; bounce once, completely, or not at all.
+Completeness checker validates a request against its catalog item’s requirements before it enters a queue missing laptop model, no manager name, absent justification and asks the requester one consolidated question covering everything at once. Core principle: a request that cannot be fulfilled yet should not look fulfillable; bounce once, completely, or not at all.
 
 ## When to Use
 
 - Catalog item has required fields/attachments that arrive empty
 - Fulfillers spend their first touch asking for details instead of fulfilling
-- Requests bounce back and forth 2–3 times before work can start
-- When NOT to use: optional fields — nagging over nice-to-haves kills goodwill
+- Requests bounce back and forth 23 times before work can start
+- When NOT to use: optional fields nagging over nice-to-haves kills goodwill
 
 ## Core Pattern
 

@@ -17,8 +17,8 @@ Knowledge records pack standardizes what knowledge produces: article templates p
 
 ## When to Use
 
-- New article drafted — must follow the template for its kbType before review
-- Article published or retired — placement/retirement decision needs a record
+- New article drafted must follow the template for its kbType before review
+- Article published or retired placement/retirement decision needs a record
 - Quarterly review: which content to invest, fix, or archive?
 - When NOT to use: reference architecture decisions that follow a different record scheme
 
@@ -51,7 +51,7 @@ const pack = knowledgeRecords(kb)
 
 ## Implementation
 
-Structure & tagging assist records template coverage and editorial notes; context publisher records placements; usefulness tracker and freshness watchdog feed the quarterly scorecard and audit — one report structure per quarter, reviewed and archived.
+Structure & tagging assist records template coverage and editorial notes; context publisher records placements; usefulness tracker and freshness watchdog feed the quarterly scorecard and audit one report structure per quarter, reviewed and archived.
 
 ## Common Mistakes
 

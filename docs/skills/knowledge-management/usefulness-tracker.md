@@ -13,14 +13,14 @@ description: Use when KB health is measured by page views and thumbs-up, while n
 
 ## Overview
 
-Usefulness tracker correlates article usage with outcomes: when an incident linked to an article resolves successfully, the article earns a confirmed success; high views without successes mean findable-but-broken. Core principle: feedback is behavioral — resolution data tells the truth that star ratings flatter.
+Usefulness tracker correlates article usage with outcomes: when an incident linked to an article resolves successfully, the article earns a confirmed success; high views without successes mean findable-but-broken. Core principle: feedback is behavioral resolution data tells the truth that star ratings flatter.
 
 ## When to Use
 
 - Quarterly KB review: which articles deserve investment?
 - An article gets traffic but the same failures keep escalating past it
 - Deciding where to spend documentation effort next quarter
-- When NOT to use: brand-new article with <10 exposures — sample too small to judge
+- When NOT to use: brand-new article with <10 exposures sample too small to judge
 
 ## Core Pattern
 

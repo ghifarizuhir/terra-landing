@@ -13,14 +13,14 @@ description: Use when end-of-life hardware keeps running past support, licenses 
 
 ## Overview
 
-Retirement planner surfaces assets at end of life — support ended, warranty expired, unused for months, linked person offboarded — and drafts the disposal checklist: data wipe, license reclaim, CI unlink, record close. Core principle: an asset’s exit matters as much as its entry; sloppy exits leak money and data.
+Retirement planner surfaces assets at end of life support ended, warranty expired, unused for months, linked person offboarded and drafts the disposal checklist: data wipe, license reclaim, CI unlink, record close. Core principle: an asset’s exit matters as much as its entry; sloppy exits leak money and data.
 
 ## When to Use
 
-- Vendor support/warranty ended — device now an uninsured risk
+- Vendor support/warranty ended device now an uninsured risk
 - License seats bill for people who left months ago
 - Storage closet filling with “we’ll deal with those later”
-- When NOT to use: asset still actively serving prod despite age — flag risk instead of retiring
+- When NOT to use: asset still actively serving prod despite age flag risk instead of retiring
 
 ## Core Pattern
 

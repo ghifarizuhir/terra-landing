@@ -13,14 +13,14 @@ description: Use when requesters ask “any update on my laptop?” because fulf
 
 ## Overview
 
-Status comms drafter answers “where is my request?” from the fulfillment timeline — ordered, shipped, delivered — and drafts the delivery confirmation message so closure is explicit, not a silent status change. Core principle: silence reads as neglect; the timeline already knows the answer, someone just has to say it.
+Status comms drafter answers “where is my request?” from the fulfillment timeline ordered, shipped, delivered and drafts the delivery confirmation message so closure is explicit, not a silent status change. Core principle: silence reads as neglect; the timeline already knows the answer, someone just has to say it.
 
 ## When to Use
 
 - Requester asks for status on an in-flight request
 - Fulfillment state changed (ordered/shipped/done) without telling the requester
-- Request is fulfilled — needs explicit confirmation before closing
-- When NOT to use: nothing has changed since the last update — do not send empty noise
+- Request is fulfilled needs explicit confirmation before closing
+- When NOT to use: nothing has changed since the last update do not send empty noise
 
 ## Core Pattern
 
@@ -52,7 +52,7 @@ onFulfilled((req) => proposeConfirmation(req))
 
 ## Implementation
 
-Compresses the fulfillment timeline into 1–2 sentences with the next milestone and date, always extractive (dates and states come from records, not invention). Drafts are sent by humans or auto-posted where policy allows. At fulfillment, proposes the confirmation message that doubles as the closure record.
+Compresses the fulfillment timeline into 12 sentences with the next milestone and date, always extractive (dates and states come from records, not invention). Drafts are sent by humans or auto-posted where policy allows. At fulfillment, proposes the confirmation message that doubles as the closure record.
 
 ## Common Mistakes
 

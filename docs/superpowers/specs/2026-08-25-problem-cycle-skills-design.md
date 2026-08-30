@@ -1,4 +1,4 @@
-# Problem Cycle Skills — Design
+# Problem Cycle Skills Design
 
 Date: 2026-08-25
 Status: Approved (user confirmed mapping table)
@@ -21,7 +21,7 @@ Complete Problem Management AI-skill coverage using the same 1-skill-per-stage p
 ## New skills (full SKILL.md structure)
 
 ### Recurring-impact scorer (Prioritize)
-Scores a problem's priority from recurrence frequency × affected users × trend direction. Frequency beats severity for problems — a small failure every day costs more than one big one. Suggests P-level, human confirms.
+Scores a problem's priority from recurrence frequency × affected users × trend direction. Frequency beats severity for problems a small failure every day costs more than one big one. Suggests P-level, human confirms.
 
 ### Known-error publisher (Workaround)
 When RCA confirms cause but the permanent fix needs a change, drafts and publishes the workaround as a known-error record so agents find it during incidents. Extractive from RCA + linked incident workarounds; never publishes unreviewed.
@@ -32,9 +32,9 @@ Correlates incidents after the permanent fix shipped against the pre-fix baselin
 ### Recurrence watchdog (Close & watch)
 Watches closed problems for re-emergence of the same signature; proposes reopen with fresh cluster evidence instead of letting a dead problem absorb new incidents.
 
-Shared principle: AI correlates and suggests, humans confirm; a problem is not done because it was closed — it is done when recurrence stops.
+Shared principle: AI correlates and suggests, humans confirm; a problem is not done because it was closed it is done when recurrence stops.
 
 ## Tests
 
 - `managements.test.ts`: problem has 6 skills, ordered stages matching the 6 stage names.
-- JourneyLoop strip test already generic — extend to also assert Problem renders the strip.
+- JourneyLoop strip test already generic extend to also assert Problem renders the strip.

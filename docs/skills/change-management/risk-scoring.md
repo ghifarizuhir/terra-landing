@@ -13,12 +13,12 @@ description: Use when changes are created with vague descriptions, every change 
 
 ## Overview
 
-Risk scoring grades a planned change as low/medium/high/critical before approval. Core principle: description length and environment are the signals — a 10-word prod change is riskier than a 100-word staging change.
+Risk scoring grades a planned change as low/medium/high/critical before approval. Core principle: description length and environment are the signals a 10-word prod change is riskier than a 100-word staging change.
 
 ## When to Use
 
 - Change created, especially for prod or with <50 char description
-- Every change is “medium” — no differentiation
+- Every change is “medium” no differentiation
 - Prod change with 10-word description
 - When NOT to use: change already has a thorough risk assessment by author
 

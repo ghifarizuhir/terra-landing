@@ -13,14 +13,14 @@ description: Use when a new incident is created and the right KB article is not 
 
 ## Overview
 
-Search relevance suggests the right KB article when a similar incident is opened. Core principle: the incident text is the query — embedding similarity finds the KB whose sections already solved it.
+Search relevance suggests the right KB article when a similar incident is opened. Core principle: the incident text is the query embedding similarity finds the KB whose sections already solved it.
 
 ## When to Use
 
 - New incident is created
 - “Is there a runbook for this?” asked
 - Repeated manual search for same error
-- When NOT to use: incident is a novel error with no KB — no suggestion
+- When NOT to use: incident is a novel error with no KB no suggestion
 
 ## Core Pattern
 
@@ -56,4 +56,4 @@ Embedding similarity between incident title/description and KB sections. Surface
 
 ## Example
 
-New incident “504 checkout” → suggests KB-012 “Runbook: 504 — check DB pool” (0.81).
+New incident “504 checkout” → suggests KB-012 “Runbook: 504 check DB pool” (0.81).

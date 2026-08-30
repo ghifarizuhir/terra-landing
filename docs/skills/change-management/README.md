@@ -6,7 +6,7 @@ Lane: **cycle** · cycle coverage: 7/7 stages
 
 ## What it does
 
-- Plans change with risk, intent and rollback — not just deploy
+- Plans change with risk, intent and rollback not just deploy
 - Verifies outcome after deployment during monitoring period
 - Holds or rolls back when monitoring shows warning or anomaly
 

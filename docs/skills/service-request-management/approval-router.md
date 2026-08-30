@@ -13,7 +13,7 @@ description: Use when approvals sit for days with the wrong person, requesters h
 
 ## Overview
 
-Approval router determines who must approve a request — by item type × cost × requester role policy — attaches the context an approver needs to decide fast, and nudges approvals sitting past due. Core principle: approval should take one glance; the AI finds the right pair of eyes and hands them everything on one screen.
+Approval router determines who must approve a request by item type × cost × requester role policy attaches the context an approver needs to decide fast, and nudges approvals sitting past due. Core principle: approval should take one glance; the AI finds the right pair of eyes and hands them everything on one screen.
 
 ## When to Use
 

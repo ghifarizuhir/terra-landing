@@ -7,7 +7,7 @@ Lane: **cycle** · cycle coverage: 7/7 stages
 ## What it does
 
 - Captures runbooks, troubleshooting guides and postmortems as structured articles
-- Makes knowledge findable inside the incident — not after
+- Makes knowledge findable inside the incident not after
 - Evolves articles from real resolutions, not theory
 
 ## AI skills

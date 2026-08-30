@@ -32,7 +32,7 @@ function skillToMarkdown(m: (typeof managements)[number], skill: (typeof managem
     skill.commonMistakes.forEach((c) => lines.push(`- ${c}`))
   }
   if (skill.example) lines.push('', `## Example`, '', `> ${skill.example}`)
-  lines.push('', `---`, `*Terra — AI for ITSM · ${m.title}*`)
+  lines.push('', `---`, `*Terra AI for ITSM · ${m.title}*`)
   return lines.join('\n')
 }
 
@@ -43,14 +43,14 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
   const active = open ? managements.find((m) => m.id === open) ?? null : null
   const shouldReduceMotion = useReducedMotion()
   const tipById: Record<string, string> = {
-    incident: 'Restore first, then learn — triage → war-room → close hands off to Problem & Knowledge.',
-    request: 'Requests ≠ incidents — validate completeness once, route by policy, confirm delivery explicitly.',
-    problem: 'From repeats to root cause — cluster → RCA draft → known error until fix is verified.',
-    change: 'Plan → risk score → approve → verify — every change leaves an audit trail.',
-    knowledge: 'Capture from resolutions, structure for findability, retire stale — search quality is the test.',
-    improvement: 'Trends → suggestions → backlog → impact review — improvement is a loop, not a ticket.',
-    asset: 'Receive → classify → operate → audit → retire — if it’s not in the register, it doesn’t exist.',
-    'service-map': 'Register CIs, map dependencies, predict blast radius — the map is the foundation for impact.',
+    incident: 'Restore first, then learn triage → war-room → close hands off to Problem & Knowledge.',
+    request: 'Requests ≠ incidents validate completeness once, route by policy, confirm delivery explicitly.',
+    problem: 'From repeats to root cause cluster → RCA draft → known error until fix is verified.',
+    change: 'Plan → risk score → approve → verify every change leaves an audit trail.',
+    knowledge: 'Capture from resolutions, structure for findability, retire stale search quality is the test.',
+    improvement: 'Trends → suggestions → backlog → impact review improvement is a loop, not a ticket.',
+    asset: 'Receive → classify → operate → audit → retire if it’s not in the register, it doesn’t exist.',
+    'service-map': 'Register CIs, map dependencies, predict blast radius the map is the foundation for impact.',
   }
 
   const copy = async (text: string, key: string) => {
@@ -127,9 +127,9 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
 
   return (
     <>
-      {/* Leaderboard — skills.sh style */}
+      {/* Leaderboard skills.sh style */}
       <div className="rounded-lg border border-[#eaeaea] overflow-hidden bg-white">
-        {/* table header — like skills.sh */}
+        {/* table header like skills.sh */}
         <div className="hidden sm:grid grid-cols-[44px_1fr_140px_90px] gap-0 border-b border-[#eaeaea] bg-[#fafafa] px-4 py-2 font-mono text-[11px] tracking-wide uppercase text-[#999]">
           <span>#</span>
           <span>Practice</span>
@@ -170,7 +170,7 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                   </div>
                 </div>
 
-                {/* skills — desktop */}
+                {/* skills desktop */}
                 <div className="hidden sm:flex flex-wrap justify-end gap-1.5">
                   {m.skills.slice(0, 2).map((s) => (
                     <span key={s.name} className="font-mono text-[11px] bg-black text-white px-2 py-1 rounded-full max-w-[120px] truncate">{s.name}</span>
@@ -198,7 +198,7 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
         <span className="h-px flex-1 bg-[#eaeaea]" />
       </div>
 
-      {/* Detail — Rail + Reader — clean */}
+      {/* Detail Rail + Reader clean */}
       <AnimatePresence>
         {active && (
           <motion.div
@@ -233,7 +233,7 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                 <div className="mt-5 grid sm:grid-cols-3 gap-3">
                   {active.bullets.map((b, i) => (
                     <div key={b} className="rounded-lg border border-[#eaeaea] bg-[#fafafa] p-3">
-                      <div className="font-mono text-[11px] tracking-wide uppercase text-[#999]">0{i + 1} — What it does</div>
+                      <div className="font-mono text-[11px] tracking-wide uppercase text-[#999]">0{i + 1} What it does</div>
                       <p className="text-[13px] leading-[1.5] mt-1">{b}</p>
                     </div>
                   ))}
@@ -251,13 +251,13 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                 </div>
                 {allStaged && (
                   <p className="font-mono text-[11px] text-[#999] mt-2">
-                    {active.lane === 'foundation' ? 'Always-on foundation — one skill per stage' : 'Full lifecycle coverage — one skill per stage'}
+                    {active.lane === 'foundation' ? 'Always-on foundation one skill per stage' : 'Full lifecycle coverage one skill per stage'}
                   </p>
                 )}
 
-                {/* Rail + Reader — mobile: sticky horizontal pills, desktop: vertical rail */}
+                {/* Rail + Reader mobile: sticky horizontal pills, desktop: vertical rail */}
                 <div className="mt-4 grid lg:grid-cols-[240px_1fr] gap-0 rounded-xl border border-[#eaeaea] overflow-hidden bg-white shadow-sm">
-                  {/* Rail — sticky on both */}
+                  {/* Rail sticky on both */}
                   <nav className="sticky top-0 z-10 lg:static border-b lg:border-b-0 lg:border-r border-[#eaeaea] bg-white flex flex-col max-lg:overflow-hidden" aria-label="Stage rail">
                     <div className="px-3 py-3 border-b border-[#eaeaea] bg-[#fafafa]">
                       <p className="font-mono text-[11px] tracking-wide uppercase text-[#999]">Stages</p>
@@ -289,7 +289,7 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                     </div>
                   </nav>
 
-                  {/* Reader — roomy, high readability */}
+                  {/* Reader roomy, high readability */}
                   <div className="min-h-[420px] bg-white flex justify-center">
                     <AnimatePresence mode="wait">
                       {selectedSkill && (
@@ -301,7 +301,7 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                           transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] as const }}
                           className="bg-white max-w-[720px] w-full"
                         >
-                          {/* skill header — larger, clearer */}
+                          {/* skill header larger, clearer */}
                           <div className="px-4 sm:px-6 py-5 border-b border-[#eaeaea] bg-[#fafafa]/60">
                             <div className="flex items-start gap-3">
                               <div className="flex-1 min-w-0">

@@ -13,14 +13,14 @@ description: Use when a problem RCA is published or a change is marked achieved 
 
 ## Overview
 
-Resolution → article generates a knowledge article draft from a closed problem or change resolution. Core principle: the resolution is the source — the draft prefills from published RCA or change goals, human publishes.
+Resolution → article generates a knowledge article draft from a closed problem or change resolution. Core principle: the resolution is the source the draft prefills from published RCA or change goals, human publishes.
 
 ## When to Use
 
 - Problem RCA is published
 - Change is marked achieved
 - Same incident is solved from scratch each time
-- When NOT to use: KB already exists for this fix — link, do not duplicate
+- When NOT to use: KB already exists for this fix link, do not duplicate
 
 ## Core Pattern
 
@@ -28,7 +28,7 @@ Resolution → article generates a knowledge article draft from a closed problem
 
 ```js
 // Before: fix stays in comments
-// “we fixed by increasing pool” — lost in 200 comments
+// “we fixed by increasing pool” lost in 200 comments
 ```
 
 ### After
@@ -58,4 +58,4 @@ Prefills title, kbType and sections from published RCA or change goals. Syntheti
 
 ## Example
 
-RCA “DB pool fix” → draft KB “Runbook: DB pool exhausted — increase maxPool to 50” (runbook).
+RCA “DB pool fix” → draft KB “Runbook: DB pool exhausted increase maxPool to 50” (runbook).

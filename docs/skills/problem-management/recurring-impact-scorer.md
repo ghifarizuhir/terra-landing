@@ -13,14 +13,14 @@ description: Use when the problem backlog is ranked by gut feel, small-but-daily
 
 ## Overview
 
-Recurring-impact scorer ranks the problem backlog by real cost: recurrence frequency × users affected × trend direction. Core principle: for problems, frequency beats severity — a 5-minute failure every day costs more than a one-hour outage once. The AI computes and ranks; humans confirm the priority.
+Recurring-impact scorer ranks the problem backlog by real cost: recurrence frequency × users affected × trend direction. Core principle: for problems, frequency beats severity a 5-minute failure every day costs more than a one-hour outage once. The AI computes and ranks; humans confirm the priority.
 
 ## When to Use
 
 - Problem backlog has >10 open PRBs with no clear order
 - A daily nuisance incident outranks nothing because each occurrence looks small
 - Planning meeting needs evidence for “why this RCA first”
-- When NOT to use: brand-new problem with 1 occurrence — no recurrence data to score yet
+- When NOT to use: brand-new problem with 1 occurrence no recurrence data to score yet
 
 ## Core Pattern
 
@@ -54,7 +54,7 @@ return scored.sort((a, b) => b.score - a.score) // human confirms top of queue
 
 ## Implementation
 
-Counts occurrences from linked incidents over trailing 30 days, multiplies by distinct users affected and trend factor (rising/flat/falling via week-over-week delta). Output: {score, suggestedP, reason} per problem. Suggestion only — priority changes still need human confirmation, and every factor is shown so the ranking is arguable.
+Counts occurrences from linked incidents over trailing 30 days, multiplies by distinct users affected and trend factor (rising/flat/falling via week-over-week delta). Output: {score, suggestedP, reason} per problem. Suggestion only priority changes still need human confirmation, and every factor is shown so the ranking is arguable.
 
 ## Common Mistakes
 
@@ -64,4 +64,4 @@ Counts occurrences from linked incidents over trailing 30 days, multiplies by di
 
 ## Example
 
-PRB “DB pool exhaustion”: 9 occurrences × 40 users × rising (×1.5) → score 540, suggested P2 — jumps above two older one-off P1s in the ranked backlog.
+PRB “DB pool exhaustion”: 9 occurrences × 40 users × rising (×1.5) → score 540, suggested P2 jumps above two older one-off P1s in the ranked backlog.

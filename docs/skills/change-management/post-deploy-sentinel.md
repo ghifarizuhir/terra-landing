@@ -2,14 +2,14 @@
 name: Post-deploy sentinel
 stage: "05 · Deploy & verify"
 management: Change Management (CHG-)
-description: Use when deploys go green and everyone walks away, while the real verdict — error rates, latency, business metrics — shows up hours later unwatched
+description: Use when deploys go green and everyone walks away, while the real verdict error rates, latency, business metrics shows up hours later unwatched
 ---
 
 # Post-deploy sentinel
 
 > **05 · Deploy & verify** · Cycle stage of Change Management (CHG-)
 
-**Use when** deploys go green and everyone walks away, while the real verdict — error rates, latency, business metrics — shows up hours later unwatched
+**Use when** deploys go green and everyone walks away, while the real verdict error rates, latency, business metrics shows up hours later unwatched
 
 ## Overview
 
@@ -18,7 +18,7 @@ Post-deploy sentinel watches the affected services during the monitoring period,
 ## When to Use
 
 - High/critical change just deployed to prod with a monitoring period set
-- Deploy finished outside overlap hours — no engineer is naturally watching
+- Deploy finished outside overlap hours no engineer is naturally watching
 - Service has known wobble where humans need a diff against baseline, not raw dashboards
 - When NOT to use: low-risk isolated change with trivial verification checks already defined
 

@@ -13,14 +13,14 @@ description: Use when audit season reveals devices on paper that nobody can find
 
 ## Overview
 
-Audit reconciler compares inventory records against operational reality — discovery scans, spot checks, network evidence — and classifies every mismatch: ghost (recorded, absent) or zombie (running, unrecorded). Core principle: two sources of truth means zero; reconciliation is how inventory stays honest.
+Audit reconciler compares inventory records against operational reality discovery scans, spot checks, network evidence and classifies every mismatch: ghost (recorded, absent) or zombie (running, unrecorded). Core principle: two sources of truth means zero; reconciliation is how inventory stays honest.
 
 ## When to Use
 
 - Periodic audit cycle or compliance check approaching
 - Discovery tooling reports devices the inventory never heard of
 - Reports disagree: finance counts ≠ ops counts
-- When NOT to use: asset mid-transfer between locations — expected temporary mismatch
+- When NOT to use: asset mid-transfer between locations expected temporary mismatch
 
 ## Core Pattern
 
@@ -52,7 +52,7 @@ return triageList(mismatches)
 
 ## Implementation
 
-Matches records against scan/discovery feeds using hostname, serial and fuzzy name matching (same matcher as inventory linking), then buckets differences by type with confidence and last-seen evidence. Produces a triage-ordered worklist — high-value ghosts first — where each resolution routes to the right stage (retire, register, update). Humans judge every disposition.
+Matches records against scan/discovery feeds using hostname, serial and fuzzy name matching (same matcher as inventory linking), then buckets differences by type with confidence and last-seen evidence. Produces a triage-ordered worklist high-value ghosts first where each resolution routes to the right stage (retire, register, update). Humans judge every disposition.
 
 ## Common Mistakes
 

@@ -13,7 +13,7 @@ description: Use when approvers decide from a title and a gut feeling, meetings 
 
 ## Overview
 
-CAB evidence pack compiles everything an approver needs into one view: risk score, predicted blast radius, rollout and rollback plans, schedule conflicts (change freezes, overlapping changes on the same CI) — plus a draft rationale either way. Core principle: approval quality is bounded by evidence quality; the AI assembles, the board decides.
+CAB evidence pack compiles everything an approver needs into one view: risk score, predicted blast radius, rollout and rollback plans, schedule conflicts (change freezes, overlapping changes on the same CI) plus a draft rationale either way. Core principle: approval quality is bounded by evidence quality; the AI assembles, the board decides.
 
 ## When to Use
 
@@ -58,7 +58,7 @@ Joins outputs of the earlier stages (risk, impact) with schedule data: other pen
 
 - Auto-approving low-risk packs → approval theater returns via the side door. Fix: humans decide, always.
 - Conflict window too narrow (same hour) → sequential deploys still collide. Fix: default ±48h.
-- Packs so long nobody reads them. Fix: one screen — flags up top, evidence behind.
+- Packs so long nobody reads them. Fix: one screen flags up top, evidence behind.
 
 ## Example
 

@@ -13,14 +13,14 @@ description: Use when inventory mixes servers, licenses and “misc” because c
 
 ## Overview
 
-Lifecycle classifier assigns each asset its category (server/license/service/other), environment and criticality from its description and context — mapping free text onto the fixed enum. Core principle: category decides the whole lifecycle (a license renews, a server depreciates); misclassification corrupts every downstream report.
+Lifecycle classifier assigns each asset its category (server/license/service/other), environment and criticality from its description and context mapping free text onto the fixed enum. Core principle: category decides the whole lifecycle (a license renews, a server depreciates); misclassification corrupts every downstream report.
 
 ## When to Use
 
 - Imported inventory arrives with free-text “type” columns (“box”, “subscrip”)
 - Assets lack environment tags so prod cannot be separated from dev in reports
 - Replacement planning needs criticality that nobody assigned
-- When NOT to use: asset already cleanly categorized — no signal needed
+- When NOT to use: asset already cleanly categorized no signal needed
 
 ## Core Pattern
 

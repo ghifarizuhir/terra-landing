@@ -13,14 +13,14 @@ description: Use when services run in production that the map has never heard of
 
 ## Overview
 
-CI capture assist drafts configuration records from operational evidence — deploy events, service descriptions, app associations — so the graph learns about services when they are born, not after their first outage. Core principle: every unrecorded service is a blind spot in the next impact prediction; capture is the graph’s immune system.
+CI capture assist drafts configuration records from operational evidence deploy events, service descriptions, app associations so the graph learns about services when they are born, not after their first outage. Core principle: every unrecorded service is a blind spot in the next impact prediction; capture is the graph’s immune system.
 
 ## When to Use
 
 - New service deployed but no CI exists for it yet
-- CI entry has only a hostname — no kind, environment or owning app
+- CI entry has only a hostname no kind, environment or owning app
 - Team mentions “the queue worker” that no one can find on the map
-- When NOT to use: ephemeral build containers / short-lived jobs — noise, not configuration
+- When NOT to use: ephemeral build containers / short-lived jobs noise, not configuration
 
 ## Core Pattern
 
@@ -52,7 +52,7 @@ return humanConfirms(draft)
 
 ## Implementation
 
-Watches deployment and infrastructure events plus existing app structures to propose new CI records with kind (server/service), environment and owning application; enriches descriptions from documentation excerpts. Drafts stage for human confirmation — the graph of record only grows through approved writes.
+Watches deployment and infrastructure events plus existing app structures to propose new CI records with kind (server/service), environment and owning application; enriches descriptions from documentation excerpts. Drafts stage for human confirmation the graph of record only grows through approved writes.
 
 ## Common Mistakes
 

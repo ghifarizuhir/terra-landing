@@ -13,14 +13,14 @@ description: Use when problems close as “fixed” with no documented statement
 
 ## Overview
 
-Problem records pack standardizes what every problem must produce: the problem statement, the RCA document, the known-error record, the recurrence and fix-effectiveness report. Core principle: a problem is not solved because its ticket says closed — it is solved when its records explain what happened, what worked, and what came back.
+Problem records pack standardizes what every problem must produce: the problem statement, the RCA document, the known-error record, the recurrence and fix-effectiveness report. Core principle: a problem is not solved because its ticket says closed it is solved when its records explain what happened, what worked, and what came back.
 
 ## When to Use
 
-- Problem investigated — RCA document due for review
+- Problem investigated RCA document due for review
 - Workaround exists but no known-error record pins it where agents can find it
 - Quarterly problem review needs recurrence curves across all open/closed problems
-- When NOT to use: single-incident PRB closed as no-fault — lean record suffices
+- When NOT to use: single-incident PRB closed as no-fault lean record suffices
 
 ## Core Pattern
 
@@ -61,4 +61,4 @@ Problem creation seeds a record skeleton; RCA draft assist fills the RCA doc dra
 
 ## Example
 
-PRB “pool exhaustion” → RCA doc published + KE record linked to checkout KB + 3-week fix report: 78% reduction, verdict partial — problem stays open with evidence.
+PRB “pool exhaustion” → RCA doc published + KE record linked to checkout KB + 3-week fix report: 78% reduction, verdict partial problem stays open with evidence.

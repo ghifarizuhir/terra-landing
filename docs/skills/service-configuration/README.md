@@ -6,7 +6,7 @@ Lane: **foundation** · workflow coverage: 7/7 stages
 
 ## What it does
 
-- Records CIs (server/service) and directed dependencies — not a stale diagram
+- Records CIs (server/service) and directed dependencies not a stale diagram
 - Answers impact: if this component fails, what else is affected?
 - Ties configuration to the assets that actually run it
 

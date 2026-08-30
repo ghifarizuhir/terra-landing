@@ -13,7 +13,7 @@ description: Use when a service request is approved and needs assignment to the 
 
 ## Overview
 
-Auto-routing suggests the owner team and a realistic due date for a validated request. Core principle: history is the SLA — past fulfillment times for that catalog item predict the next due date.
+Auto-routing suggests the owner team and a realistic due date for a validated request. Core principle: history is the SLA past fulfillment times for that catalog item predict the next due date.
 
 ## When to Use
 

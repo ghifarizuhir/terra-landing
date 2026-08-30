@@ -13,14 +13,14 @@ description: Use when published articles live only in the portal nobody opens du
 
 ## Overview
 
-Context publisher places an approved article where its audience actually works: the portal, the runbook slot of matching CIs, the in-ticket suggestion pool for future similar incidents. Core principle: publishing is placement, not a button — knowledge that surfaces after the incident is trivia.
+Context publisher places an approved article where its audience actually works: the portal, the runbook slot of matching CIs, the in-ticket suggestion pool for future similar incidents. Core principle: publishing is placement, not a button knowledge that surfaces after the incident is trivia.
 
 ## When to Use
 
 - Article approved but visible only via direct URL / portal search
 - Runbooks exist for services but never appear when those services fail
 - Teams argue the KB is useless because nothing shows up mid-ticket
-- When NOT to use: sensitive internal analysis restricted by policy — placement must respect ACLs first
+- When NOT to use: sensitive internal analysis restricted by policy placement must respect ACLs first
 
 ## Core Pattern
 

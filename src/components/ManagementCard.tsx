@@ -60,12 +60,12 @@ export default function ManagementCard({ prefix, title, oneLiner, bullets, skill
           </span>
         </div>
 
-        {/* One liner — work instruction */}
+        {/* One liner work instruction */}
         <p className="font-display text-[18px] leading-[1.1] tracking-tight text-[#1a1d23] mb-2.5">
           {oneLiner}
         </p>
 
-        {/* Work steps — numbered, not bulleted */}
+        {/* Work steps numbered, not bulleted */}
         <ol className="space-y-1.5 mb-4">
           {bullets.slice(0, 3).map((b, i) => (
             <li key={b} className="flex gap-2 text-[12.5px] leading-[1.5] text-[#3a3f4a]">
@@ -75,7 +75,7 @@ export default function ManagementCard({ prefix, title, oneLiner, bullets, skill
           ))}
         </ol>
 
-        {/* Andon call — skill badges as lamp calls */}
+        {/* Andon call skill badges as lamp calls */}
         <div className="flex flex-wrap gap-1.5 pt-3 border-t border-[#e8e9eb]">
           {skills.length > 0 ? (
             skills.map((s) => {
@@ -91,7 +91,7 @@ export default function ManagementCard({ prefix, title, oneLiner, bullets, skill
             })
           ) : (
             <span className="font-mono text-[10px] tracking-widest uppercase text-[#8a8f98] border border-dashed border-[#8a8f98]/50 px-2 py-1 rounded-sm">
-              No cord — links to CI
+              No cord links to CI
             </span>
           )}
         </div>

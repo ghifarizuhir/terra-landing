@@ -13,14 +13,14 @@ description: Use when the same manual requests repeat every week yet stay manual
 
 ## Overview
 
-Demand miner clusters fulfilled requests over time to expose what people actually keep asking for — and quantifies it: volume, handler time, seasonality. Core principle: the catalog should grow from evidence of repeated demand, not from whoever complained loudest this month.
+Demand miner clusters fulfilled requests over time to expose what people actually keep asking for and quantifies it: volume, handler time, seasonality. Core principle: the catalog should grow from evidence of repeated demand, not from whoever complained loudest this month.
 
 ## When to Use
 
 - Quarterly catalog review: which free-text asks recur often enough to become items?
 - A request type is fulfilled manually 20× a month with the same three steps
 - Stakeholders debate new self-service flows with no usage data
-- When NOT to use: one-off unusual requests — no pattern to mine yet
+- When NOT to use: one-off unusual requests no pattern to mine yet
 
 ## Core Pattern
 

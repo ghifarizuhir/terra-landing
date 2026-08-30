@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Detail A — Rail + Reader (Recommended)</title>
+<title>Detail A Rail + Reader (Recommended)</title>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap" rel="stylesheet">
 <style>
 :root{--bg:oklch(0.985 0 0);--fg:oklch(0.145 0 0);--muted:oklch(0.45 0 0);--muted2:oklch(0.62 0 0);--border:oklch(0.145 0 0 / 12%);--strong:oklch(0.145 0 0)}
@@ -44,7 +44,7 @@ td{padding:6px 8px;border-top:1px solid var(--border)}
 </style>
 </head>
 <body>
-<div class="header mono"><span style="height:26px;width:26px;border:1.5px solid var(--strong);display:grid;place-items:center;font-family:'Instrument Serif',serif">T</span><b style="font-size:11px;letter-spacing:.14em">Terra — AI for ITSM</b><span style="border:1px solid var(--strong);padding:3px 8px;background:#fff;font-size:10px;letter-spacing:.1em">INC- Knowledge</span><span style="margin-left:auto;font-size:10px;color:var(--muted)">A · Rail + Reader · Recommended</span></div>
+<div class="header mono"><span style="height:26px;width:26px;border:1.5px solid var(--strong);display:grid;place-items:center;font-family:'Instrument Serif',serif">T</span><b style="font-size:11px;letter-spacing:.14em">Terra AI for ITSM</b><span style="border:1px solid var(--strong);padding:3px 8px;background:#fff;font-size:10px;letter-spacing:.1em">INC- Knowledge</span><span style="margin-left:auto;font-size:10px;color:var(--muted)">A · Rail + Reader · Recommended</span></div>
 <div class="shell">
   <aside class="rail">
     <div class="rail-head">
@@ -62,13 +62,13 @@ td{padding:6px 8px;border-top:1px solid var(--border)}
       <button class="item"><b>06 · Close & learn</b><p>Closure & handover pack</p></button>
       <button class="item active"><b>07 · Reporting & records</b><p>Incident records pack ★ active</p></button>
     </nav>
-    <div class="quote serif2">“A ticket is not done when it says closed — it is done when its records explain what happened.”</div>
+    <div class="quote serif2">“A ticket is not done when it says closed it is done when its records explain what happened.”</div>
   </aside>
   <main class="reader">
     <div class="kicker mono"><i></i>07 · Reporting & records</div>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px"><h1 class="display">Incident records pack</h1><span class="tag mono">07 · Reporting & records</span></div>
     <p class="desc mono">Use when close is “fixed” with no documented statement, war-room chats hold the truth, and leadership cannot tell if it came back.</p>
-    <div class="sec"><h3 class="mono">Overview</h3><p style="margin-top:6px">Incident records pack standardizes what every incident must produce: the incident report, the PIR, the comms log. Core principle: an incident is not done when resolved — it is done when its records close the loop.</p></div>
+    <div class="sec"><h3 class="mono">Overview</h3><p style="margin-top:6px">Incident records pack standardizes what every incident must produce: the incident report, the PIR, the comms log. Core principle: an incident is not done when resolved it is done when its records close the loop.</p></div>
     <div class="sec"><h3 class="mono">When to use</h3><ul style="margin-top:6px;padding-left:16px"><li>Incident closed as “fixed” with empty report</li><li>War-room exists but no timestamped comms log</li><li>When NOT to use: no-fault PRB with lean record</li></ul></div>
     <div class="sec"><h3 class="mono">Core Pattern</h3><div style="display:grid;gap:8px;margin-top:8px"><pre class="dark mono">// Before: truth in DMs&#10;resolve(); // report later (never)</pre><pre class="light mono">// After: pack is the close&#10;const pack = buildIncidentRecords(inc)&#10;// {report, pir, commsLog}</pre></div></div>
     <div class="sec"><h3 class="mono">Quick Reference</h3><table class="mono" style="margin-top:8px"><tr><th>Document</th><th>Trigger</th><th>Required</th></tr><tr><td>Incident report</td><td>Every INC-</td><td>what · when · who · fix</td></tr><tr><td>PIR</td><td>Post-close 5d</td><td>cause · missed · prevent</td></tr><tr><td>Comms log</td><td>War-room</td><td>time · channel · decision</td></tr></table></div>

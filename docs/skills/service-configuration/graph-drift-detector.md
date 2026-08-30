@@ -13,14 +13,14 @@ description: Use when the map says a service has no dependencies yet incidents k
 
 ## Overview
 
-Graph drift detector compares the configuration graph against signals of operational reality — new services in deploys, dependency mentions in incident notes, edges implied by traffic — and proposes the missing nodes and edges. Core principle: maps do not drift loudly; they rot quietly until an impact prediction lies to you at the worst time.
+Graph drift detector compares the configuration graph against signals of operational reality new services in deploys, dependency mentions in incident notes, edges implied by traffic and proposes the missing nodes and edges. Core principle: maps do not drift loudly; they rot quietly until an impact prediction lies to you at the worst time.
 
 ## When to Use
 
 - Incident revealed “X actually calls Y” but no edge exists
 - Deploy logs mention services absent from the graph
 - Impact prediction results contradict what responders saw
-- When NOT to use: intentional isolation confirmed by owner — document, don’t chase
+- When NOT to use: intentional isolation confirmed by owner document, don’t chase
 
 ## Core Pattern
 
@@ -29,7 +29,7 @@ Graph drift detector compares the configuration graph against signals of operati
 ```js
 // Before: drift found by victims
 impact(CI-042) // “no downstream”
-// reality: three services scream when it dies — map was stale for months
+// reality: three services scream when it dies map was stale for months
 ```
 
 ### After
@@ -45,9 +45,9 @@ returnPropose(drift) // human confirms each write
 
 | Signal | Drift type | Confidence |
 | --- | --- | --- |
-| “calls X” in incident note | missing edge | high — cite incident |
+| “calls X” in incident note | missing edge | high cite incident |
 | New deploy target | missing node | route via capture assist |
-| No events + no mentions | possible ghost | low — verify first |
+| No events + no mentions | possible ghost | low verify first |
 
 ## Implementation
 

@@ -13,14 +13,14 @@ description: Use when monitoring floods the queue with raw alert bursts, inciden
 
 ## Overview
 
-Auto-log enrichment turns a burst of correlated alerts into one clean incident: duplicates merge, and service, component, start time and error signature are copied from the structured payload into the ticket. Core principle: one outage is one ticket — and the alert already knows most of its own fields. The AI copies structured facts; it never invents values it cannot find.
+Auto-log enrichment turns a burst of correlated alerts into one clean incident: duplicates merge, and service, component, start time and error signature are copied from the structured payload into the ticket. Core principle: one outage is one ticket and the alert already knows most of its own fields. The AI copies structured facts; it never invents values it cannot find.
 
 ## When to Use
 
 - Burst of related alerts from one service within minutes (CPU + health-check + latency)
 - Incident created by monitoring webhook arrives with blank description or missing affected-service
 - Responders spend minutes copying host, error text and timestamps from dashboards into the ticket
-- When NOT to use: alerts are genuinely distinct failures — merging hides independent outages; or a clean manual report is already complete
+- When NOT to use: alerts are genuinely distinct failures merging hides independent outages; or a clean manual report is already complete
 
 ## Core Pattern
 

@@ -13,14 +13,14 @@ description: Use when the diagnosis is clear but responders stare at the ticket 
 
 ## Overview
 
-Resolution suggester ranks candidate actions for a diagnosed incident — workarounds and fixes drawn from similar resolved incidents and matched runbooks — each with its past success rate and source. Core principle: during an outage, restore first, root-cause later; the fastest safe action beats the perfect fix. The AI suggests and ranks; only humans execute.
+Resolution suggester ranks candidate actions for a diagnosed incident workarounds and fixes drawn from similar resolved incidents and matched runbooks each with its past success rate and source. Core principle: during an outage, restore first, root-cause later; the fastest safe action beats the perfect fix. The AI suggests and ranks; only humans execute.
 
 ## When to Use
 
 - Diagnosis points at a known failure mode (same signature resolved before)
 - A runbook exists but nobody on shift remembers which one or trusts it
 - P1 needs an interim workaround while engineering prepares the real fix
-- When NOT to use: genuinely novel failure with no history — escalate to deeper expertise instead of dressing up a guess
+- When NOT to use: genuinely novel failure with no history escalate to deeper expertise instead of dressing up a guess
 
 ## Core Pattern
 
@@ -62,8 +62,8 @@ Reuses similar-incident embeddings, joins each candidate with its resolution rec
 
 - Presenting an unverified suggestion as “proven”. Fix: label every candidate with its evidence.
 - Hiding blast radius (“rollback also drops in-flight orders”). Fix: show side effects next to action.
-- Treating the workaround as the fix — problem never gets the handover. Fix: mark workaround as temporary.
+- Treating the workaround as the fix problem never gets the handover. Fix: mark workaround as temporary.
 
 ## Example
 
-Diagnosed 504 on checkout → suggests “Rollback to v2.3 — used 4×, 100% success (INC-1042)” ahead of deep-dive; service restored in 12 minutes, root cause goes to Problem.
+Diagnosed 504 on checkout → suggests “Rollback to v2.3 used 4×, 100% success (INC-1042)” ahead of deep-dive; service restored in 12 minutes, root cause goes to Problem.

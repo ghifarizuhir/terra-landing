@@ -13,14 +13,14 @@ description: Use when assets have a hostname or name that matches a CI but the l
 
 ## Overview
 
-Inventory linking suggests a link between an asset (inventory) and its running CI (operational graph). Core principle: the hostname is the key — asset.name ↔ CI.hostname should match.
+Inventory linking suggests a link between an asset (inventory) and its running CI (operational graph). Core principle: the hostname is the key asset.name ↔ CI.hostname should match.
 
 ## When to Use
 
 - Asset has hostname or name matching a CI
 - Assets without CI link
 - Audit mismatches: “which CI is this asset?”
-- When NOT to use: asset is a license/service with no hostname — no CI to link
+- When NOT to use: asset is a license/service with no hostname no CI to link
 
 ## Core Pattern
 
@@ -44,7 +44,7 @@ const {ci, confidence} = match(asset, CIs) // {CI-042, 0.92}
 | Match | Confidence | Action |
 | --- | --- | --- |
 | Exact hostname | ≥0.9 | Suggest link |
-| Fuzzy (web-042 vs Web_042) | 0.7–0.9 | Suggest with warning |
+| Fuzzy (web-042 vs Web_042) | 0.70.9 | Suggest with warning |
 | No match | <0.6 | No suggestion |
 
 ## Implementation

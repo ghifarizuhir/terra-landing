@@ -1,6 +1,6 @@
 # Service Request Management (REQ-)
 
-Fulfills approved user needs through a service catalog — not a disruption
+Fulfills approved user needs through a service catalog not a disruption
 
 Lane: **parallel** · cycle coverage: 7/7 stages
 
@@ -8,7 +8,7 @@ Lane: **parallel** · cycle coverage: 7/7 stages
 
 - Offers catalog for access, hardware, info and provisioning requests
 - Validates, routes and fulfills from intake to delivery with due date
-- Keeps requests separate from incidents — different urgency, different flow
+- Keeps requests separate from incidents different urgency, different flow
 
 ## AI skills
 

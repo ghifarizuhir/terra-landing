@@ -1,8 +1,8 @@
-# Terra — AI for ITSM · Skill Library
+# Terra AI for ITSM · Skill Library
 
 8 management workflows · 56 AI skills · one skill per lifecycle/workflow stage.
 
-Generated from `src/data/managements.ts` — run `npm run docs:skills` to regenerate.
+Generated from `src/data/managements.ts` run `npm run docs:skills` to regenerate.
 
 | Management | Prefix | Lane | Skills | Folder |
 | --- | --- | --- | --- | --- |

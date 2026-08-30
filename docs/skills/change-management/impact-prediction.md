@@ -13,13 +13,13 @@ description: Use when a change touches a CI that has dependencies and the blast 
 
 ## Overview
 
-Impact prediction lists which services and apps will be affected if this change is deployed. Core principle: the Service Map is the truth — traverse the dependency graph from the touched CI downstream.
+Impact prediction lists which services and apps will be affected if this change is deployed. Core principle: the Service Map is the truth traverse the dependency graph from the touched CI downstream.
 
 ## When to Use
 
 - Change touches a CI that has outgoing dependencies
 - “We didn’t know it would break X” after deploy
-- When NOT to use: CI has no dependencies (isolated) — no impact
+- When NOT to use: CI has no dependencies (isolated) no impact
 
 ## Core Pattern
 

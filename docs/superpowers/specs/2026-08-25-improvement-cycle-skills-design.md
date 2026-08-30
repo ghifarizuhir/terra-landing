@@ -1,4 +1,4 @@
-# Continual Improvement Cycle Skills — Design
+# Continual Improvement Cycle Skills Design
 
 Date: 2026-08-25
 Status: Approved via established pattern (user: "lanjut continual improvement")
@@ -27,7 +27,7 @@ Ranks the improvement backlog by expected impact × confidence ÷ effort, using 
 Watches improvement items for motion: proposed → in_progress → done. Flags stalled work with age and owner evidence, proposes unblock or descoped close instead of letting the board rot. A visible board only works if someone reads it.
 
 ### Outcome verifier (Verify outcome)
-Compares the target metric after implementation against the pre-improvement baseline — did MTTR actually drop, did that ticket category shrink? Declares verified / partial / no effect; closes on evidence, not on task completion.
+Compares the target metric after implementation against the pre-improvement baseline did MTTR actually drop, did that ticket category shrink? Declares verified / partial / no effect; closes on evidence, not on task completion.
 
 ### Practice embedder (Embed & close)
 Turns a verified improvement into the default way of working: proposes runbook/policy/checklist updates so the fix survives team changes, then closes with adoption evidence. An improvement is done when it became the standard.

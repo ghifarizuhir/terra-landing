@@ -127,7 +127,7 @@ export function cn(...inputs: ClassValue[]) {
 
 ```tsx
 export default function App() {
-  return <div className="min-h-screen bg-zinc-50 text-zinc-900">Terra Landing — scaffold ok</div>
+  return <div className="min-h-screen bg-zinc-50 text-zinc-900">Terra Landing scaffold ok</div>
 }
 ```
 
@@ -160,7 +160,7 @@ git commit -m "feat: scaffold vite+react+tailwind base"
 
 ---
 
-### Task 2: Data Layer — 8 Managements + Skills Mapping
+### Task 2: Data Layer 8 Managements + Skills Mapping
 
 **Files:**
 - Create: `src/data/managements.ts`
@@ -201,7 +201,7 @@ describe('managements data', () => {
 
 ```bash
 npm run test -- tests/managements.test.ts
-# Expected: FAIL — module not found
+# Expected: FAIL module not found
 ```
 
 - [ ] **Step 3: Write minimal `src/data/managements.ts`**
@@ -359,7 +359,7 @@ export default function ManagementCard({ prefix, title, oneLiner, bullets, skill
             <Icons.Sparkles className="h-3 w-3" /> {s}
           </span>
         ))}
-        {skills.length === 0 && <span className="text-[11px] text-zinc-400">No native skill — links to CI</span>}
+        {skills.length === 0 && <span className="text-[11px] text-zinc-400">No native skill links to CI</span>}
       </div>
     </div>
   )
@@ -395,7 +395,7 @@ git commit -m "feat: add ManagementCard (color-coded + skill badges)"
 export default function PulsePreview() {
   return (
     <div className="rounded-2xl border bg-white p-4 shadow-lg border-zinc-200 w-full max-w-md">
-      <div className="text-xs font-semibold text-zinc-500 mb-2">Pulse Dashboard — 14-day activity</div>
+      <div className="text-xs font-semibold text-zinc-500 mb-2">Pulse Dashboard 14-day activity</div>
       <div className="grid grid-cols-4 gap-2 mb-3">
         {['INC 12','PRB 3','CHG 7','KB 24'].map(v => (
           <div key={v} className="bg-zinc-900 text-white text-xs font-mono rounded-lg p-2 text-center">{v}</div>
@@ -421,7 +421,7 @@ export default function Hero() {
   return (
     <section className="max-w-7xl mx-auto px-6 py-16 grid lg:grid-cols-2 gap-10 items-center">
       <div>
-        <div className="inline-flex items-center gap-2 text-xs font-mono bg-zinc-900 text-white px-3 py-1 rounded-full mb-4">TERRA — AI for ITSM</div>
+        <div className="inline-flex items-center gap-2 text-xs font-mono bg-zinc-900 text-white px-3 py-1 rounded-full mb-4">TERRA AI for ITSM</div>
         <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-zinc-900 mb-3">One Graph, Not Silos</h1>
         <p className="text-lg text-zinc-600 mb-6">8 managements, one entity graph, AI skills for every step. ITIL4-aligned, built for operators.</p>
         <div className="flex gap-3">
@@ -466,7 +466,7 @@ git commit -m "feat: add Hero + PulsePreview"
 
 ---
 
-### Task 5: JourneyLoop — Desktop SVG Loop + Mobile Timeline
+### Task 5: JourneyLoop Desktop SVG Loop + Mobile Timeline
 
 **Files:**
 - Create: `src/components/JourneyLoop.tsx`
@@ -495,7 +495,7 @@ it('renders foundation section', () => {
 
 ```bash
 npm run test -- tests/JourneyLoop.test.tsx
-# Expected: FAIL — module not found
+# Expected: FAIL module not found
 ```
 
 - [ ] **Step 3: Implement `src/components/JourneyLoop.tsx`**
@@ -536,7 +536,7 @@ export default function JourneyLoop() {
           ))}
         </div>
         <div className="mt-10">
-          <h3 className="text-sm font-semibold text-zinc-500 mb-3">Foundation — always visible</h3>
+          <h3 className="text-sm font-semibold text-zinc-500 mb-3">Foundation always visible</h3>
           <div className="grid gap-4">
             {foundation.map(m => <ManagementCard key={m.id} {...m} />)}
           </div>
@@ -548,7 +548,7 @@ export default function JourneyLoop() {
   return (
     <section id="journey" className="max-w-7xl mx-auto px-6 py-10">
       <h2 className="text-2xl font-bold mb-2">Journey Timeline</h2>
-      <p className="text-sm text-zinc-500 mb-6">Incident → Problem → Change → Knowledge → Improvement — with Request parallel & Service Map + Asset as foundation</p>
+      <p className="text-sm text-zinc-500 mb-6">Incident → Problem → Change → Knowledge → Improvement with Request parallel & Service Map + Asset as foundation</p>
       {/* parallel lane hint */}
       <div className="mb-6 flex gap-4">
         {parallel.map(m => (
@@ -611,7 +611,7 @@ git commit -m "feat: add JourneyLoop (desktop SVG loop + mobile timeline)"
 
 ---
 
-### Task 6: SkillsSection — Aggregate 5 Default Skills
+### Task 6: SkillsSection Aggregate 5 Default Skills
 
 **Files:**
 - Create: `src/components/SkillsSection.tsx`
@@ -626,8 +626,8 @@ import { Sparkles } from 'lucide-react'
 export default function SkillsSection() {
   return (
     <section id="skills" className="max-w-7xl mx-auto px-6 py-12">
-      <h2 className="text-2xl font-bold mb-2">AI Agent Skills — per Management</h2>
-      <p className="text-sm text-zinc-500 mb-6">5 default skills seeded per org via <span className="font-mono bg-zinc-900 text-white px-1.5 py-0.5 rounded text-xs">GET /api/skills</span>. Attach to any Incident/Problem/Change/CI — plus create custom skills.</p>
+      <h2 className="text-2xl font-bold mb-2">AI Agent Skills per Management</h2>
+      <p className="text-sm text-zinc-500 mb-6">5 default skills seeded per org via <span className="font-mono bg-zinc-900 text-white px-1.5 py-0.5 rounded text-xs">GET /api/skills</span>. Attach to any Incident/Problem/Change/CI plus create custom skills.</p>
       <div className="grid md:grid-cols-3 gap-4">
         {defaultSkills.map(s => (
           <div key={s.name} className="rounded-2xl border bg-white p-5">
@@ -697,9 +697,9 @@ export default function EntityGraphProof() {
     <section className="max-w-7xl mx-auto px-6 py-10">
       <div className="rounded-3xl bg-zinc-900 text-white p-8">
         <h2 className="text-xl font-bold mb-2">Anything can link to anything</h2>
-        <p className="text-sm text-zinc-400 mb-6">entity_links with 5 relations: parent · depends_on · relates_to · caused_by · resolved_by — plus comments, timeline, versions, reviews, attachments.</p>
+        <p className="text-sm text-zinc-400 mb-6">entity_links with 5 relations: parent · depends_on · relates_to · caused_by · resolved_by plus comments, timeline, versions, reviews, attachments.</p>
         <div className="flex flex-wrap gap-2 font-mono text-xs">
-          {['INC-202501-003 —caused_by→ PRB-202501-001', 'PRB →resolved_by→ CHG-202501-002', 'CHG →relates_to→ KB-202501-010', 'INC —depends_on→ CI-001'].map(e => (
+          {['INC-202501-003 caused_by→ PRB-202501-001', 'PRB →resolved_by→ CHG-202501-002', 'CHG →relates_to→ KB-202501-010', 'INC depends_on→ CI-001'].map(e => (
             <span key={e} className="bg-white/10 px-3 py-1.5 rounded-full">{e}</span>
           ))}
         </div>
@@ -716,7 +716,7 @@ export default function Footer() {
   return (
     <footer className="max-w-7xl mx-auto px-6 py-10 text-center">
       <h3 className="text-xl font-bold mb-2">Bring your ITSM into one graph</h3>
-      <p className="text-sm text-zinc-500 mb-4">Terra Service Management — AI for ITSM, ITIL4-aligned.</p>
+      <p className="text-sm text-zinc-500 mb-4">Terra Service Management AI for ITSM, ITIL4-aligned.</p>
       <div className="text-xs text-zinc-400">© 2026 Terra · No pricing/testimonials fabricated</div>
     </footer>
   )

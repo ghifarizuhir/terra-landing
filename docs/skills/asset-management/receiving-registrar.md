@@ -18,9 +18,9 @@ Receiving registrar drafts the complete asset record at the moment of arrival fr
 ## When to Use
 
 - Hardware delivered with a PO/packing list but no asset entry yet
-- New license purchased — needs its seat count and renewal date recorded
+- New license purchased needs its seat count and renewal date recorded
 - Bulk delivery (10 monitors) arriving as one box with one invoice
-- When NOT to use: asset already registered — update instead of duplicating
+- When NOT to use: asset already registered update instead of duplicating
 
 ## Core Pattern
 
@@ -37,7 +37,7 @@ Receiving registrar drafts the complete asset record at the moment of arrival fr
 ```js
 // After: draft from delivery evidence
 const record = extractFromDocuments({ po, packingList })
-// {model, serials[], cost, warrantyStart} — gaps flagged
+// {model, serials[], cost, warrantyStart} gaps flagged
 return humanConfirms(record)
 ```
 

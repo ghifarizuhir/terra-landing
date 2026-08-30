@@ -1,13 +1,13 @@
-# Foundation Workflows Skills — Design (Asset + Service Configuration)
+# Foundation Workflows Skills Design (Asset + Service Configuration)
 
 Date: 2026-08-25
 Status: Approved via established pattern (user: "boleh lanjut keduanya")
 
 ## Goal
 
-Complete coverage for the two foundation managements. They are not lifecycle cycles but operating workflows — same 1-skill-per-stage pattern, strip label becomes lane-aware ("Workflow coverage" for non-cycle lanes).
+Complete coverage for the two foundation managements. They are not lifecycle cycles but operating workflows same 1-skill-per-stage pattern, strip label becomes lane-aware ("Workflow coverage" for non-cycle lanes).
 
-## Asset Management — workflow → skills
+## Asset Management workflow → skills
 
 | # | Stage | Skill | New? |
 |---|-------|-------|------|
@@ -25,7 +25,7 @@ Complete coverage for the two foundation managements. They are not lifecycle cyc
 - Audit reconciler: compares records against discovery/spot-check reality; flags ghosts (recorded, missing) and zombies (running, unrecorded).
 - Retirement planner: surfaces end-of-life/warranty-expired assets; drafts disposal checklist (data wipe, license reclaim, CI unlink).
 
-## Service Configuration — workflow → skills
+## Service Configuration workflow → skills
 
 | # | Stage | Skill | New? |
 |---|-------|-------|------|

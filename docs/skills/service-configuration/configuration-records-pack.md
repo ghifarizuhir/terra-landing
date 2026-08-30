@@ -13,14 +13,14 @@ description: Use when nobody can say which CI fields are authoritative, only som
 
 ## Overview
 
-Configuration records pack standardizes what the map must maintain: the CI schema (required field set per kind), the edge confidence policy, the graph health report, the drift findings log. Core principle: impact predictions inherit one thing from the map — its documented health. Records are how trust becomes a grade instead of a vibe.
+Configuration records pack standardizes what the map must maintain: the CI schema (required field set per kind), the edge confidence policy, the graph health report, the drift findings log. Core principle: impact predictions inherit one thing from the map its documented health. Records are how trust becomes a grade instead of a vibe.
 
 ## When to Use
 
 - New or stalky CI entry exists as a bare hostname
 - Teams argue whether the map can be trusted for this change’s blast radius
 - Planning map hygiene or an internal audit of the configuration estate
-- When NOT to use: items properly outside CMDB scope (ephemerals) — no record expected
+- When NOT to use: items properly outside CMDB scope (ephemerals) no record expected
 
 ## Core Pattern
 
@@ -51,7 +51,7 @@ const pack = buildConfigRecords()
 
 ## Implementation
 
-CI capture assist and graph drift detector contribute their evidence packages as log entries; graph health scorer rolls them into the periodic grade. Schema and edge policy are reviewed documents, not tribal knowledge — they are where the strip stages derive their meaning.
+CI capture assist and graph drift detector contribute their evidence packages as log entries; graph health scorer rolls them into the periodic grade. Schema and edge policy are reviewed documents, not tribal knowledge they are where the strip stages derive their meaning.
 
 ## Common Mistakes
 
@@ -61,4 +61,4 @@ CI capture assist and graph drift detector contribute their evidence packages as
 
 ## Example
 
-Quarterly health report: C+ → 38% edges unconfirmed, 14 orphans → policy requires 0.7 cited edges, 9 confirmations queued via drift log — grade rises to B next quarter.
+Quarterly health report: C+ → 38% edges unconfirmed, 14 orphans → policy requires 0.7 cited edges, 9 confirmations queued via drift log grade rises to B next quarter.

@@ -1,4 +1,4 @@
-// src/data/managements.ts — Terra — AI for ITSM: clear knowledge + real AI skills (full SKILL.md structure) per management.
+// src/data/managements.ts Terra AI for ITSM: clear knowledge + real AI skills (full SKILL.md structure) per management.
 export type SkillDetail = {
   name: string
   stage?: string
@@ -38,12 +38,12 @@ export const managements: Management[] = [
         name: 'Auto-log enrichment',
         stage: '01 · Detect & log',
         description: 'Use when monitoring floods the queue with raw alert bursts, incidents arrive with empty fields, or responders retype what the payload already says',
-        overview: 'Auto-log enrichment turns a burst of correlated alerts into one clean incident: duplicates merge, and service, component, start time and error signature are copied from the structured payload into the ticket. Core principle: one outage is one ticket — and the alert already knows most of its own fields. The AI copies structured facts; it never invents values it cannot find.',
+        overview: 'Auto-log enrichment turns a burst of correlated alerts into one clean incident: duplicates merge, and service, component, start time and error signature are copied from the structured payload into the ticket. Core principle: one outage is one ticket and the alert already knows most of its own fields. The AI copies structured facts; it never invents values it cannot find.',
         whenToUse: [
           'Burst of related alerts from one service within minutes (CPU + health-check + latency)',
           'Incident created by monitoring webhook arrives with blank description or missing affected-service',
           'Responders spend minutes copying host, error text and timestamps from dashboards into the ticket',
-          'When NOT to use: alerts are genuinely distinct failures — merging hides independent outages; or a clean manual report is already complete',
+          'When NOT to use: alerts are genuinely distinct failures merging hides independent outages; or a clean manual report is already complete',
         ],
         corePattern: {
           before: '// Before: humans triage alert storms by hand\nfunction log(alerts) {\n  // 14 CPU alerts + 2 health-checks → 16 tickets? copy-paste each\n  return alerts.map((a) => createTicket(a)) // queue floods\n}',
@@ -70,76 +70,76 @@ export const managements: Management[] = [
         name: 'Auto-triage & priority',
         stage: '02 · Triage',
         description: 'Use when incidents have inconsistent priority, wrong team assignment, or triage queue grows faster than humans can read',
-        overview: 'Auto-triage is a reference skill for suggesting priority and assignee from incident text and history. Core principle: history is the training data — past incidents with similar titles taught the model what “P1 + Payments” looks like, so the next “timeout 504” does not need a human to guess. It is a technique, not a rule: the AI suggests, the human confirms.',
+        overview: 'Auto-triage is a reference skill for suggesting priority and assignee from incident text and history. Core principle: history is the training data past incidents with similar titles taught the model what “P1 + Payments” looks like, so the next “timeout 504” does not need a human to guess. It is a technique, not a rule: the AI suggests, the human confirms.',
         whenToUse: [
-          'New incident with short or vague title (“checkout error”, “slow”) — priority is guessed',
-          'Queue >10 un-triaged incidents — human reader cannot keep up',
-          'Recurring “urgent” that is actually low — P-levels are inconsistent across triagers',
-          'Wrong team assigned — incident bounces 2–3 times before correct team',
-          'When NOT to use: incident already has a clear runbook match with a fixed priority (use the runbook), or when confidence <0.6 — ask, do not guess',
+          'New incident with short or vague title (“checkout error”, “slow”) priority is guessed',
+          'Queue >10 un-triaged incidents human reader cannot keep up',
+          'Recurring “urgent” that is actually low P-levels are inconsistent across triagers',
+          'Wrong team assigned incident bounces 23 times before correct team',
+          'When NOT to use: incident already has a clear runbook match with a fixed priority (use the runbook), or when confidence <0.6 ask, do not guess',
         ],
         corePattern: {
-          before: '// Before: manual triage — human reads, guesses\nfunction triage(incident) {\n  // “504 checkout” → human guesses P2, assigns Network (wrong)\n  return { priority: guess(), team: guess() }\n}',
+          before: '// Before: manual triage human reads, guesses\nfunction triage(incident) {\n  // “504 checkout” → human guesses P2, assigns Network (wrong)\n  return { priority: guess(), team: guess() }\n}',
           after: '// After: AI suggests, human confirms\nfunction triage(incident) {\n  const suggestion = suggestFromHistory(incident, last90Days) // {priority: "P1", team: "Payments", confidence: 0.82}\n  return suggestion.confidence > 0.7 ? suggestion : askClarifying(incident)\n}',
         },
         quickReference: {
           headers: ['Signal', 'Action', 'Threshold'],
           rows: [
             ['Title embedding ≥0.75 + same app', 'Suggest same priority/team', 'confidence ≥0.7'],
-            ['Confidence 0.6–0.7', 'Ask 1 clarifying question', 'human picks'],
+            ['Confidence 0.60.7', 'Ask 1 clarifying question', 'human picks'],
             ['Confidence <0.6', 'Do not suggest', 'avoid false triage'],
             ['Prod + “timeout 504”', 'Bias to P1', '90% P1 in history'],
           ],
         },
-        how: 'Embedding similarity (text-embedding-3-small) against last 90 days, plus keyword match on “timeout”, “down”, “504”. Input: title + description. Output: {priority: P1–P4, team, confidence, reason}. Pattern: suggest, never auto-assign. Store suggestion + human decision for audit. Keep prompt short — title is the signal.',
+        how: 'Embedding similarity (text-embedding-3-small) against last 90 days, plus keyword match on “timeout”, “down”, “504”. Input: title + description. Output: {priority: P1P4, team, confidence, reason}. Pattern: suggest, never auto-assign. Store suggestion + human decision for audit. Keep prompt short title is the signal.',
         commonMistakes: [
           'Auto-assigning without human confirm → wrong team woken at 2am. Fix: suggestion only.',
           'Keyword alone (“urgent” → P1) → over-triage. Fix: require embedding + history.',
           'Ignoring confidence → low-confidence treated as truth. Fix: threshold 0.7.',
         ],
-        example: 'INC “Checkout timeout 504” → 3 similar P1s in 7 days to Payments (0.82) → suggests “P1 — Payments, 0.82 — because 3 similar P1s”. Human confirms in one click.',
+        example: 'INC “Checkout timeout 504” → 3 similar P1s in 7 days to Payments (0.82) → suggests “P1 Payments, 0.82 because 3 similar P1s”. Human confirms in one click.',
       },
       {
         name: 'War-room summarization',
         stage: '04 · Communicate',
         description: 'Use when incident timelines have long scroll, duplicate questions, or shift handovers where newcomers ask what happened so far',
-        overview: 'War-room summarization condenses a noisy incident timeline (dozens of comments, status changes) into a 3-bullet handover readable in 30 seconds. Core principle: the timeline is the source of truth — the AI compresses it, never invents. It is a reference skill for handovers, not a decision maker.',
+        overview: 'War-room summarization condenses a noisy incident timeline (dozens of comments, status changes) into a 3-bullet handover readable in 30 seconds. Core principle: the timeline is the source of truth the AI compresses it, never invents. It is a reference skill for handovers, not a decision maker.',
         whenToUse: [
           'Incident has >10 comments or war-room flag is set',
-          'Shift handover — newcomer asks “what happened so far?”',
-          'Same question asked twice — timeline is too long to read',
-          'When NOT to use: incident has <5 comments or is already resolved — summary adds no value',
+          'Shift handover newcomer asks “what happened so far?”',
+          'Same question asked twice timeline is too long to read',
+          'When NOT to use: incident has <5 comments or is already resolved summary adds no value',
         ],
         corePattern: {
           before: '// Before: human scrolls 200 comments, copies manually\nconst handover = readAllCommentsAndGuess()\n// duplicate, slow, misses updates',
-          after: '// After: AI compresses timeline\nconst summary = summarizeTimeline(comments) // {whatHappened, impact, nextAction}\n// 2–3 sentences, verbatim source, no recommendations',
+          after: '// After: AI compresses timeline\nconst summary = summarizeTimeline(comments) // {whatHappened, impact, nextAction}\n// 23 sentences, verbatim source, no recommendations',
         },
         quickReference: {
           headers: ['Input', 'Output', 'Rule'],
           rows: [
             ['Timeline comments', '3 bullets: what happened / impact / next', 'chronological'],
             ['Source', 'Verbatim comments only', 'no invention'],
-            ['Length', '2–3 sentences', 'no recommendations'],
+            ['Length', '23 sentences', 'no recommendations'],
           ],
         },
-        how: 'Chronological summarization of comments into 3 parts: what happened, current impact, next action. Input: timeline. Output: 2–3 sentences. Uses extractive summarization, no LLM recommendations. Trigger on war-room or >10 comments.',
+        how: 'Chronological summarization of comments into 3 parts: what happened, current impact, next action. Input: timeline. Output: 23 sentences. Uses extractive summarization, no LLM recommendations. Trigger on war-room or >10 comments.',
         commonMistakes: [
           'Adding recommendations (“should rollback”) → invented. Fix: summary only, no advice.',
           'Summarizing from title alone → misses timeline. Fix: use comments.',
-          'Too long (paragraph) → not scannable. Fix: 2–3 sentences max.',
+          'Too long (paragraph) → not scannable. Fix: 23 sentences max.',
         ],
-        example: '200-comment incident → “Payment gateway 504 since 09:12, 12 orders affected, rollback to v2.3 in progress — ETA 09:40.”',
+        example: '200-comment incident → “Payment gateway 504 since 09:12, 12 orders affected, rollback to v2.3 in progress ETA 09:40.”',
       },
       {
         name: 'Similar-incident detection',
         stage: '03 · Diagnose',
         description: 'Use when responders ask “has this happened before?”, duplicate incidents pile up in the queue, or restore-path knowledge lives only in senior heads',
-        overview: 'Similar-incident detection surfaces past incidents that resemble the current one — by title, symptom and affected service. Core principle: if it happened before, the fastest path to restore is what worked last time. The AI links candidates, it never merges; humans decide whether two incidents are truly the same.',
+        overview: 'Similar-incident detection surfaces past incidents that resemble the current one by title, symptom and affected service. Core principle: if it happened before, the fastest path to restore is what worked last time. The AI links candidates, it never merges; humans decide whether two incidents are truly the same.',
         whenToUse: [
           'New incident looks familiar (“same 504 as last week”) but nobody remembers the INC number',
-          'Multiple reporters file separate tickets for one outage — duplicates flood the queue',
+          'Multiple reporters file separate tickets for one outage duplicates flood the queue',
           'Major incident needs known workarounds from previous occurrences, fast',
-          'When NOT to use: similarity below threshold or different affected service — a false link actively misleads restoration',
+          'When NOT to use: similarity below threshold or different affected service a false link actively misleads restoration',
         ],
         corePattern: {
           before: '// Before: matching by human memory\nfunction findSimilar(incident) {\n  // senior: “I think this was INC-something last month?”\n  return searchByMemory() // slow, misses, does not scale\n}',
@@ -149,7 +149,7 @@ export const managements: Management[] = [
           headers: ['Match', 'Action', 'Rule'],
           rows: [
             ['sim ≥0.85 + same service', 'Suggest as duplicate', 'merge only with confirm'],
-            ['sim 0.75–0.85', 'Suggest as related', 'link both directions'],
+            ['sim 0.750.85', 'Suggest as related', 'link both directions'],
             ['sim <0.75', 'No suggestion', 'avoid false leads'],
             ['Duplicate confirmed', 'Carry over workaround + comms', 'restore faster'],
           ],
@@ -166,12 +166,12 @@ export const managements: Management[] = [
         name: 'Resolution suggester',
         stage: '05 · Resolve & restore',
         description: 'Use when the diagnosis is clear but responders stare at the ticket unsure what to do, or MTTR is dominated by “what now?” instead of work',
-        overview: 'Resolution suggester ranks candidate actions for a diagnosed incident — workarounds and fixes drawn from similar resolved incidents and matched runbooks — each with its past success rate and source. Core principle: during an outage, restore first, root-cause later; the fastest safe action beats the perfect fix. The AI suggests and ranks; only humans execute.',
+        overview: 'Resolution suggester ranks candidate actions for a diagnosed incident workarounds and fixes drawn from similar resolved incidents and matched runbooks each with its past success rate and source. Core principle: during an outage, restore first, root-cause later; the fastest safe action beats the perfect fix. The AI suggests and ranks; only humans execute.',
         whenToUse: [
           'Diagnosis points at a known failure mode (same signature resolved before)',
           'A runbook exists but nobody on shift remembers which one or trusts it',
           'P1 needs an interim workaround while engineering prepares the real fix',
-          'When NOT to use: genuinely novel failure with no history — escalate to deeper expertise instead of dressing up a guess',
+          'When NOT to use: genuinely novel failure with no history escalate to deeper expertise instead of dressing up a guess',
         ],
         corePattern: {
           before: '// Before: fix chosen under pressure\nfunction resolve(incident) {\n  // “try restarting? redeploy? someone check the runbook?”\n  return loudestOpinion() // slow, inconsistent, untracked\n}',
@@ -190,20 +190,20 @@ export const managements: Management[] = [
         commonMistakes: [
           'Presenting an unverified suggestion as “proven”. Fix: label every candidate with its evidence.',
           'Hiding blast radius (“rollback also drops in-flight orders”). Fix: show side effects next to action.',
-          'Treating the workaround as the fix — problem never gets the handover. Fix: mark workaround as temporary.',
+          'Treating the workaround as the fix problem never gets the handover. Fix: mark workaround as temporary.',
         ],
-        example: 'Diagnosed 504 on checkout → suggests “Rollback to v2.3 — used 4×, 100% success (INC-1042)” ahead of deep-dive; service restored in 12 minutes, root cause goes to Problem.',
+        example: 'Diagnosed 504 on checkout → suggests “Rollback to v2.3 used 4×, 100% success (INC-1042)” ahead of deep-dive; service restored in 12 minutes, root cause goes to Problem.',
       },
       {
         name: 'Closure & handover pack',
         stage: '06 · Close & learn',
         description: 'Use when incidents close as one-liners like “fixed”, postmortems start from a blank page, or problem/knowledge teams chase responders for context',
-        overview: 'Closure & handover pack assembles the learning record at close time: timeline digest, impact, actions taken, resolution and open follow-ups — formatted so problem management gets a problem statement and knowledge gets an article stub, not a scavenger hunt. Core principle: learning is part of closing; whatever is not captured now is lost forever.',
+        overview: 'Closure & handover pack assembles the learning record at close time: timeline digest, impact, actions taken, resolution and open follow-ups formatted so problem management gets a problem statement and knowledge gets an article stub, not a scavenger hunt. Core principle: learning is part of closing; whatever is not captured now is lost forever.',
         whenToUse: [
           'Any non-trivial incident is about to close with a thin resolution note',
-          'An incident closes that has recurred before — recurrence must reach problem management',
+          'An incident closes that has recurred before recurrence must reach problem management',
           'Major/war-room incident closure where stakeholders expect a record',
-          'When NOT to use: trivial password-reset-class tickets — lightweight close is fine',
+          'When NOT to use: trivial password-reset-class tickets lightweight close is fine',
         ],
         corePattern: {
           before: "// Before: close = type “done”, move on\nfunction close(incident) {\n  incident.resolution = prompt('resolution?') // “fixed”\n  return incident // context evaporates\n}",
@@ -220,9 +220,9 @@ export const managements: Management[] = [
         },
         how: 'Extractive assembly from the timeline and comms into four sections (what happened, impact, actions, follow-ups); classifies the learning target (problem / knowledge / none) using recurrence count and novelty; drafts are staged for human review before any record is created. Recurrence counters feed back into similar-incident and triage skills.',
         commonMistakes: [
-          'Writing a root cause into the closure — that is problem management’s job, not the closer’s. Fix: record facts, flag for RCA.',
+          'Writing a root cause into the closure that is problem management’s job, not the closer’s. Fix: record facts, flag for RCA.',
           'Auto-creating problem records or articles without review. Fix: draft and stage, human publishes.',
-          'Skipping follow-up capture (“we should add alerting”) — they evaporate. Fix: follow-ups are a required section.',
+          'Skipping follow-up capture (“we should add alerting”) they evaporate. Fix: follow-ups are a required section.',
         ],
         example: 'INC closes after rollback → pack: “504 checkout, 22 min, 12 orders affected, rollback v2.3” + “3rd occurrence in 30 days → propose PRB” + KB stub drafted from timeline, awaiting review.',
       },
@@ -230,12 +230,12 @@ export const managements: Management[] = [
         name: 'Incident records pack',
         stage: '07 · Reporting & records',
         description: 'Use when nobody can say which documents an incident must produce, PIRs quietly stop happening after busy weeks, and audits ask for reports that were never written',
-        overview: 'Incident records pack defines the standard documents every incident yields — the incident report for the facts, the post-incident review for majors, the communications log for who was told what when. Core principle: an incident without its records never legally happened: no lessons, no compliance trail, no defense.',
+        overview: 'Incident records pack defines the standard documents every incident yields the incident report for the facts, the post-incident review for majors, the communications log for who was told what when. Core principle: an incident without its records never legally happened: no lessons, no compliance trail, no defense.',
         whenToUse: [
-          'Major incident resolved — post-incident review due within 5 working days',
+          'Major incident resolved post-incident review due within 5 working days',
           'Audit or customer asks for incident documentation',
           'New coordinator unsure what to produce for each severity level',
-          'When NOT to use: trivial ticket closed with a lightweight resolution note — full pack is overkill',
+          'When NOT to use: trivial ticket closed with a lightweight resolution note full pack is overkill',
         ],
         corePattern: {
           before: '// Before: documentation = whatever anyone remembers later\nresolve(incident)\n// three months later: “do we have a report for that outage?” …no',
@@ -250,7 +250,7 @@ export const managements: Management[] = [
             ['Waiver note', 'Pack skipped', 'who waived · why'],
           ],
         },
-        how: 'Templates are attached at incident creation by severity; the closure flow checks for required documents and offers an explicit waiver path (named human, stated reason) instead of silent gaps. Majors auto-schedule their PIR meeting. Reports stay extractive — assembled from timeline and comms, edited by humans, never ghostwritten opinions.',
+        how: 'Templates are attached at incident creation by severity; the closure flow checks for required documents and offers an explicit waiver path (named human, stated reason) instead of silent gaps. Majors auto-schedule their PIR meeting. Reports stay extractive assembled from timeline and comms, edited by humans, never ghostwritten opinions.',
         commonMistakes: [
           'PIR skipped under workload pressure → same outage returns undocumented. Fix: scheduled + waiver requires a name.',
           'Reports written as novels → nobody reads them. Fix: structured sections, facts only.',
@@ -262,23 +262,23 @@ export const managements: Management[] = [
     color: 'bg-red-500', icon: 'Siren', order: 1, lane: 'cycle'
   },
   {
-    id: 'request', prefix: 'REQ-', title: 'Service Request Management', oneLiner: 'Fulfills approved user needs through a service catalog — not a disruption',
+    id: 'request', prefix: 'REQ-', title: 'Service Request Management', oneLiner: 'Fulfills approved user needs through a service catalog not a disruption',
     bullets: [
       'Offers catalog for access, hardware, info and provisioning requests',
       'Validates, routes and fulfills from intake to delivery with due date',
-      'Keeps requests separate from incidents — different urgency, different flow',
+      'Keeps requests separate from incidents different urgency, different flow',
     ],
     skills: [
       {
         name: 'Intent classification',
         stage: '01 · Intake & classify',
         description: 'Use when users write free-text and it is ambiguous whether the input is a service request or an incident, or which catalog item it maps to',
-        overview: 'Intent classification decides whether incoming text is a service request or an incident, and which catalog item it maps to. Core principle: the catalog is the vocabulary — the model maps free text to a fixed enum (access/hardware/info/…), not to open-ended labels.',
+        overview: 'Intent classification decides whether incoming text is a service request or an incident, and which catalog item it maps to. Core principle: the catalog is the vocabulary the model maps free text to a fixed enum (access/hardware/info/…), not to open-ended labels.',
         whenToUse: [
-          'User writes “need laptop” vs “cannot login” — request vs incident is unclear',
+          'User writes “need laptop” vs “cannot login” request vs incident is unclear',
           'Requests appear in incident queue or vice versa',
           'Wrong SLA applied because request_type was guessed',
-          'When NOT to use: form already has a selected catalog item — no classification needed',
+          'When NOT to use: form already has a selected catalog item no classification needed',
         ],
         corePattern: {
           before: '// Before: human reads, guesses type\nif (text.includes("need")) return "request" // fragile',
@@ -288,11 +288,11 @@ export const managements: Management[] = [
           headers: ['Signal', 'Result', 'Action'],
           rows: [
             ['Confidence ≥0.7', 'request_type + catalog', 'auto-fill'],
-            ['Confidence 0.5–0.7', 'Ask 1 question (2–4 options)', 'human picks'],
+            ['Confidence 0.50.7', 'Ask 1 question (24 options)', 'human picks'],
             ['Confidence <0.5', 'Leave blank', 'human decides'],
           ],
         },
-        how: 'Classifier maps text to request_type enum vs incident. Confidence 0.7 threshold; below, ask one clarifying question with 2–4 options. Input: free text. Output: type + confidence + reason.',
+        how: 'Classifier maps text to request_type enum vs incident. Confidence 0.7 threshold; below, ask one clarifying question with 24 options. Input: free text. Output: type + confidence + reason.',
         commonMistakes: [
           'Open-ended labels (“other”) → unsearchable. Fix: fixed enum.',
           'Auto-filing low-confidence → wrong queue. Fix: threshold + question.',
@@ -303,12 +303,12 @@ export const managements: Management[] = [
         name: 'Completeness checker',
         stage: '02 · Validate',
         description: 'Use when requests reach fulfillers missing fields or attachments, and fulfillment starts with a “can you also send me…” email instead of work',
-        overview: 'Completeness checker validates a request against its catalog item’s requirements before it enters a queue — missing laptop model, no manager name, absent justification — and asks the requester one consolidated question covering everything at once. Core principle: a request that cannot be fulfilled yet should not look fulfillable; bounce once, completely, or not at all.',
+        overview: 'Completeness checker validates a request against its catalog item’s requirements before it enters a queue missing laptop model, no manager name, absent justification and asks the requester one consolidated question covering everything at once. Core principle: a request that cannot be fulfilled yet should not look fulfillable; bounce once, completely, or not at all.',
         whenToUse: [
           'Catalog item has required fields/attachments that arrive empty',
           'Fulfillers spend their first touch asking for details instead of fulfilling',
-          'Requests bounce back and forth 2–3 times before work can start',
-          'When NOT to use: optional fields — nagging over nice-to-haves kills goodwill',
+          'Requests bounce back and forth 23 times before work can start',
+          'When NOT to use: optional fields nagging over nice-to-haves kills goodwill',
         ],
         corePattern: {
           before: '// Before: discover gaps one email at a time\nfulfill(request) // → “which model?” → wait → “and manager approval?” → wait\n// 3 days lost before real work starts',
@@ -335,7 +335,7 @@ export const managements: Management[] = [
         name: 'Approval router',
         stage: '03 · Approve',
         description: 'Use when approvals sit for days with the wrong person, requesters have no idea where theirs is stuck, or every approval chases its approver manually',
-        overview: 'Approval router determines who must approve a request — by item type × cost × requester role policy — attaches the context an approver needs to decide fast, and nudges approvals sitting past due. Core principle: approval should take one glance; the AI finds the right pair of eyes and hands them everything on one screen.',
+        overview: 'Approval router determines who must approve a request by item type × cost × requester role policy attaches the context an approver needs to decide fast, and nudges approvals sitting past due. Core principle: approval should take one glance; the AI finds the right pair of eyes and hands them everything on one screen.',
         whenToUse: [
           'Access/costly items waiting on an approval chain nobody is sure about',
           'Approvals routed by org-chart guesswork bounce between managers',
@@ -367,7 +367,7 @@ export const managements: Management[] = [
         name: 'Auto-routing',
         stage: '04 · Route & fulfill',
         description: 'Use when a service request is approved and needs assignment to the correct fulfillment team with a realistic due date',
-        overview: 'Auto-routing suggests the owner team and a realistic due date for a validated request. Core principle: history is the SLA — past fulfillment times for that catalog item predict the next due date.',
+        overview: 'Auto-routing suggests the owner team and a realistic due date for a validated request. Core principle: history is the SLA past fulfillment times for that catalog item predict the next due date.',
         whenToUse: [
           'Request is approved and sits unassigned',
           'Wrong team gets hardware requests',
@@ -397,12 +397,12 @@ export const managements: Management[] = [
         name: 'Status comms drafter',
         stage: '05 · Deliver & confirm',
         description: 'Use when requesters ask “any update on my laptop?” because fulfillment happens in silence, and closure arrives as a surprise status flip',
-        overview: 'Status comms drafter answers “where is my request?” from the fulfillment timeline — ordered, shipped, delivered — and drafts the delivery confirmation message so closure is explicit, not a silent status change. Core principle: silence reads as neglect; the timeline already knows the answer, someone just has to say it.',
+        overview: 'Status comms drafter answers “where is my request?” from the fulfillment timeline ordered, shipped, delivered and drafts the delivery confirmation message so closure is explicit, not a silent status change. Core principle: silence reads as neglect; the timeline already knows the answer, someone just has to say it.',
         whenToUse: [
           'Requester asks for status on an in-flight request',
           'Fulfillment state changed (ordered/shipped/done) without telling the requester',
-          'Request is fulfilled — needs explicit confirmation before closing',
-          'When NOT to use: nothing has changed since the last update — do not send empty noise',
+          'Request is fulfilled needs explicit confirmation before closing',
+          'When NOT to use: nothing has changed since the last update do not send empty noise',
         ],
         corePattern: {
           before: '// Before: requester pings, human digs\nonStatusQuestion((req) => readTimelineManually(req)) // 10 min per ping\n// close happens silently; requester finds out by accident',
@@ -417,7 +417,7 @@ export const managements: Management[] = [
             ['No change since last', 'Nothing', 'no empty updates'],
           ],
         },
-        how: 'Compresses the fulfillment timeline into 1–2 sentences with the next milestone and date, always extractive (dates and states come from records, not invention). Drafts are sent by humans or auto-posted where policy allows. At fulfillment, proposes the confirmation message that doubles as the closure record.',
+        how: 'Compresses the fulfillment timeline into 12 sentences with the next milestone and date, always extractive (dates and states come from records, not invention). Drafts are sent by humans or auto-posted where policy allows. At fulfillment, proposes the confirmation message that doubles as the closure record.',
         commonMistakes: [
           'Inventing ETAs to sound helpful → broken promises. Fix: only dates that exist in records.',
           'Updating on every micro-change → spam. Fix: meaningful milestones only.',
@@ -429,12 +429,12 @@ export const managements: Management[] = [
         name: 'Demand miner',
         stage: '06 · Close & mine demand',
         description: 'Use when the same manual requests repeat every week yet stay manual, and nobody can prove which new catalog item or automation would pay off first',
-        overview: 'Demand miner clusters fulfilled requests over time to expose what people actually keep asking for — and quantifies it: volume, handler time, seasonality. Core principle: the catalog should grow from evidence of repeated demand, not from whoever complained loudest this month.',
+        overview: 'Demand miner clusters fulfilled requests over time to expose what people actually keep asking for and quantifies it: volume, handler time, seasonality. Core principle: the catalog should grow from evidence of repeated demand, not from whoever complained loudest this month.',
         whenToUse: [
           'Quarterly catalog review: which free-text asks recur often enough to become items?',
           'A request type is fulfilled manually 20× a month with the same three steps',
           'Stakeholders debate new self-service flows with no usage data',
-          'When NOT to use: one-off unusual requests — no pattern to mine yet',
+          'When NOT to use: one-off unusual requests no pattern to mine yet',
         ],
         corePattern: {
           before: '// Before: catalog evolves by anecdote\nreviewCatalog() // “I think people want X?”\n// same manual fulfillment continues, cost invisible',
@@ -461,12 +461,12 @@ export const managements: Management[] = [
         name: 'Request records pack',
         stage: '07 · Reporting & records',
         description: 'Use when catalog items live without a written spec, SLA is a guess, and monthly fulfillment statistics do not exist when the business asks for them',
-        overview: 'Request records pack standardizes the documents every fulfilled request journey must leave: the catalog item spec, the SLA sheet, the monthly fulfillment report, the approval audit trail. Core principle: requests are not favors — they are measurable services; whatever is not defined and counted will be debated and ignored.',
+        overview: 'Request records pack standardizes the documents every fulfilled request journey must leave: the catalog item spec, the SLA sheet, the monthly fulfillment report, the approval audit trail. Core principle: requests are not favors they are measurable services; whatever is not defined and counted will be debated and ignored.',
         whenToUse: [
           'New catalog item added without its spec and approval rules documented',
-          'Monthly service review asks for volume, timing and satisfaction — nobody has numbers',
+          'Monthly service review asks for volume, timing and satisfaction nobody has numbers',
           'Approval for costly access is questioned and no trail exists to defend it',
-          'When NOT to use: one-off exception request with no repeat value — note the trail only',
+          'When NOT to use: one-off exception request with no repeat value note the trail only',
         ],
         corePattern: {
           before: '// Before: records scattered\n// “catalog says depends on who wrote it”, MTTS = vibes\n// audit asks who approved REQ-42 → silence',
@@ -481,7 +481,7 @@ export const managements: Management[] = [
             ['Monthly fulfillment report', 'End of month', 'volume · MTTS · satisfaction · top demands'],
           ],
         },
-        how: 'Catalog specs are templates enforced at catalog creation; approval trails auto-attach from approval router events; fulfillment records feed a monthly aggregation job that outputs the standard report structure — humans review and publish before it reaches stakeholders.',
+        how: 'Catalog specs are templates enforced at catalog creation; approval trails auto-attach from approval router events; fulfillment records feed a monthly aggregation job that outputs the standard report structure humans review and publish before it reaches stakeholders.',
         commonMistakes: [
           'Catalog specs written as marketing copy → nobody can fulfill to it. Fix: required structured sections.',
           'Monthly report built manually → stale by publication day. Fix: auto-aggregation, human publishes.',
@@ -504,7 +504,7 @@ export const managements: Management[] = [
         name: 'Pattern clustering',
         stage: '01 · Detect & cluster',
         description: 'Use when similar incidents repeat weekly but no problem is created and the team stays in reactive firefighting',
-        overview: 'Pattern clustering finds groups of similar incidents that should become a problem. Core principle: recurrence is a graph signal — same app + overlapping title is the cluster, not a single incident’s severity.',
+        overview: 'Pattern clustering finds groups of similar incidents that should become a problem. Core principle: recurrence is a graph signal same app + overlapping title is the cluster, not a single incident’s severity.',
         whenToUse: [
           '≥3 incidents in 7 days share same app and title overlap ≥0.6',
           'Incident marked “recurring”',
@@ -528,18 +528,18 @@ export const managements: Management[] = [
           'Single keyword match → false cluster. Fix: require embedding + app.',
           'Auto-creating PRB → noise. Fix: suggest only.',
         ],
-        example: '3× “DB timeout 500” on APP-004 in 5 days → 0.78 → “Create PRB — DB capacity”.',
+        example: '3× “DB timeout 500” on APP-004 in 5 days → 0.78 → “Create PRB DB capacity”.',
       },
       {
         name: 'Recurring-impact scorer',
         stage: '02 · Prioritize',
         description: 'Use when the problem backlog is ranked by gut feel, small-but-daily failures sit below one-off P1s, or engineers argue about which RCA to run first',
-        overview: 'Recurring-impact scorer ranks the problem backlog by real cost: recurrence frequency × users affected × trend direction. Core principle: for problems, frequency beats severity — a 5-minute failure every day costs more than a one-hour outage once. The AI computes and ranks; humans confirm the priority.',
+        overview: 'Recurring-impact scorer ranks the problem backlog by real cost: recurrence frequency × users affected × trend direction. Core principle: for problems, frequency beats severity a 5-minute failure every day costs more than a one-hour outage once. The AI computes and ranks; humans confirm the priority.',
         whenToUse: [
           'Problem backlog has >10 open PRBs with no clear order',
           'A daily nuisance incident outranks nothing because each occurrence looks small',
           'Planning meeting needs evidence for “why this RCA first”',
-          'When NOT to use: brand-new problem with 1 occurrence — no recurrence data to score yet',
+          'When NOT to use: brand-new problem with 1 occurrence no recurrence data to score yet',
         ],
         corePattern: {
           before: '// Before: backlog ordered by loudest voice\nconst queue = problems.sort((a, b) => b.shoutiness - a.shoutiness)\n// daily nuisances starve while big one-offs jump the line',
@@ -554,24 +554,24 @@ export const managements: Management[] = [
             ['Score ≥ threshold', 'Suggest P-level', 'human confirms'],
           ],
         },
-        how: 'Counts occurrences from linked incidents over trailing 30 days, multiplies by distinct users affected and trend factor (rising/flat/falling via week-over-week delta). Output: {score, suggestedP, reason} per problem. Suggestion only — priority changes still need human confirmation, and every factor is shown so the ranking is arguable.',
+        how: 'Counts occurrences from linked incidents over trailing 30 days, multiplies by distinct users affected and trend factor (rising/flat/falling via week-over-week delta). Output: {score, suggestedP, reason} per problem. Suggestion only priority changes still need human confirmation, and every factor is shown so the ranking is arguable.',
         commonMistakes: [
           'Scoring on single-incident severity → backlog becomes just another P1 list. Fix: frequency is the dominant factor.',
           'Hiding the formula → engineers distrust the rank. Fix: show factors next to score.',
           'Auto-reprioritizing the board. Fix: suggest, human applies.',
         ],
-        example: 'PRB “DB pool exhaustion”: 9 occurrences × 40 users × rising (×1.5) → score 540, suggested P2 — jumps above two older one-off P1s in the ranked backlog.',
+        example: 'PRB “DB pool exhaustion”: 9 occurrences × 40 users × rising (×1.5) → score 540, suggested P2 jumps above two older one-off P1s in the ranked backlog.',
       },
       {
         name: 'RCA draft assist',
         stage: '03 · Investigate (RCA)',
         description: 'Use when a problem has linked incidents but its RCA is blank, inconsistent, or repeatedly written manually',
-        overview: 'RCA draft assist generates a root-cause analysis draft from a cluster of linked incidents, ready for the engineer to edit. Core principle: linked incidents are the source — the draft compresses them, never invents.',
+        overview: 'RCA draft assist generates a root-cause analysis draft from a cluster of linked incidents, ready for the engineer to edit. Core principle: linked incidents are the source the draft compresses them, never invents.',
         whenToUse: [
           'Problem has 2+ linked incidents and RCA is empty',
           '“What happened” is copied manually each time',
           'RCA structure varies per author',
-          'When NOT to use: RCA already published — do not overwrite',
+          'When NOT to use: RCA already published do not overwrite',
         ],
         corePattern: {
           before: '// Before: blank RCA\nrca = {whatHappened:"", rootCause:""} // engineer writes from scratch',
@@ -597,12 +597,12 @@ export const managements: Management[] = [
         name: 'Known-error publisher',
         stage: '04 · Workaround',
         description: 'Use when the cause is understood but the permanent fix is weeks away, and every new incident re-derives the same workaround from scratch',
-        overview: 'Known-error publisher turns a diagnosed problem into a findable known-error record: confirmed cause + the best workaround observed across linked incidents, published to knowledge so agents hit it during triage. Core principle: until the fix ships, the workaround is the product — make it impossible not to find.',
+        overview: 'Known-error publisher turns a diagnosed problem into a findable known-error record: confirmed cause + the best workaround observed across linked incidents, published to knowledge so agents hit it during triage. Core principle: until the fix ships, the workaround is the product make it impossible not to find.',
         whenToUse: [
           'RCA is confirmed but the permanent fix waits on a change window',
-          'Linked incidents show 2+ different workarounds for the same cause — pick and standardize one',
+          'Linked incidents show 2+ different workarounds for the same cause pick and standardize one',
           'Agents keep asking “how did we fix this last time?” in war-rooms',
-          'When NOT to use: RCA still unconfirmed — publishing an unproven cause poisons future diagnosis',
+          'When NOT to use: RCA still unconfirmed publishing an unproven cause poisons future diagnosis',
         ],
         corePattern: {
           before: '// Before: workaround lives in one engineer’s head\nif (incident.matches(problem)) {\n  return askSeniorHowToMitigate() // slow, inconsistent, leaves with them\n}',
@@ -629,12 +629,12 @@ export const managements: Management[] = [
         name: 'Fix-effectiveness check',
         stage: '05 · Verify fix',
         description: 'Use when the permanent fix just shipped and everyone assumes the problem is over, but nobody checked whether incidents actually stopped',
-        overview: 'Fix-effectiveness check compares incident recurrence after the permanent fix against the pre-fix baseline and declares a verdict: effective, partial, or no effect. Core principle: shipping is not fixing — only the recurrence curve decides. The AI measures; humans decide what to do about a failing verdict.',
+        overview: 'Fix-effectiveness check compares incident recurrence after the permanent fix against the pre-fix baseline and declares a verdict: effective, partial, or no effect. Core principle: shipping is not fixing only the recurrence curve decides. The AI measures; humans decide what to do about a failing verdict.',
         whenToUse: [
-          'Permanent-fix change completed ≥1 week ago — baseline comparison is meaningful',
+          'Permanent-fix change completed ≥1 week ago baseline comparison is meaningful',
           'Problem was closed on the assumption that deployment = resolution',
           'Stakeholders ask “is it actually better now?” with no data behind the answer',
-          'When NOT to use: fix shipped days ago with near-zero traffic since — sample too small, wait',
+          'When NOT to use: fix shipped days ago with near-zero traffic since sample too small, wait',
         ],
         corePattern: {
           before: '// Before: close because the change went green\nif (change.status === "completed") problem.close() // hope as strategy\n// nobody checks next month',
@@ -644,61 +644,61 @@ export const managements: Management[] = [
           headers: ['Reduction vs baseline', 'Verdict', 'Next'],
           rows: [
             ['≥80%', 'Effective', 'propose close + retire KE'],
-            ['30–80%', 'Partial', 'keep open, note residual'],
+            ['3080%', 'Partial', 'keep open, note residual'],
             ['<30%', 'No effect', 'reopen investigation'],
             ['<1 week of data', 'Inconclusive', 'wait for sample'],
           ],
         },
-        how: 'Builds a 30-day pre-fix occurrence baseline from linked incidents, then counts matching occurrences since the fix change completed; same embedding signature as pattern clustering so “similar” means the same thing in both places. Output: {reduction %, verdict, evidence}. Verdicts are proposals attached to the problem — closure still needs a human.',
+        how: 'Builds a 30-day pre-fix occurrence baseline from linked incidents, then counts matching occurrences since the fix change completed; same embedding signature as pattern clustering so “similar” means the same thing in both places. Output: {reduction %, verdict, evidence}. Verdicts are proposals attached to the problem closure still needs a human.',
         commonMistakes: [
           'Judging after 2 quiet days → noise reads as success. Fix: minimum observation window.',
           'Ignoring partial results → residual occurrences have no owner. Fix: partial keeps the problem open.',
           'Comparing different signatures pre/post → false improvement. Fix: reuse clustering embeddings.',
         ],
-        example: 'Fix shipped 3 weeks ago: baseline 9/month → now 2/month = 78% reduction → verdict “Partial — keep open”; two residual timeouts share a new signature worth its own look.',
+        example: 'Fix shipped 3 weeks ago: baseline 9/month → now 2/month = 78% reduction → verdict “Partial keep open”; two residual timeouts share a new signature worth its own look.',
       },
       {
         name: 'Recurrence watchdog',
         stage: '06 · Close & watch',
         description: 'Use when closed problems silently absorb nothing while their failure mode lives on under new titles, and nobody notices the same outage wearing a new name',
-        overview: 'Recurrence watchdog keeps watching after a problem closes: if incidents with the same signature re-emerge, it proposes reopening with the fresh cluster as evidence. Core principle: a problem is done when recurrence stops — not when its status says closed. The watch costs nothing; missing the comeback costs the whole RCA again.',
+        overview: 'Recurrence watchdog keeps watching after a problem closes: if incidents with the same signature re-emerge, it proposes reopening with the fresh cluster as evidence. Core principle: a problem is done when recurrence stops not when its status says closed. The watch costs nothing; missing the comeback costs the whole RCA again.',
         whenToUse: [
-          'Problem closed as “fixed” — start a watch instead of walking away',
+          'Problem closed as “fixed” start a watch instead of walking away',
           'New incident arrives that matches a closed PRB’s signature',
           'Quarterly hygiene: which closed problems have quietly recurred?',
-          'When NOT to use: problem closed as “no fault found” with zero occurrences ever linked — nothing to match against',
+          'When NOT to use: problem closed as “no fault found” with zero occurrences ever linked nothing to match against',
         ],
         corePattern: {
-          before: '// Before: closed = invisible\nproblem.close()\n// 6 weeks later the same failure returns under a new title — fresh RCA, full price\ncreateBrandNewProblem(incident)',
+          before: '// Before: closed = invisible\nproblem.close()\n// 6 weeks later the same failure returns under a new title fresh RCA, full price\ncreateBrandNewProblem(incident)',
           after: '// After: closed problems stay watched\nwatchdog.watch(problem, { signatureEmbedding, ttlDays: 90 })\nonMatch((incident, prb) => proposeReopen(prb, [incident])) // evidence attached',
         },
         quickReference: {
           headers: ['Signal', 'Action', 'Threshold'],
           rows: [
             ['New incident sim ≥0.85 to closed PRB', 'Propose reopen', 'cluster attached'],
-            ['sim 0.7–0.85', 'Flag for review', 'human judges'],
+            ['sim 0.70.85', 'Flag for review', 'human judges'],
             ['Quiet through TTL', 'Archive watch', '90 days default'],
             ['Reopen confirmed', 'Restore links + history', 'no cold restart'],
           ],
         },
-        how: 'Stores each closed problem’s cluster signature (embeddings of linked incident titles + service) with a 90-day watch TTL. Incoming incidents are matched against closed-problem signatures; strong matches generate a reopen proposal citing the old RCA plus the new cluster. Humans confirm reopens — the AI only proves the case.',
+        how: 'Stores each closed problem’s cluster signature (embeddings of linked incident titles + service) with a 90-day watch TTL. Incoming incidents are matched against closed-problem signatures; strong matches generate a reopen proposal citing the old RCA plus the new cluster. Humans confirm reopens the AI only proves the case.',
         commonMistakes: [
           'Watching forever → watch list becomes noise. Fix: TTL archive.',
           'Auto-reopening on any weak match → churn and distrust. Fix: reopen needs ≥0.85 or human review.',
           'Reopening empty-handed → engineers relitigate from scratch. Fix: always attach new cluster + old RCA.',
         ],
-        example: 'Closed PRB “DB pool exhaustion”: 5 weeks later 3× “checkout latency spike” score 0.88 to its signature → proposal: “Reopen PRB-1042 — same signature, here is why”, old RCA preloaded.',
+        example: 'Closed PRB “DB pool exhaustion”: 5 weeks later 3× “checkout latency spike” score 0.88 to its signature → proposal: “Reopen PRB-1042 same signature, here is why”, old RCA preloaded.',
       },
       {
         name: 'Problem records pack',
         stage: '07 · Reporting & records',
         description: 'Use when problems close as “fixed” with no documented statement, known errors hide in war-room chats, and recurrence trends are invisible to leadership',
-        overview: 'Problem records pack standardizes what every problem must produce: the problem statement, the RCA document, the known-error record, the recurrence and fix-effectiveness report. Core principle: a problem is not solved because its ticket says closed — it is solved when its records explain what happened, what worked, and what came back.',
+        overview: 'Problem records pack standardizes what every problem must produce: the problem statement, the RCA document, the known-error record, the recurrence and fix-effectiveness report. Core principle: a problem is not solved because its ticket says closed it is solved when its records explain what happened, what worked, and what came back.',
         whenToUse: [
-          'Problem investigated — RCA document due for review',
+          'Problem investigated RCA document due for review',
           'Workaround exists but no known-error record pins it where agents can find it',
           'Quarterly problem review needs recurrence curves across all open/closed problems',
-          'When NOT to use: single-incident PRB closed as no-fault — lean record suffices',
+          'When NOT to use: single-incident PRB closed as no-fault lean record suffices',
         ],
         corePattern: {
           before: '// Before: records exist if someone felt like writing them\n// RCA blank, known error in a Slack thread\n// “did it come back?” unknown until the next outage',
@@ -719,7 +719,7 @@ export const managements: Management[] = [
           'Workaround living in comments instead of the known-error record → repeat discovery. Fix: separate published document.',
           'Fix declared effective without the report → recurrence surprises. Fix: gate closure on fix verdict.',
         ],
-        example: 'PRB “pool exhaustion” → RCA doc published + KE record linked to checkout KB + 3-week fix report: 78% reduction, verdict partial — problem stays open with evidence.',
+        example: 'PRB “pool exhaustion” → RCA doc published + KE record linked to checkout KB + 3-week fix report: 78% reduction, verdict partial problem stays open with evidence.',
       },
     ],
     color: 'bg-purple-500', icon: 'SearchX', order: 2, lane: 'cycle'
@@ -727,7 +727,7 @@ export const managements: Management[] = [
   {
     id: 'change', prefix: 'CHG-', title: 'Change Management', oneLiner: 'Controls changes to services and infrastructure and verifies they hold',
     bullets: [
-      'Plans change with risk, intent and rollback — not just deploy',
+      'Plans change with risk, intent and rollback not just deploy',
       'Verifies outcome after deployment during monitoring period',
       'Holds or rolls back when monitoring shows warning or anomaly',
     ],
@@ -736,12 +736,12 @@ export const managements: Management[] = [
         name: 'Change-request drafter',
         stage: '01 · Log & plan',
         description: 'Use when change requests are thin one-liners like “update DB”, rollout steps are invented per deploy, or rollback is a blank field nobody fills',
-        overview: 'Change-request drafter assembles a complete change record from history: intent, rollout steps, verification checks and a rollback plan drawn from similar completed changes on the same service. Core principle: past changes are the template — if no previous change ever used a rollback step, the drafter says so instead of inventing one.',
+        overview: 'Change-request drafter assembles a complete change record from history: intent, rollout steps, verification checks and a rollback plan drawn from similar completed changes on the same service. Core principle: past changes are the template if no previous change ever used a rollback step, the drafter says so instead of inventing one.',
         whenToUse: [
           'New change created with a short description and empty rollback field',
           'Same service gets changed repeatedly with rewritten-from-scratch plans',
-          'Author is junior to change process — needs the structure, not the lecture',
-          'When NOT to use: emergency fix mid-incident — speed beats paperwork; draft after the fact',
+          'Author is junior to change process needs the structure, not the lecture',
+          'When NOT to use: emergency fix mid-incident speed beats paperwork; draft after the fact',
         ],
         corePattern: {
           before: '// Before: plan typed from memory\nconst chg = { title: "update DB", rollback: null }\n// discovered incomplete at 2am during a failed deploy',
@@ -756,7 +756,7 @@ export const managements: Management[] = [
             ['Verification steps', 'Post-deploy checks used before', 'human edits'],
           ],
         },
-        how: 'Finds completed changes touching the same CI/service (embedding + exact CI match), extracts their steps, rollbacks and outcomes; drafts the new record section by section with source links. Output is a staged draft — nothing enters the approval flow until the author edits and submits. Missing sections are flagged, not filled with guesses.',
+        how: 'Finds completed changes touching the same CI/service (embedding + exact CI match), extracts their steps, rollbacks and outcomes; drafts the new record section by section with source links. Output is a staged draft nothing enters the approval flow until the author edits and submits. Missing sections are flagged, not filled with guesses.',
         commonMistakes: [
           'Copying a rollback plan from an unrelated service → dangerous theater. Fix: same-CI history only.',
           'Auto-submitting drafts into approval → reviewers rubber-stamp noise. Fix: author submits.',
@@ -768,10 +768,10 @@ export const managements: Management[] = [
         name: 'Risk scoring',
         stage: '02 · Assess risk',
         description: 'Use when changes are created with vague descriptions, every change is marked medium, or production changes have no risk signal',
-        overview: 'Risk scoring grades a planned change as low/medium/high/critical before approval. Core principle: description length and environment are the signals — a 10-word prod change is riskier than a 100-word staging change.',
+        overview: 'Risk scoring grades a planned change as low/medium/high/critical before approval. Core principle: description length and environment are the signals a 10-word prod change is riskier than a 100-word staging change.',
         whenToUse: [
           'Change created, especially for prod or with <50 char description',
-          'Every change is “medium” — no differentiation',
+          'Every change is “medium” no differentiation',
           'Prod change with 10-word description',
           'When NOT to use: change already has a thorough risk assessment by author',
         ],
@@ -799,11 +799,11 @@ export const managements: Management[] = [
         name: 'Impact prediction',
         stage: '03 · Map blast radius',
         description: 'Use when a change touches a CI that has dependencies and the blast radius is discovered only after deploy',
-        overview: 'Impact prediction lists which services and apps will be affected if this change is deployed. Core principle: the Service Map is the truth — traverse the dependency graph from the touched CI downstream.',
+        overview: 'Impact prediction lists which services and apps will be affected if this change is deployed. Core principle: the Service Map is the truth traverse the dependency graph from the touched CI downstream.',
         whenToUse: [
           'Change touches a CI that has outgoing dependencies',
           '“We didn’t know it would break X” after deploy',
-          'When NOT to use: CI has no dependencies (isolated) — no impact',
+          'When NOT to use: CI has no dependencies (isolated) no impact',
         ],
         corePattern: {
           before: '// Before: blind deploy\ndeploy(change) // discover impact after',
@@ -827,7 +827,7 @@ export const managements: Management[] = [
         name: 'CAB evidence pack',
         stage: '04 · Approve & schedule',
         description: 'Use when approvers decide from a title and a gut feeling, meetings re-litigate the same questions, or two changes collide on the same service unnoticed',
-        overview: 'CAB evidence pack compiles everything an approver needs into one view: risk score, predicted blast radius, rollout and rollback plans, schedule conflicts (change freezes, overlapping changes on the same CI) — plus a draft rationale either way. Core principle: approval quality is bounded by evidence quality; the AI assembles, the board decides.',
+        overview: 'CAB evidence pack compiles everything an approver needs into one view: risk score, predicted blast radius, rollout and rollback plans, schedule conflicts (change freezes, overlapping changes on the same CI) plus a draft rationale either way. Core principle: approval quality is bounded by evidence quality; the AI assembles, the board decides.',
         whenToUse: [
           'Change enters approval with prod impact or high risk score',
           'Approvers keep asking “what else touches this CI next week?”',
@@ -851,18 +851,18 @@ export const managements: Management[] = [
         commonMistakes: [
           'Auto-approving low-risk packs → approval theater returns via the side door. Fix: humans decide, always.',
           'Conflict window too narrow (same hour) → sequential deploys still collide. Fix: default ±48h.',
-          'Packs so long nobody reads them. Fix: one screen — flags up top, evidence behind.',
+          'Packs so long nobody reads them. Fix: one screen flags up top, evidence behind.',
         ],
         example: 'CHG “DB pool fix” on CI-042 → pack: high risk · 3 apps impacted · conflicts CHG-131 (same CI, +6h) · freeze starts Friday → CAB defers to Monday, rationale recorded.',
       },
       {
         name: 'Post-deploy sentinel',
         stage: '05 · Deploy & verify',
-        description: 'Use when deploys go green and everyone walks away, while the real verdict — error rates, latency, business metrics — shows up hours later unwatched',
+        description: 'Use when deploys go green and everyone walks away, while the real verdict error rates, latency, business metrics shows up hours later unwatched',
         overview: 'Post-deploy sentinel watches the affected services during the monitoring period, comparing live metrics against a pre-deploy baseline, and proposes hold or rollback when anomalies appear. Core principle: green pipeline means deployed, not working. The AI watches and alerts; pulling the trigger stays human.',
         whenToUse: [
           'High/critical change just deployed to prod with a monitoring period set',
-          'Deploy finished outside overlap hours — no engineer is naturally watching',
+          'Deploy finished outside overlap hours no engineer is naturally watching',
           'Service has known wobble where humans need a diff against baseline, not raw dashboards',
           'When NOT to use: low-risk isolated change with trivial verification checks already defined',
         ],
@@ -891,12 +891,12 @@ export const managements: Management[] = [
         name: 'Closure & drift report',
         stage: '06 · Close & learn',
         description: 'Use when changes close the moment monitoring ends, related incidents later have no link back, and the runbook nobody updated quietly rots',
-        overview: 'Closure & drift report closes the loop: it checks whether the change held after the monitoring period (no related incidents, config still matches intent) and lists what should be updated — runbooks, architecture docs, the CI record. Core principle: a change is done when it stopped generating work, not when it deployed green.',
+        overview: 'Closure & drift report closes the loop: it checks whether the change held after the monitoring period (no related incidents, config still matches intent) and lists what should be updated runbooks, architecture docs, the CI record. Core principle: a change is done when it stopped generating work, not when it deployed green.',
         whenToUse: [
-          'Monitoring period completed without rollback — candidate for closure review',
+          'Monitoring period completed without rollback candidate for closure review',
           'Incident appears days/weeks later touching a recently changed CI',
           'Docs and diagrams that reference this service may now be stale',
-          'When NOT to use: change was rolled back — it feeds problem/incident records instead',
+          'When NOT to use: change was rolled back it feeds problem/incident records instead',
         ],
         corePattern: {
           before: '// Before: close = status flip\nif (monitoringOver()) change.close()\n// docs say old schema, incidents arrive unlinkable, drift begins',
@@ -923,12 +923,12 @@ export const managements: Management[] = [
         name: 'Change records pack',
         stage: '07 · Reporting & records',
         description: 'Use when changes ship with scattered intent, CAB decisions lack minutes, deployment checklists live in private notes, and no post-change report tells whether it held',
-        overview: 'Change records pack standardizes the documents every change leaves: the change plan/RFC, the CAB agenda and minutes, the deployment checklist, the post-implementation review. Core principle: a change without its records is an undocumented edit to production — unreviewable, unauditable, unlearnable.',
+        overview: 'Change records pack standardizes the documents every change leaves: the change plan/RFC, the CAB agenda and minutes, the deployment checklist, the post-implementation review. Core principle: a change without its records is an undocumented edit to production unreviewable, unauditable, unlearnable.',
         whenToUse: [
-          'Any prod change entering approval — CAB packet due before the meeting',
-          'Change deployed — PIR-change due after the monitoring period',
+          'Any prod change entering approval CAB packet due before the meeting',
+          'Change deployed PIR-change due after the monitoring period',
           'Audit or incident review asks “who approved CHG-118 and why?”',
-          'When NOT to use: pre-approved Standard change with a fixed low-risk package — single record suffices',
+          'When NOT to use: pre-approved Standard change with a fixed low-risk package single record suffices',
         ],
         corePattern: {
           before: '// Before: records exist in someone’s notes\ndocument(findIt()) // deployment checklist in a DM\n// 6 weeks later audit: “was this approved?” …who knows',
@@ -958,7 +958,7 @@ export const managements: Management[] = [
     id: 'knowledge', prefix: 'KB-', title: 'Knowledge Management', oneLiner: 'Makes every fix reusable at the moment of need',
     bullets: [
       'Captures runbooks, troubleshooting guides and postmortems as structured articles',
-      'Makes knowledge findable inside the incident — not after',
+      'Makes knowledge findable inside the incident not after',
       'Evolves articles from real resolutions, not theory',
     ],
     skills: [
@@ -966,15 +966,15 @@ export const managements: Management[] = [
         name: 'Resolution → article',
         stage: '01 · Capture',
         description: 'Use when a problem RCA is published or a change is marked achieved but the fix stays in comments and the KB stays empty',
-        overview: 'Resolution → article generates a knowledge article draft from a closed problem or change resolution. Core principle: the resolution is the source — the draft prefills from published RCA or change goals, human publishes.',
+        overview: 'Resolution → article generates a knowledge article draft from a closed problem or change resolution. Core principle: the resolution is the source the draft prefills from published RCA or change goals, human publishes.',
         whenToUse: [
           'Problem RCA is published',
           'Change is marked achieved',
           'Same incident is solved from scratch each time',
-          'When NOT to use: KB already exists for this fix — link, do not duplicate',
+          'When NOT to use: KB already exists for this fix link, do not duplicate',
         ],
         corePattern: {
-          before: '// Before: fix stays in comments\n// “we fixed by increasing pool” — lost in 200 comments',
+          before: '// Before: fix stays in comments\n// “we fixed by increasing pool” lost in 200 comments',
           after: '// After: draft KB\nkb = draftFromRCA(publishedRCA) // {title, kbType: "runbook", sections}\n// human reviews → publish',
         },
         quickReference: {
@@ -990,18 +990,18 @@ export const managements: Management[] = [
           'Inventing steps without source → wrong runbook. Fix: source is RCA/change only.',
           'Duplicate KB → noise. Fix: check similarity before drafting.',
         ],
-        example: 'RCA “DB pool fix” → draft KB “Runbook: DB pool exhausted — increase maxPool to 50” (runbook).',
+        example: 'RCA “DB pool fix” → draft KB “Runbook: DB pool exhausted increase maxPool to 50” (runbook).',
       },
       {
         name: 'Structure & tagging assist',
         stage: '02 · Structure & review',
         description: 'Use when KB drafts are wall-of-text with no sections or tags, reviews bounce for structure instead of substance, and every author formats differently',
-        overview: 'Structure & tagging assist shapes a raw draft into a reviewable article: sections per kbType template, suggested tags pulled from content, a readability pass, then routes it to the right technical reviewer. Core principle: reviewers should spend attention on whether the fix is right — not on reformatting. The AI structures; meaning stays with the author.',
+        overview: 'Structure & tagging assist shapes a raw draft into a reviewable article: sections per kbType template, suggested tags pulled from content, a readability pass, then routes it to the right technical reviewer. Core principle: reviewers should spend attention on whether the fix is right not on reformatting. The AI structures; meaning stays with the author.',
         whenToUse: [
-          'Draft has no symptom/cause/steps separation — hard to follow mid-incident',
+          'Draft has no symptom/cause/steps separation hard to follow mid-incident',
           'Tagging is inconsistent, so search misses articles that exist',
           'Review cycles waste time on “can you restructure this?” feedback',
-          'When NOT to use: postmortem with required legal/compliance wording — template may break format rules',
+          'When NOT to use: postmortem with required legal/compliance wording template may break format rules',
         ],
         corePattern: {
           before: '// Before: reviewer = editor + fact-checker\nreview(rawDraft) // “add steps section, add tags, what’s the symptom here?”\n// 3 rounds of formatting ping-pong before anyone checks the facts',
@@ -1011,7 +1011,7 @@ export const managements: Management[] = [
           headers: ['Pass', 'Input', 'Output'],
           rows: [
             ['Template sections', 'Raw draft', 'kbType-shaped article'],
-            ['Tags', 'Entities in text (CI, app, error)', '5–10 consistent tags'],
+            ['Tags', 'Entities in text (CI, app, error)', '510 consistent tags'],
             ['Readability', 'Full text', 'flags long steps, jargon'],
             ['Reviewer route', 'Domain of content', 'named technical reviewer'],
           ],
@@ -1028,12 +1028,12 @@ export const managements: Management[] = [
         name: 'Context publisher',
         stage: '03 · Publish & target',
         description: 'Use when published articles live only in the portal nobody opens during an outage, while agents needed them inside the ticket',
-        overview: 'Context publisher places an approved article where its audience actually works: the portal, the runbook slot of matching CIs, the in-ticket suggestion pool for future similar incidents. Core principle: publishing is placement, not a button — knowledge that surfaces after the incident is trivia.',
+        overview: 'Context publisher places an approved article where its audience actually works: the portal, the runbook slot of matching CIs, the in-ticket suggestion pool for future similar incidents. Core principle: publishing is placement, not a button knowledge that surfaces after the incident is trivia.',
         whenToUse: [
           'Article approved but visible only via direct URL / portal search',
           'Runbooks exist for services but never appear when those services fail',
           'Teams argue the KB is useless because nothing shows up mid-ticket',
-          'When NOT to use: sensitive internal analysis restricted by policy — placement must respect ACLs first',
+          'When NOT to use: sensitive internal analysis restricted by policy placement must respect ACLs first',
         ],
         corePattern: {
           before: '// Before: one button, one place\npublish(kb) // → portal listing #47\n// during next checkout outage, agent never sees it exists',
@@ -1060,12 +1060,12 @@ export const managements: Management[] = [
         name: 'Search relevance',
         stage: '04 · Find & surface',
         description: 'Use when a new incident is created and the right KB article is not suggested, so the team searches manually',
-        overview: 'Search relevance suggests the right KB article when a similar incident is opened. Core principle: the incident text is the query — embedding similarity finds the KB whose sections already solved it.',
+        overview: 'Search relevance suggests the right KB article when a similar incident is opened. Core principle: the incident text is the query embedding similarity finds the KB whose sections already solved it.',
         whenToUse: [
           'New incident is created',
           '“Is there a runbook for this?” asked',
           'Repeated manual search for same error',
-          'When NOT to use: incident is a novel error with no KB — no suggestion',
+          'When NOT to use: incident is a novel error with no KB no suggestion',
         ],
         corePattern: {
           before: '// Before: manual search\nresults = search("timeout") // 50 hits, slow',
@@ -1083,18 +1083,18 @@ export const managements: Management[] = [
           'Auto-linking low score → wrong KB linked. Fix: threshold 0.6, suggest only.',
           'Ignoring sections → title only. Fix: include KB sections in embedding.',
         ],
-        example: 'New incident “504 checkout” → suggests KB-012 “Runbook: 504 — check DB pool” (0.81).',
+        example: 'New incident “504 checkout” → suggests KB-012 “Runbook: 504 check DB pool” (0.81).',
       },
       {
         name: 'Usefulness tracker',
         stage: '05 · Use & feedback',
         description: 'Use when KB health is measured by page views and thumbs-up, while nobody knows whether articles actually resolve incidents',
-        overview: 'Usefulness tracker correlates article usage with outcomes: when an incident linked to an article resolves successfully, the article earns a confirmed success; high views without successes mean findable-but-broken. Core principle: feedback is behavioral — resolution data tells the truth that star ratings flatter.',
+        overview: 'Usefulness tracker correlates article usage with outcomes: when an incident linked to an article resolves successfully, the article earns a confirmed success; high views without successes mean findable-but-broken. Core principle: feedback is behavioral resolution data tells the truth that star ratings flatter.',
         whenToUse: [
           'Quarterly KB review: which articles deserve investment?',
           'An article gets traffic but the same failures keep escalating past it',
           'Deciding where to spend documentation effort next quarter',
-          'When NOT to use: brand-new article with <10 exposures — sample too small to judge',
+          'When NOT to use: brand-new article with <10 exposures sample too small to judge',
         ],
         corePattern: {
           before: '// Before: popularity as proxy for quality\nrankArticlesBy(views) // SEO wins, usefulness invisible\n// broken runbook keeps collecting views and failed fixes',
@@ -1121,12 +1121,12 @@ export const managements: Management[] = [
         name: 'Freshness watchdog',
         stage: '06 · Maintain & retire',
         description: 'Use when three-year-old runbooks still claim to be truth, the service they describe was redesigned twice, and wrong instructions burn the next on-call',
-        overview: 'Freshness watchdog watches staleness signals — linked CI changed, product version moved, no confirmed success in months — and proposes update or retirement with evidence. Core principle: a wrong article is worse than no article; stale knowledge actively misleads at the worst moment.',
+        overview: 'Freshness watchdog watches staleness signals linked CI changed, product version moved, no confirmed success in months and proposes update or retirement with evidence. Core principle: a wrong article is worse than no article; stale knowledge actively misleads at the worst moment.',
         whenToUse: [
           'CI referenced by an article was modified or replaced',
           'Article had zero confirmed successes for N months while its topic recurred',
           'Periodic KB hygiene sweep before audit or review',
-          'When NOT to use: reference material that does not decay (architecture decision records) — age alone is not staleness',
+          'When NOT to use: reference material that does not decay (architecture decision records) age alone is not staleness',
         ],
         corePattern: {
           before: '// Before: staleness discovered by victims\nonCall.follows(runbookFrom2023) // steps reference deleted service\n// incident extended by 40 minutes of confusion',
@@ -1141,7 +1141,7 @@ export const managements: Management[] = [
             ['Contradicts newer article', 'Conflict', 'merge proposal'],
           ],
         },
-        how: 'Subscribes to change events on CIs and products referenced in each article’s tags and body entities; combines signal strength (how central was the changed component) with usefulness data from the tracker. Proposals come as evidence packages — what changed, what likely broke, suggested owner — routed to the last author or domain reviewer. Humans update or retire.',
+        how: 'Subscribes to change events on CIs and products referenced in each article’s tags and body entities; combines signal strength (how central was the changed component) with usefulness data from the tracker. Proposals come as evidence packages what changed, what likely broke, suggested owner routed to the last author or domain reviewer. Humans update or retire.',
         commonMistakes: [
           'Age-only triggers → good stable articles harassed. Fix: require change/success signals.',
           'Silent auto-archive → teams lose tribal knowledge. Fix: proposals with grace period.',
@@ -1155,8 +1155,8 @@ export const managements: Management[] = [
         description: 'Use when articles of wildly different shapes pass review, placement decisions vanish without a trail, and nobody can report on whether the knowledge base actually works',
         overview: 'Knowledge records pack standardizes what knowledge produces: article templates per kbType, control effectiveness',
         whenToUse: [
-          'New article drafted — must follow the template for its kbType before review',
-          'Article published or retired — placement/retirement decision needs a record',
+          'New article drafted must follow the template for its kbType before review',
+          'Article published or retired placement/retirement decision needs a record',
           'Quarterly review: which content to invest, fix, or archive?',
           'When NOT to use: reference architecture decisions that follow a different record scheme',
         ],
@@ -1173,7 +1173,7 @@ export const managements: Management[] = [
             ['Quality scorecard & audit', 'Quarterly', 'views · success rate · stale flags · decisions'],
           ],
         },
-        how: 'Structure & tagging assist records template coverage and editorial notes; context publisher records placements; usefulness tracker and freshness watchdog feed the quarterly scorecard and audit — one report structure per quarter, reviewed and archived.',
+        how: 'Structure & tagging assist records template coverage and editorial notes; context publisher records placements; usefulness tracker and freshness watchdog feed the quarterly scorecard and audit one report structure per quarter, reviewed and archived.',
         commonMistakes: [
           'Template ignored → article unusable mid-incident. Fix: template enforced by record, not by habit.',
           'Placement decisions undocumented → leaks and blind spots. Fix: record at publish and at retire.',
@@ -1196,7 +1196,7 @@ export const managements: Management[] = [
         name: 'Trend detection',
         stage: '01 · Detect signal',
         description: 'Use when many improvements share the same source or keywords but are treated as isolated and no systemic fix is created',
-        overview: 'Trend detection spots repeating improvement themes across retro notes and postmortems. Core principle: repetition is the systemic signal — five “onboarding docs” improvements should become one.',
+        overview: 'Trend detection spots repeating improvement themes across retro notes and postmortems. Core principle: repetition is the systemic signal five “onboarding docs” improvements should become one.',
         whenToUse: [
           'Same theme (“onboarding”) appears 5× in 30 days',
           'Many improvements from retro/audit with overlapping keywords',
@@ -1224,14 +1224,14 @@ export const managements: Management[] = [
         name: 'Suggestion mining',
         stage: '02 · Mine ideas',
         description: 'Use when postmortems contain what could be better but no improvement is created and lessons stay in comments',
-        overview: 'Suggestion mining extracts improvement candidates from incident comments and postmortems. Core principle: the postmortem already contains the improvement — “should / could / need to” are the signals.',
+        overview: 'Suggestion mining extracts improvement candidates from incident comments and postmortems. Core principle: the postmortem already contains the improvement “should / could / need to” are the signals.',
         whenToUse: [
           'Postmortem contains “what could be better”',
           'No improvement created after incident',
-          'When NOT to use: no retrospective or postmortem — no source',
+          'When NOT to use: no retrospective or postmortem no source',
         ],
         corePattern: {
-          before: '// Before: lessons in comments\n// “should add DB pool alert” — stays in comment',
+          before: '// Before: lessons in comments\n// “should add DB pool alert” stays in comment',
           after: '// After: draft improvement\nconst draft = mine(comments) // "Add DB pool alert (effort S)"\n// human confirms',
         },
         quickReference: {
@@ -1252,12 +1252,12 @@ export const managements: Management[] = [
         name: 'Impact-effort ranker',
         stage: '03 · Prioritize',
         description: 'Use when the improvement backlog is ordered by whoever shouted last, tiny pet ideas outrank systemic fixes, and nobody can say why the top item is on top',
-        overview: 'Impact-effort ranker orders the improvement backlog by expected impact × confidence ÷ effort, where impact comes from evidence attached to each idea — how often the pain recurred, how many people or tickets it touches. Core principle: a backlog is a bet portfolio; rank it by expected return, not by recency or volume of complaining.',
+        overview: 'Impact-effort ranker orders the improvement backlog by expected impact × confidence ÷ effort, where impact comes from evidence attached to each idea how often the pain recurred, how many people or tickets it touches. Core principle: a backlog is a bet portfolio; rank it by expected return, not by recency or volume of complaining.',
         whenToUse: [
           'Improvement backlog exceeds what the team can do this quarter',
           'Two ideas compete and the debate is opinion vs opinion',
           'Small easy wins crowd out systemic improvements quarter after quarter',
-          'When NOT to use: compliance/security-mandated changes — they skip the queue by policy',
+          'When NOT to use: compliance/security-mandated changes they skip the queue by policy',
         ],
         corePattern: {
           before: '// Before: loudest voice sorts the board\nbacklog.sort((a, b) => b.insistence - a.insistence)\n// systemic fix starves behind 12 quick cosmetic wins',
@@ -1272,7 +1272,7 @@ export const managements: Management[] = [
             ['Effort', 'Estimate S/M/L/XL', '÷ divisor'],
           ],
         },
-        how: 'Joins each improvement with its source evidence (mined suggestions carry incident links; trends carry cluster size), computes expected-return score with all factors shown inline, and presents the ranked top slice for human confirmation. Scores are transparent arithmetic — every factor is inspectable so the order can be argued and overridden.',
+        how: 'Joins each improvement with its source evidence (mined suggestions carry incident links; trends carry cluster size), computes expected-return score with all factors shown inline, and presents the ranked top slice for human confirmation. Scores are transparent arithmetic every factor is inspectable so the order can be argued and overridden.',
         commonMistakes: [
           'Opaque scoring → team distrusts and ignores the order. Fix: show factors next to every score.',
           'Impact without recurrence evidence → popularity contest returns. Fix: require linked signals.',
@@ -1283,13 +1283,13 @@ export const managements: Management[] = [
       {
         name: 'Progress tracker',
         stage: '04 · Implement & track',
-        description: 'Use when improvement items enter the board full of energy and die there silently — proposed forever, in_progress with no commits, done meaning nothing happened',
-        overview: 'Progress tracker watches each improvement for actual motion across proposed → in_progress → done and surfaces stalled work with age-and-owner evidence before it fossilizes. Core principle: an improvement board works only if stale entries are embarrassing — visibility with gentle pressure is the whole mechanism.',
+        description: 'Use when improvement items enter the board full of energy and die there silently proposed forever, in_progress with no commits, done meaning nothing happened',
+        overview: 'Progress tracker watches each improvement for actual motion across proposed → in_progress → done and surfaces stalled work with age-and-owner evidence before it fossilizes. Core principle: an improvement board works only if stale entries are embarrassing visibility with gentle pressure is the whole mechanism.',
         whenToUse: [
           'Items sit proposed/in_progress past their due dates with no updates',
           'Weekly sync spends its time asking “what happened to that one?”',
           'Board shows 40% done but nothing measurably changed',
-          'When NOT to use: item is actively moving with fresh updates — no signal needed',
+          'When NOT to use: item is actively moving with fresh updates no signal needed',
         ],
         corePattern: {
           before: '// Before: silent rot\nimprovements.filter(i => i.status === "proposed") // 23 items, oldest: 14 months\n// nobody remembers why any of them mattered',
@@ -1304,7 +1304,7 @@ export const managements: Management[] = [
             ['Done but unverified', 'Pretend-done', 'route to verifier'],
           ],
         },
-        how: 'Tracks state transitions and event freshness per item; when staleness thresholds trip, attaches the evidence package (age, owner, last event, original rationale link from mining) and proposes one of three honest exits: unblock, re-commit with new date, or close as won’t-do. Humans choose — the tracker only makes drift visible.',
+        how: 'Tracks state transitions and event freshness per item; when staleness thresholds trip, attaches the evidence package (age, owner, last event, original rationale link from mining) and proposes one of three honest exits: unblock, re-commit with new date, or close as won’t-do. Humans choose the tracker only makes drift visible.',
         commonMistakes: [
           'Nagging daily → flags muted like approval spam. Fix: one well-evidenced flag per threshold.',
           'Closing stalled items silently → ideas vanish without learning. Fix: closure requires a reason.',
@@ -1316,12 +1316,12 @@ export const managements: Management[] = [
         name: 'Outcome verifier',
         stage: '05 · Verify outcome',
         description: 'Use when improvements get marked done the moment the task closes, while nobody checks whether the metric they promised actually moved',
-        overview: 'Outcome verifier compares the target metric after implementation against the pre-improvement baseline and issues a verdict: verified, partial, or no effect. Core principle: task completion is not improvement — the metric is the only judge, and it votes after, not before.',
+        overview: 'Outcome verifier compares the target metric after implementation against the pre-improvement baseline and issues a verdict: verified, partial, or no effect. Core principle: task completion is not improvement the metric is the only judge, and it votes after, not before.',
         whenToUse: [
           'Implementation marked done with a stated target (“cut MTTR”, “fewer misrouted requests”)',
           'Quarterly review: which shipped improvements actually paid off?',
           'Deciding whether to double down, adjust, or abandon an approach',
-          'When NOT to use: improvement has no measurable target defined — send back to planning with a metric requirement',
+          'When NOT to use: improvement has no measurable target defined send back to planning with a metric requirement',
         ],
         corePattern: {
           before: '// Before: done means done\nimp.close() // “alert added” ✓\n// MTTR unchanged; nobody noticed because nobody looked',
@@ -1336,7 +1336,7 @@ export const managements: Management[] = [
             ['No target metric', 'Unverifiable', 'return to planning'],
           ],
         },
-        how: 'Resolves each improvement’s target to a measurable series (incident metrics, request volumes, KB success rates), builds a pre/post window around completion, and reports the delta with sample sizes so noise is visible. Verdicts attach to the record permanently — feeding practice embedder on success and progress tracker on failure. Humans decide iteration vs acceptance.',
+        how: 'Resolves each improvement’s target to a measurable series (incident metrics, request volumes, KB success rates), builds a pre/post window around completion, and reports the delta with sample sizes so noise is visible. Verdicts attach to the record permanently feeding practice embedder on success and progress tracker on failure. Humans decide iteration vs acceptance.',
         commonMistakes: [
           'Short windows read noise as victory. Fix: symmetric 30-day windows minimum.',
           'Ignoring confounders (another fix landed same week). Fix: note overlapping changes in evidence.',
@@ -1347,13 +1347,13 @@ export const managements: Management[] = [
       {
         name: 'Practice embedder',
         stage: '06 · Embed & close',
-        description: 'Use when verified improvements stay personal wins — the person who fixed it leaves, and six months later the same problem needs the same heroics again',
-        overview: 'Practice embedder converts a verified improvement into the default way of working: runbook steps, checklists, policy lines, catalog defaults — then closes with adoption evidence. Core principle: improvement is not finished when it works once; it is finished when working that way is unavoidable.',
+        description: 'Use when verified improvements stay personal wins the person who fixed it leaves, and six months later the same problem needs the same heroics again',
+        overview: 'Practice embedder converts a verified improvement into the default way of working: runbook steps, checklists, policy lines, catalog defaults then closes with adoption evidence. Core principle: improvement is not finished when it works once; it is finished when working that way is unavoidable.',
         whenToUse: [
           'Improvement verified by outcome data and ready to become standard',
           'A fix lives in one engineer’s muscle memory or private notes',
           'Similar work keeps being done differently per shift or per person',
-          'When NOT to use: outcome unverified — embed facts only after the verifier says they hold',
+          'When NOT to use: outcome unverified embed facts only after the verifier says they hold',
         ],
         corePattern: {
           before: '// Before: heroics are the process\nimp.close() // alert lives in Dina’s head\n// Dina leaves → next pool exhaustion repeats the discovery, full price',
@@ -1367,7 +1367,7 @@ export const managements: Management[] = [
             ['Recurring risk', 'Policy/checklist line', 'audit passes'],
           ],
         },
-        how: 'Proposes concrete artifact edits — which runbook section, which checklist line, which policy paragraph — derived from the implemented change and its verified evidence. After edits land, tracks early adoption (artifacts referenced in real work) and only then proposes closure. Humans write and approve artifacts; the embedder keeps them from evaporating.',
+        how: 'Proposes concrete artifact edits which runbook section, which checklist line, which policy paragraph derived from the implemented change and its verified evidence. After edits land, tracks early adoption (artifacts referenced in real work) and only then proposes closure. Humans write and approve artifacts; the embedder keeps them from evaporating.',
         commonMistakes: [
           'Embedding by memo (“team please start doing X”) → memory-hole. Fix: edit the actual artifact.',
           'Closing at embed proposal, before adoption evidence. Fix: close requires usage signal.',
@@ -1379,15 +1379,15 @@ export const managements: Management[] = [
         name: 'Improvement records pack',
         stage: '07 · Reporting & records',
         description: 'Use when improvements exist as scattered board cards with no common record, status is vibes, and quarterly reviews cannot prove the program did anything',
-        overview: 'Improvement records pack standardizes what every improvement yields: the register entry, the business case for large items, the outcome verification report, the adoption record. Core principle: improvement is not a card on a board — it is a chain of documents that survives team changes and proves what became standard.',
+        overview: 'Improvement records pack standardizes what every improvement yields: the register entry, the business case for large items, the outcome verification report, the adoption record. Core principle: improvement is not a card on a board it is a chain of documents that survives team changes and proves what became standard.',
         whenToUse: [
-          'Improvement mined/drafted — register entry due with evidence and target metric',
+          'Improvement mined/drafted register entry due with evidence and target metric',
           'Large (L/XL) improvement needs a business case before effort is allocated',
-          'Outcome verifier completed — verification report attaches to the record',
-          'When NOT to use: tiny voluntary fixes done in a day — lean close is fine',
+          'Outcome verifier completed verification report attaches to the record',
+          'When NOT to use: tiny voluntary fixes done in a day lean close is fine',
         ],
         corePattern: {
-          before: '// Before: board is the record\n// “Add pool alert — doing” → done → card gone → nothing to show\n// quarterly: “what did we improve?” …which board?',
+          before: '// Before: board is the record\n// “Add pool alert doing” → done → card gone → nothing to show\n// quarterly: “what did we improve?” …which board?',
           after: '// After: records survive the board\nconst pack = buildImprovementRecords(imp)\n// {entry · businessCase? · verificationReport · adoptionRecord}',
         },
         quickReference: {
@@ -1399,7 +1399,7 @@ export const managements: Management[] = [
             ['Adoption record', 'At embed stage', 'artifacts updated · usage signal · close date'],
           ],
         },
-        how: 'Suggestion mining and trend detection seed the entry with evidence; impact-effort ranker contributes expected-return arithmetic; outcome verifier and practice embedder attach their reports as linked sections — the whole pack stays attached to the register entry permanently and feeds the quarterly program report.',
+        how: 'Suggestion mining and trend detection seed the entry with evidence; impact-effort ranker contributes expected-return arithmetic; outcome verifier and practice embedder attach their reports as linked sections the whole pack stays attached to the register entry permanently and feeds the quarterly program report.',
         commonMistakes: [
           'Entry without target metric → unverifiable later. Fix: required section, verifier blocks closure.',
           'Business cases skipped under pressure → expensive guesses. Fix: gate L/XL at prioritize.',
@@ -1414,7 +1414,7 @@ export const managements: Management[] = [
     id: 'asset', prefix: 'AST-', title: 'Asset Management', oneLiner: 'Knows what is owned, where it is, and its lifecycle',
     bullets: [
       'Inventories hardware, licenses and service assets with location and environment',
-      'Connects ownership to operational reality — what runs where',
+      'Connects ownership to operational reality what runs where',
       'Informs cost, compliance and replacement decisions',
     ],
     skills: [
@@ -1425,13 +1425,13 @@ export const managements: Management[] = [
         overview: 'Receiving registrar drafts the complete asset record at the moment of arrival from purchase and delivery evidence: model, serials, cost, warranty start, assigned location. Core principle: an asset that is not registered on day one will lie in every report forever. The AI extracts from documents; humans confirm the record.',
         whenToUse: [
           'Hardware delivered with a PO/packing list but no asset entry yet',
-          'New license purchased — needs its seat count and renewal date recorded',
+          'New license purchased needs its seat count and renewal date recorded',
           'Bulk delivery (10 monitors) arriving as one box with one invoice',
-          'When NOT to use: asset already registered — update instead of duplicating',
+          'When NOT to use: asset already registered update instead of duplicating',
         ],
         corePattern: {
           before: '// Before: record typed later, if ever\n// laptop arrives Monday → registered “someday”\n// audit finds it in October as a mystery device',
-          after: '// After: draft from delivery evidence\nconst record = extractFromDocuments({ po, packingList })\n// {model, serials[], cost, warrantyStart} — gaps flagged\nreturn humanConfirms(record)',
+          after: '// After: draft from delivery evidence\nconst record = extractFromDocuments({ po, packingList })\n// {model, serials[], cost, warrantyStart} gaps flagged\nreturn humanConfirms(record)',
         },
         quickReference: {
           headers: ['Field', 'Source', 'Rule'],
@@ -1454,12 +1454,12 @@ export const managements: Management[] = [
         name: 'Lifecycle classifier',
         stage: '02 · Categorize & tag',
         description: 'Use when inventory mixes servers, licenses and “misc” because classification depends on whoever typed the row',
-        overview: 'Lifecycle classifier assigns each asset its category (server/license/service/other), environment and criticality from its description and context — mapping free text onto the fixed enum. Core principle: category decides the whole lifecycle (a license renews, a server depreciates); misclassification corrupts every downstream report.',
+        overview: 'Lifecycle classifier assigns each asset its category (server/license/service/other), environment and criticality from its description and context mapping free text onto the fixed enum. Core principle: category decides the whole lifecycle (a license renews, a server depreciates); misclassification corrupts every downstream report.',
         whenToUse: [
           'Imported inventory arrives with free-text “type” columns (“box”, “subscrip”)',
           'Assets lack environment tags so prod cannot be separated from dev in reports',
           'Replacement planning needs criticality that nobody assigned',
-          'When NOT to use: asset already cleanly categorized — no signal needed',
+          'When NOT to use: asset already cleanly categorized no signal needed',
         ],
         corePattern: {
           before: '// Before: type = whatever was typed\n{kind: "subscription thing?"} // unreportable\n// licenses counted as hardware; budget reviews despair',
@@ -1485,12 +1485,12 @@ export const managements: Management[] = [
         name: 'Inventory linking',
         stage: '03 · Link to operations',
         description: 'Use when assets have a hostname or name that matches a CI but the link is missing and audits show mismatches',
-        overview: 'Inventory linking suggests a link between an asset (inventory) and its running CI (operational graph). Core principle: the hostname is the key — asset.name ↔ CI.hostname should match.',
+        overview: 'Inventory linking suggests a link between an asset (inventory) and its running CI (operational graph). Core principle: the hostname is the key asset.name ↔ CI.hostname should match.',
         whenToUse: [
           'Asset has hostname or name matching a CI',
           'Assets without CI link',
           'Audit mismatches: “which CI is this asset?”',
-          'When NOT to use: asset is a license/service with no hostname — no CI to link',
+          'When NOT to use: asset is a license/service with no hostname no CI to link',
         ],
         corePattern: {
           before: '// Before: manual link\nasset.ci_id = guess() // often wrong',
@@ -1500,7 +1500,7 @@ export const managements: Management[] = [
           headers: ['Match', 'Confidence', 'Action'],
           rows: [
             ['Exact hostname', '≥0.9', 'Suggest link'],
-            ['Fuzzy (web-042 vs Web_042)', '0.7–0.9', 'Suggest with warning'],
+            ['Fuzzy (web-042 vs Web_042)', '0.70.9', 'Suggest with warning'],
             ['No match', '<0.6', 'No suggestion'],
           ],
         },
@@ -1515,12 +1515,12 @@ export const managements: Management[] = [
         name: 'Status tracker',
         stage: '04 · Track & maintain',
         description: 'Use when warranties lapse unnoticed, “locations” show a laptop in three cities at once, and renewal dates live in someone’s calendar reminders',
-        overview: 'Status tracker watches each asset’s lifecycle clock — warranty expiry, license renewals, location/status changes — and proposes record updates before things lapse silently or contradict themselves. Core principle: inventory truth decays daily; tracking is not a project, it is a pulse.',
+        overview: 'Status tracker watches each asset’s lifecycle clock warranty expiry, license renewals, location/status changes and proposes record updates before things lapse silently or contradict themselves. Core principle: inventory truth decays daily; tracking is not a project, it is a pulse.',
         whenToUse: [
-          'Warranty or license expiry within 30–60 days with no action yet',
+          'Warranty or license expiry within 3060 days with no action yet',
           'Asset status/location changed (assignment, office move) but record still old',
           'Quarterly review needs the list of assets about to need attention',
-          'When NOT to use: asset already retired — retirement planner owns it now',
+          'When NOT to use: asset already retired retirement planner owns it now',
         ],
         corePattern: {
           before: '// Before: decay discovered at renewal failure\nif (warrantyExpired) hopeForTheBest() // vendor refuses service\n// “location: Jakarta” while the device scans in Singapore',
@@ -1547,12 +1547,12 @@ export const managements: Management[] = [
         name: 'Audit reconciler',
         stage: '05 · Audit & reconcile',
         description: 'Use when audit season reveals devices on paper that nobody can find, servers running that exist in no spreadsheet, and everyone guessing which list is right',
-        overview: 'Audit reconciler compares inventory records against operational reality — discovery scans, spot checks, network evidence — and classifies every mismatch: ghost (recorded, absent) or zombie (running, unrecorded). Core principle: two sources of truth means zero; reconciliation is how inventory stays honest.',
+        overview: 'Audit reconciler compares inventory records against operational reality discovery scans, spot checks, network evidence and classifies every mismatch: ghost (recorded, absent) or zombie (running, unrecorded). Core principle: two sources of truth means zero; reconciliation is how inventory stays honest.',
         whenToUse: [
           'Periodic audit cycle or compliance check approaching',
           'Discovery tooling reports devices the inventory never heard of',
           'Reports disagree: finance counts ≠ ops counts',
-          'When NOT to use: asset mid-transfer between locations — expected temporary mismatch',
+          'When NOT to use: asset mid-transfer between locations expected temporary mismatch',
         ],
         corePattern: {
           before: '// Before: reconciliation by spreadsheet duel\ndiff(financeList, opsList) // 200 rows of red\n// weeks of email archaeology per mismatch',
@@ -1567,7 +1567,7 @@ export const managements: Management[] = [
             ['Match', '-', 'no action'],
           ],
         },
-        how: 'Matches records against scan/discovery feeds using hostname, serial and fuzzy name matching (same matcher as inventory linking), then buckets differences by type with confidence and last-seen evidence. Produces a triage-ordered worklist — high-value ghosts first — where each resolution routes to the right stage (retire, register, update). Humans judge every disposition.',
+        how: 'Matches records against scan/discovery feeds using hostname, serial and fuzzy name matching (same matcher as inventory linking), then buckets differences by type with confidence and last-seen evidence. Produces a triage-ordered worklist high-value ghosts first where each resolution routes to the right stage (retire, register, update). Humans judge every disposition.',
         commonMistakes: [
           'Treating all mismatches equally → low-value noise blocks serious finds. Fix: value-ordered triage.',
           'Deleting ghosts immediately → stolen assets vanish from books too. Fix: investigate-before-retire rule.',
@@ -1579,12 +1579,12 @@ export const managements: Management[] = [
         name: 'Retirement planner',
         stage: '06 · Retire & dispose',
         description: 'Use when end-of-life hardware keeps running past support, licenses keep billing for leavers, and disposal happens without wipe certificates or record closure',
-        overview: 'Retirement planner surfaces assets at end of life — support ended, warranty expired, unused for months, linked person offboarded — and drafts the disposal checklist: data wipe, license reclaim, CI unlink, record close. Core principle: an asset’s exit matters as much as its entry; sloppy exits leak money and data.',
+        overview: 'Retirement planner surfaces assets at end of life support ended, warranty expired, unused for months, linked person offboarded and drafts the disposal checklist: data wipe, license reclaim, CI unlink, record close. Core principle: an asset’s exit matters as much as its entry; sloppy exits leak money and data.',
         whenToUse: [
-          'Vendor support/warranty ended — device now an uninsured risk',
+          'Vendor support/warranty ended device now an uninsured risk',
           'License seats bill for people who left months ago',
           'Storage closet filling with “we’ll deal with those later”',
-          'When NOT to use: asset still actively serving prod despite age — flag risk instead of retiring',
+          'When NOT to use: asset still actively serving prod despite age flag risk instead of retiring',
         ],
         corePattern: {
           before: '// Before: retirement = forgetting harder\n// old laptops pile up; Adobe bills 12 seats, 4 employees remain\n// one wiped-later-found-unwiped incident away from headlines',
@@ -1619,7 +1619,7 @@ export const managements: Management[] = [
           'When NOT to use: items below the accounting threshold handled elsewhere',
         ],
         corePattern: {
-          before: '// Before: records per habit\n// “laptop → in list?” depends on who bought it\n// warranties expiring — surprise at renewal failure',
+          before: '// Before: records per habit\n// “laptop → in list?” depends on who bought it\n// warranties expiring surprise at renewal failure',
           after: '// After: records standardized\nconst pack = buildAssetRecords()\n// {registerSpec, procurementLog, disposalLog, renewalCalendar, lastReconciliation}',
         },
         quickReference: {
@@ -1631,7 +1631,7 @@ export const managements: Management[] = [
             ['Renewal calendar & reconciliation', 'Rolling', 'due dates + lead times · ghosts/zombies report'],
           ],
         },
-        how: 'Receiving registrar and retirement planner emit their logs as sections; lifecycle classifier enforces the register standard at record creation; status tracker and audit reconciler feed renewal dates and reconciliation reports — one rolling calendar plus one archived reconciliation per cycle.',
+        how: 'Receiving registrar and retirement planner emit their logs as sections; lifecycle classifier enforces the register standard at record creation; status tracker and audit reconciler feed renewal dates and reconciliation reports one rolling calendar plus one archived reconciliation per cycle.',
         commonMistakes: [
           'Disposal logged without wipe certificate → data exposure with a tidy row. Fix: certificate required section.',
           'Renewals tracked per-person in calendars → missed scale. Fix: shared calendar with lead-time windows.',
@@ -1645,7 +1645,7 @@ export const managements: Management[] = [
   {
     id: 'service-map', prefix: 'CI-', title: 'Service Configuration (Service Map)', oneLiner: 'Maps services as a live graph to see dependencies and predict impact',
     bullets: [
-      'Records CIs (server/service) and directed dependencies — not a stale diagram',
+      'Records CIs (server/service) and directed dependencies not a stale diagram',
       'Answers impact: if this component fails, what else is affected?',
       'Ties configuration to the assets that actually run it',
     ],
@@ -1654,12 +1654,12 @@ export const managements: Management[] = [
         name: 'CI capture assist',
         stage: '01 · Register & describe',
         description: 'Use when services run in production that the map has never heard of, or CI entries start life as a bare hostname with no kind, environment or app link',
-        overview: 'CI capture assist drafts configuration records from operational evidence — deploy events, service descriptions, app associations — so the graph learns about services when they are born, not after their first outage. Core principle: every unrecorded service is a blind spot in the next impact prediction; capture is the graph’s immune system.',
+        overview: 'CI capture assist drafts configuration records from operational evidence deploy events, service descriptions, app associations so the graph learns about services when they are born, not after their first outage. Core principle: every unrecorded service is a blind spot in the next impact prediction; capture is the graph’s immune system.',
         whenToUse: [
           'New service deployed but no CI exists for it yet',
-          'CI entry has only a hostname — no kind, environment or owning app',
+          'CI entry has only a hostname no kind, environment or owning app',
           'Team mentions “the queue worker” that no one can find on the map',
-          'When NOT to use: ephemeral build containers / short-lived jobs — noise, not configuration',
+          'When NOT to use: ephemeral build containers / short-lived jobs noise, not configuration',
         ],
         corePattern: {
           before: '// Before: map learns from incidents\n// “what is payment-worker?” asked during SEV1\ncreateCiBarebones({name}) // impact analysis useless',
@@ -1674,7 +1674,7 @@ export const managements: Management[] = [
             ['Ephemeral workload', 'skip', 'not configuration'],
           ],
         },
-        how: 'Watches deployment and infrastructure events plus existing app structures to propose new CI records with kind (server/service), environment and owning application; enriches descriptions from documentation excerpts. Drafts stage for human confirmation — the graph of record only grows through approved writes.',
+        how: 'Watches deployment and infrastructure events plus existing app structures to propose new CI records with kind (server/service), environment and owning application; enriches descriptions from documentation excerpts. Drafts stage for human confirmation the graph of record only grows through approved writes.',
         commonMistakes: [
           'Capturing every ephemeral container → graph drowns in noise. Fix: filter by persistence signals.',
           'Bare-bones records (“web-9”) → technically present, analytically useless. Fix: require kind+env before confirm.',
@@ -1686,16 +1686,16 @@ export const managements: Management[] = [
         name: 'Dependency mapping',
         stage: '02 · Map dependencies',
         description: 'Use when a new CI is created or a description mentions depends on and the graph has isolated nodes or empty impact analysis',
-        overview: 'Dependency mapping suggests dependency edges between CIs from descriptions and app links. Core principle: the description already says it — “depends on / calls / uses” are the signals.',
+        overview: 'Dependency mapping suggests dependency edges between CIs from descriptions and app links. Core principle: the description already says it “depends on / calls / uses” are the signals.',
         whenToUse: [
           'New CI is created',
           'Description mentions “depends on”',
           'Graph has isolated nodes',
-          'When NOT to use: CI is intentionally isolated — no deps',
+          'When NOT to use: CI is intentionally isolated no deps',
         ],
         corePattern: {
           before: '// Before: isolated graph\ngraph = [CI-A, CI-B] // no edge, impact empty',
-          after: '// After: suggested edge\nedge = parse("checkout — depends on payment-api") // {from: checkout, to: payment-api, confidence:0.88}',
+          after: '// After: suggested edge\nedge = parse("checkout depends on payment-api") // {from: checkout, to: payment-api, confidence:0.88}',
         },
         quickReference: {
           headers: ['Phrase', 'Edge', 'Confidence'],
@@ -1710,17 +1710,17 @@ export const managements: Management[] = [
           'Auto-creating edge → wrong graph. Fix: suggest only.',
           'Ignoring app links → misses deps. Fix: include app-CI links.',
         ],
-        example: 'CI “checkout-service — depends on payment-api” → suggests edge checkout → payment-api (0.88).',
+        example: 'CI “checkout-service depends on payment-api” → suggests edge checkout → payment-api (0.88).',
       },
       {
         name: 'Impact prediction',
         stage: '04 · Predict impact',
         description: 'Use when an incident or change touches a CI and impact is discovered after, not before',
-        overview: 'Impact prediction lists all downstream apps and CIs that would be affected if this CI fails. Core principle: the graph already knows — traverse it downstream from the touched CI.',
+        overview: 'Impact prediction lists all downstream apps and CIs that would be affected if this CI fails. Core principle: the graph already knows traverse it downstream from the touched CI.',
         whenToUse: [
           'Incident or change touches a CI',
           '“We didn’t know X would break” after deploy',
-          'When NOT to use: CI has no downstream — no impact',
+          'When NOT to use: CI has no downstream no impact',
         ],
         corePattern: {
           before: '// Before: blind\nimpact = unknown // discover after failure',
@@ -1744,23 +1744,23 @@ export const managements: Management[] = [
         name: 'Graph drift detector',
         stage: '03 · Detect drift',
         description: 'Use when the map says a service has no dependencies yet incidents keep proving otherwise, and nobody remembers what changed since someone last drew the graph',
-        overview: 'Graph drift detector compares the configuration graph against signals of operational reality — new services in deploys, dependency mentions in incident notes, edges implied by traffic — and proposes the missing nodes and edges. Core principle: maps do not drift loudly; they rot quietly until an impact prediction lies to you at the worst time.',
+        overview: 'Graph drift detector compares the configuration graph against signals of operational reality new services in deploys, dependency mentions in incident notes, edges implied by traffic and proposes the missing nodes and edges. Core principle: maps do not drift loudly; they rot quietly until an impact prediction lies to you at the worst time.',
         whenToUse: [
           'Incident revealed “X actually calls Y” but no edge exists',
           'Deploy logs mention services absent from the graph',
           'Impact prediction results contradict what responders saw',
-          'When NOT to use: intentional isolation confirmed by owner — document, don’t chase',
+          'When NOT to use: intentional isolation confirmed by owner document, don’t chase',
         ],
         corePattern: {
-          before: '// Before: drift found by victims\nimpact(CI-042) // “no downstream”\n// reality: three services scream when it dies — map was stale for months',
+          before: '// Before: drift found by victims\nimpact(CI-042) // “no downstream”\n// reality: three services scream when it dies map was stale for months',
           after: '// After: reality compared continuously\nconst drift = diffAgainstSignals({deploys, incidentNotes, traffic})\n// {missingEdges: [checkout → payment-worker], missingNodes: [...]} \nreturnPropose(drift) // human confirms each write',
         },
         quickReference: {
           headers: ['Signal', 'Drift type', 'Confidence'],
           rows: [
-            ['“calls X” in incident note', 'missing edge', 'high — cite incident'],
+            ['“calls X” in incident note', 'missing edge', 'high cite incident'],
             ['New deploy target', 'missing node', 'route via capture assist'],
-            ['No events + no mentions', 'possible ghost', 'low — verify first'],
+            ['No events + no mentions', 'possible ghost', 'low verify first'],
           ],
         },
         how: 'Mines deployment records, incident timelines and postmortem text for dependency statements (“calls”, “depends on”, “broke when”), then diffs them against current ci_dependencies. Strong evidence becomes edge proposals citing its source; weak signals batch into a review digest. Every proposed write cites where it came from.',
@@ -1775,12 +1775,12 @@ export const managements: Management[] = [
         name: 'Graph health scorer',
         stage: '05 · Score health',
         description: 'Use when leadership asks “can we trust the map?” and the honest answer is a shrug, while impact predictions get quietly ignored by engineers who got burned before',
-        overview: 'Graph health scorer grades the configuration map’s trustworthiness: completeness of nodes, share of confirmed vs inferred edges, orphan count, description coverage — one score with the reasons behind it. Core principle: impact answers inherit the graph’s health; a B-grade map gives B-grade blast radii, and everyone should know which grade they are reading.',
+        overview: 'Graph health scorer grades the configuration map’s trustworthiness: completeness of nodes, share of confirmed vs inferred edges, orphan count, description coverage one score with the reasons behind it. Core principle: impact answers inherit the graph’s health; a B-grade map gives B-grade blast radii, and everyone should know which grade they are reading.',
         whenToUse: [
           'Periodic CMDB/data-quality review',
-          'Teams bypass the map because “it’s always wrong” — quantify what is wrong',
+          'Teams bypass the map because “it’s always wrong” quantify what is wrong',
           'Before trusting impact analysis for a high-stakes change',
-          'When NOT to use: freshly seeded graph still in bulk import — scores mislead during bootstrap',
+          'When NOT to use: freshly seeded graph still in bulk import scores mislead during bootstrap',
         ],
         corePattern: {
           before: '// Before: trust is vibes\n“the map is fine” // nobody checked\n// engineer ignores predicted blast radius, gets surprised anyway',
@@ -1801,22 +1801,22 @@ export const managements: Management[] = [
           'Punishing legitimately isolated CIs as orphans. Fix: confirmed-isolation flag respected.',
           'Scoring once a year → trust erodes between reviews. Fix: scheduled cadence, trend visible.',
         ],
-        example: 'Score: C+ — 38% edges unconfirmed, 14 orphans → fix list queues 9 edge confirmations and routes ghosts; two quarters later the map reads A− and engineers cite it in change packs.',
+        example: 'Score: C+ 38% edges unconfirmed, 14 orphans → fix list queues 9 edge confirmations and routes ghosts; two quarters later the map reads A− and engineers cite it in change packs.',
       },
       {
         name: 'Stale-node sweeper',
         stage: '06 · Retire & clean',
         description: 'Use when the map accumulates ghosts of decommissioned servers and dead services, and every traversal drags outdated baggage into impact answers',
-        overview: 'Stale-node sweeper proposes archiving configuration items that no longer exist operationally: no recent events, linked asset retired, nothing references them anymore. Core principle: a clean graph is not a bigger graph — every dead node dilutes the signal for everything that is alive.',
+        overview: 'Stale-node sweeper proposes archiving configuration items that no longer exist operationally: no recent events, linked asset retired, nothing references them anymore. Core principle: a clean graph is not a bigger graph every dead node dilutes the signal for everything that is alive.',
         whenToUse: [
           'Linked asset retired/disposed but the CI still sits on the map',
           'CI untouched for many months with zero incident/change references',
           'Traversal results feel polluted with things everyone knows are gone',
-          'When NOT to use: seasonal or rarely-active components — dormancy is not death; verify first',
+          'When NOT to use: seasonal or rarely-active components dormancy is not death; verify first',
         ],
         corePattern: {
           before: '// Before: nothing ever leaves\ngraph.nodes // 2019 servers, deleted projects, ex-vendor APIs\n// impact lists grow; trust shrinks',
-          after: '// After: exits like entries — planned\nconst candidates = findStale({noEventsMonths: 12, assetRetired, unreferenced})\nproposeArchive(candidates) // evidence attached, reversible',
+          after: '// After: exits like entries planned\nconst candidates = findStale({noEventsMonths: 12, assetRetired, unreferenced})\nproposeArchive(candidates) // evidence attached, reversible',
         },
         quickReference: {
           headers: ['Signal', 'Weight', 'Action'],
@@ -1827,7 +1827,7 @@ export const managements: Management[] = [
             ['Owner objects', '-', 'keep, tag dormant'],
           ],
         },
-        how: 'Ranks archival candidates from lifecycle evidence — retirement planner outputs, event recency, reference counts from edges and documents — and packages each proposal with proof plus a one-click restore path if the node turns out alive. Archives preserve history for audits instead of hard-deleting; humans approve every exit.',
+        how: 'Ranks archival candidates from lifecycle evidence retirement planner outputs, event recency, reference counts from edges and documents and packages each proposal with proof plus a one-click restore path if the node turns out alive. Archives preserve history for audits instead of hard-deleting; humans approve every exit.',
         commonMistakes: [
           'Hard-deleting nodes → audit history gone. Fix: archive, always reversible.',
           'Sweeping by age alone → rare-but-critical components vanish. Fix: multi-signal requirement.',
@@ -1839,12 +1839,12 @@ export const managements: Management[] = [
         name: 'Configuration records pack',
         stage: '07 · Reporting & records',
         description: 'Use when nobody can say which CI fields are authoritative, only some edges have evidence, and drift findings exist nowhere outside one engineer’s memory',
-        overview: 'Configuration records pack standardizes what the map must maintain: the CI schema (required field set per kind), the edge confidence policy, the graph health report, the drift findings log. Core principle: impact predictions inherit one thing from the map — its documented health. Records are how trust becomes a grade instead of a vibe.',
+        overview: 'Configuration records pack standardizes what the map must maintain: the CI schema (required field set per kind), the edge confidence policy, the graph health report, the drift findings log. Core principle: impact predictions inherit one thing from the map its documented health. Records are how trust becomes a grade instead of a vibe.',
         whenToUse: [
           'New or stalky CI entry exists as a bare hostname',
           'Teams argue whether the map can be trusted for this change’s blast radius',
           'Planning map hygiene or an internal audit of the configuration estate',
-          'When NOT to use: items properly outside CMDB scope (ephemerals) — no record expected',
+          'When NOT to use: items properly outside CMDB scope (ephemerals) no record expected',
         ],
         corePattern: {
           before: '// Before: map quality = vibes\n// schema per author, edges per hunch\n// “grade: trust me”',
@@ -1859,13 +1859,13 @@ export const managements: Management[] = [
             ['Drift findings log', 'Continuous', 'signal · proposals with citations · dispositions'],
           ],
         },
-        how: 'CI capture assist and graph drift detector contribute their evidence packages as log entries; graph health scorer rolls them into the periodic grade. Schema and edge policy are reviewed documents, not tribal knowledge — they are where the strip stages derive their meaning.',
+        how: 'CI capture assist and graph drift detector contribute their evidence packages as log entries; graph health scorer rolls them into the periodic grade. Schema and edge policy are reviewed documents, not tribal knowledge they are where the strip stages derive their meaning.',
         commonMistakes: [
           'Schema per habit → incomparable records. Fix: documented required field set per kind.',
           'Health report without cited evidence → grade distrusted. Fix: dimension details with source counts.',
           'Drift findings kept off-record → map silently rots between cleanups. Fix: continuous log, archived.',
         ],
-        example: 'Quarterly health report: C+ → 38% edges unconfirmed, 14 orphans → policy requires 0.7 cited edges, 9 confirmations queued via drift log — grade rises to B next quarter.',
+        example: 'Quarterly health report: C+ → 38% edges unconfirmed, 14 orphans → policy requires 0.7 cited edges, 9 confirmations queued via drift log grade rises to B next quarter.',
       },
     ],
     color: 'bg-slate-500', icon: 'Network', order: 7, lane: 'foundation'

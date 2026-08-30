@@ -13,14 +13,14 @@ description: Use when change requests are thin one-liners like “update DB”, 
 
 ## Overview
 
-Change-request drafter assembles a complete change record from history: intent, rollout steps, verification checks and a rollback plan drawn from similar completed changes on the same service. Core principle: past changes are the template — if no previous change ever used a rollback step, the drafter says so instead of inventing one.
+Change-request drafter assembles a complete change record from history: intent, rollout steps, verification checks and a rollback plan drawn from similar completed changes on the same service. Core principle: past changes are the template if no previous change ever used a rollback step, the drafter says so instead of inventing one.
 
 ## When to Use
 
 - New change created with a short description and empty rollback field
 - Same service gets changed repeatedly with rewritten-from-scratch plans
-- Author is junior to change process — needs the structure, not the lecture
-- When NOT to use: emergency fix mid-incident — speed beats paperwork; draft after the fact
+- Author is junior to change process needs the structure, not the lecture
+- When NOT to use: emergency fix mid-incident speed beats paperwork; draft after the fact
 
 ## Core Pattern
 
@@ -52,7 +52,7 @@ return humanEdits(chg) // author confirms every step
 
 ## Implementation
 
-Finds completed changes touching the same CI/service (embedding + exact CI match), extracts their steps, rollbacks and outcomes; drafts the new record section by section with source links. Output is a staged draft — nothing enters the approval flow until the author edits and submits. Missing sections are flagged, not filled with guesses.
+Finds completed changes touching the same CI/service (embedding + exact CI match), extracts their steps, rollbacks and outcomes; drafts the new record section by section with source links. Output is a staged draft nothing enters the approval flow until the author edits and submits. Missing sections are flagged, not filled with guesses.
 
 ## Common Mistakes
 

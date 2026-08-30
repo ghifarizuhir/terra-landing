@@ -9,7 +9,7 @@ export default function EntityGraphProof() {
             </div>
             <h2 className="font-display text-[28px] font-bold tracking-tight uppercase leading-none">A system, not 8 silos</h2>
             <p className="mt-3 text-[13px] leading-[1.6] text-white/70 max-w-[48ch]">
-              Incident calls Problem, Problem proposes Change, Change creates Knowledge, Knowledge feeds Improvement — with Request flowing in parallel and Configuration + Asset as the ground it all runs on.
+              Incident calls Problem, Problem proposes Change, Change creates Knowledge, Knowledge feeds Improvement with Request flowing in parallel and Configuration + Asset as the ground it all runs on.
             </p>
             <div className="mt-6 flex flex-wrap gap-2 font-mono text-[11px]">
               {['INC → Problem', 'Problem → Change', 'Change → Knowledge', 'Knowledge → Improvement', 'Request ↛ Incident'].map((e) => (
@@ -21,7 +21,7 @@ export default function EntityGraphProof() {
           </div>
 
           <div className="relative bg-[#0f1115] border-t lg:border-t-0 lg:border-l border-white/10 p-6">
-            <div className="font-mono text-[10px] tracking-widest uppercase text-white/40 mb-3">System wiring — conceptual</div>
+            <div className="font-mono text-[10px] tracking-widest uppercase text-white/40 mb-3">System wiring conceptual</div>
             <svg viewBox="0 0 360 160" className="w-full h-auto">
               <rect x="20" y="60" width="70" height="28" fill="#fafaf7" stroke="#8a8f98" strokeWidth="0.8" />
               <text x="55" y="77" textAnchor="middle" fontFamily="JetBrains Mono" fontSize="8" fontWeight="600" fill="#1a1d23">INC</text>

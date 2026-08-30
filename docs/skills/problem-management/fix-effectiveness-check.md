@@ -13,14 +13,14 @@ description: Use when the permanent fix just shipped and everyone assumes the pr
 
 ## Overview
 
-Fix-effectiveness check compares incident recurrence after the permanent fix against the pre-fix baseline and declares a verdict: effective, partial, or no effect. Core principle: shipping is not fixing — only the recurrence curve decides. The AI measures; humans decide what to do about a failing verdict.
+Fix-effectiveness check compares incident recurrence after the permanent fix against the pre-fix baseline and declares a verdict: effective, partial, or no effect. Core principle: shipping is not fixing only the recurrence curve decides. The AI measures; humans decide what to do about a failing verdict.
 
 ## When to Use
 
-- Permanent-fix change completed ≥1 week ago — baseline comparison is meaningful
+- Permanent-fix change completed ≥1 week ago baseline comparison is meaningful
 - Problem was closed on the assumption that deployment = resolution
 - Stakeholders ask “is it actually better now?” with no data behind the answer
-- When NOT to use: fix shipped days ago with near-zero traffic since — sample too small, wait
+- When NOT to use: fix shipped days ago with near-zero traffic since sample too small, wait
 
 ## Core Pattern
 
@@ -48,13 +48,13 @@ return review(v) // human decides: keep open, adjust, close
 | Reduction vs baseline | Verdict | Next |
 | --- | --- | --- |
 | ≥80% | Effective | propose close + retire KE |
-| 30–80% | Partial | keep open, note residual |
+| 3080% | Partial | keep open, note residual |
 | <30% | No effect | reopen investigation |
 | <1 week of data | Inconclusive | wait for sample |
 
 ## Implementation
 
-Builds a 30-day pre-fix occurrence baseline from linked incidents, then counts matching occurrences since the fix change completed; same embedding signature as pattern clustering so “similar” means the same thing in both places. Output: {reduction %, verdict, evidence}. Verdicts are proposals attached to the problem — closure still needs a human.
+Builds a 30-day pre-fix occurrence baseline from linked incidents, then counts matching occurrences since the fix change completed; same embedding signature as pattern clustering so “similar” means the same thing in both places. Output: {reduction %, verdict, evidence}. Verdicts are proposals attached to the problem closure still needs a human.
 
 ## Common Mistakes
 
@@ -64,4 +64,4 @@ Builds a 30-day pre-fix occurrence baseline from linked incidents, then counts m
 
 ## Example
 
-Fix shipped 3 weeks ago: baseline 9/month → now 2/month = 78% reduction → verdict “Partial — keep open”; two residual timeouts share a new signature worth its own look.
+Fix shipped 3 weeks ago: baseline 9/month → now 2/month = 78% reduction → verdict “Partial keep open”; two residual timeouts share a new signature worth its own look.

@@ -13,14 +13,14 @@ description: Use when warranties lapse unnoticed, “locations” show a laptop 
 
 ## Overview
 
-Status tracker watches each asset’s lifecycle clock — warranty expiry, license renewals, location/status changes — and proposes record updates before things lapse silently or contradict themselves. Core principle: inventory truth decays daily; tracking is not a project, it is a pulse.
+Status tracker watches each asset’s lifecycle clock warranty expiry, license renewals, location/status changes and proposes record updates before things lapse silently or contradict themselves. Core principle: inventory truth decays daily; tracking is not a project, it is a pulse.
 
 ## When to Use
 
-- Warranty or license expiry within 30–60 days with no action yet
+- Warranty or license expiry within 3060 days with no action yet
 - Asset status/location changed (assignment, office move) but record still old
 - Quarterly review needs the list of assets about to need attention
-- When NOT to use: asset already retired — retirement planner owns it now
+- When NOT to use: asset already retired retirement planner owns it now
 
 ## Core Pattern
 

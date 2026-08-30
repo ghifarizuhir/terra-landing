@@ -2,25 +2,25 @@
 name: Practice embedder
 stage: "06 · Embed & close"
 management: Continual Improvement (IMP-)
-description: Use when verified improvements stay personal wins — the person who fixed it leaves, and six months later the same problem needs the same heroics again
+description: Use when verified improvements stay personal wins the person who fixed it leaves, and six months later the same problem needs the same heroics again
 ---
 
 # Practice embedder
 
 > **06 · Embed & close** · Cycle stage of Continual Improvement (IMP-)
 
-**Use when** verified improvements stay personal wins — the person who fixed it leaves, and six months later the same problem needs the same heroics again
+**Use when** verified improvements stay personal wins the person who fixed it leaves, and six months later the same problem needs the same heroics again
 
 ## Overview
 
-Practice embedder converts a verified improvement into the default way of working: runbook steps, checklists, policy lines, catalog defaults — then closes with adoption evidence. Core principle: improvement is not finished when it works once; it is finished when working that way is unavoidable.
+Practice embedder converts a verified improvement into the default way of working: runbook steps, checklists, policy lines, catalog defaults then closes with adoption evidence. Core principle: improvement is not finished when it works once; it is finished when working that way is unavoidable.
 
 ## When to Use
 
 - Improvement verified by outcome data and ready to become standard
 - A fix lives in one engineer’s muscle memory or private notes
 - Similar work keeps being done differently per shift or per person
-- When NOT to use: outcome unverified — embed facts only after the verifier says they hold
+- When NOT to use: outcome unverified embed facts only after the verifier says they hold
 
 ## Core Pattern
 
@@ -52,7 +52,7 @@ embed({
 
 ## Implementation
 
-Proposes concrete artifact edits — which runbook section, which checklist line, which policy paragraph — derived from the implemented change and its verified evidence. After edits land, tracks early adoption (artifacts referenced in real work) and only then proposes closure. Humans write and approve artifacts; the embedder keeps them from evaporating.
+Proposes concrete artifact edits which runbook section, which checklist line, which policy paragraph derived from the implemented change and its verified evidence. After edits land, tracks early adoption (artifacts referenced in real work) and only then proposes closure. Humans write and approve artifacts; the embedder keeps them from evaporating.
 
 ## Common Mistakes
 

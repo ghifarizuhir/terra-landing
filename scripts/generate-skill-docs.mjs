@@ -121,7 +121,7 @@ const mgmtIndex = (mgmt, files) => {
     .sort((a, b) => (a.stage ?? '').localeCompare(b.stage ?? ''))
     .forEach((s, i) => {
       const file = `./${slug(s.name)}.md`
-      parts.push(`| ${String(i + 1).padStart(2, '0')} | ${s.stage ?? '—'} | ${s.name} | ${file} |`)
+      parts.push(`| ${String(i + 1).padStart(2, '0')} | ${s.stage ?? ''} | ${s.name} | ${file} |`)
     })
   parts.push('')
   return parts.join('\n')
@@ -130,11 +130,11 @@ const mgmtIndex = (mgmt, files) => {
 const rootIndex = (entries) => {
   const totalSkills = entries.reduce((n, [, m]) => n + m.skills.length, 0)
   const parts = []
-  parts.push('# Terra — AI for ITSM · Skill Library')
+  parts.push('# Terra AI for ITSM · Skill Library')
   parts.push('')
   parts.push(`${entries.length} management workflows · ${totalSkills} AI skills · one skill per lifecycle/workflow stage.`)
   parts.push('')
-  parts.push('Generated from `src/data/managements.ts` — run `npm run docs:skills` to regenerate.')
+  parts.push('Generated from `src/data/managements.ts` run `npm run docs:skills` to regenerate.')
   parts.push('')
   parts.push('| Management | Prefix | Lane | Skills | Folder |')
   parts.push('| --- | --- | --- | --- | --- |')
@@ -158,4 +158,4 @@ for (const mgmt of [...managements].sort((a, b) => a.order - b.order)) {
   await writeFile(join(dir, 'README.md'), mgmtIndex(mgmt), 'utf8')
 }
 await writeFile(join(OUT, 'README.md'), rootIndex(entries), 'utf8')
-console.log(`Generated docs/skills — ${entries.length} folders, ${entries.reduce((n, [, m]) => n + m.skills.length, 0)} skill docs`)
+console.log(`Generated docs/skills ${entries.length} folders, ${entries.reduce((n, [, m]) => n + m.skills.length, 0)} skill docs`)

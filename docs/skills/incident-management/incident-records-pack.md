@@ -13,14 +13,14 @@ description: Use when nobody can say which documents an incident must produce, P
 
 ## Overview
 
-Incident records pack defines the standard documents every incident yields — the incident report for the facts, the post-incident review for majors, the communications log for who was told what when. Core principle: an incident without its records never legally happened: no lessons, no compliance trail, no defense.
+Incident records pack defines the standard documents every incident yields the incident report for the facts, the post-incident review for majors, the communications log for who was told what when. Core principle: an incident without its records never legally happened: no lessons, no compliance trail, no defense.
 
 ## When to Use
 
-- Major incident resolved — post-incident review due within 5 working days
+- Major incident resolved post-incident review due within 5 working days
 - Audit or customer asks for incident documentation
 - New coordinator unsure what to produce for each severity level
-- When NOT to use: trivial ticket closed with a lightweight resolution note — full pack is overkill
+- When NOT to use: trivial ticket closed with a lightweight resolution note full pack is overkill
 
 ## Core Pattern
 
@@ -52,7 +52,7 @@ return attachToIncident(pack)
 
 ## Implementation
 
-Templates are attached at incident creation by severity; the closure flow checks for required documents and offers an explicit waiver path (named human, stated reason) instead of silent gaps. Majors auto-schedule their PIR meeting. Reports stay extractive — assembled from timeline and comms, edited by humans, never ghostwritten opinions.
+Templates are attached at incident creation by severity; the closure flow checks for required documents and offers an explicit waiver path (named human, stated reason) instead of silent gaps. Majors auto-schedule their PIR meeting. Reports stay extractive assembled from timeline and comms, edited by humans, never ghostwritten opinions.
 
 ## Common Mistakes
 

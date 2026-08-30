@@ -13,7 +13,7 @@ description: Use when similar incidents repeat weekly but no problem is created 
 
 ## Overview
 
-Pattern clustering finds groups of similar incidents that should become a problem. Core principle: recurrence is a graph signal — same app + overlapping title is the cluster, not a single incident’s severity.
+Pattern clustering finds groups of similar incidents that should become a problem. Core principle: recurrence is a graph signal same app + overlapping title is the cluster, not a single incident’s severity.
 
 ## When to Use
 
@@ -58,4 +58,4 @@ Title embedding cosine + same appId. Clusters flagged in Pulse. Does not auto-cr
 
 ## Example
 
-3× “DB timeout 500” on APP-004 in 5 days → 0.78 → “Create PRB — DB capacity”.
+3× “DB timeout 500” on APP-004 in 5 days → 0.78 → “Create PRB DB capacity”.

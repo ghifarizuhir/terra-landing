@@ -9,7 +9,7 @@ export default function PulsePreview() {
     <div className="bg-[#1a1d23] text-[#fafaf7] border border-[#1a1d23] overflow-hidden">
       {/* board header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-        <span className="font-mono text-[11px] tracking-widest uppercase font-semibold">Andon Board — Station Status</span>
+        <span className="font-mono text-[11px] tracking-widest uppercase font-semibold">Andon Board Station Status</span>
         <span className="font-mono text-[10px] tracking-widest uppercase bg-[#facc15] text-[#1a1d23] px-1.5 py-0.5 font-bold">Takt live</span>
       </div>
 
@@ -27,7 +27,7 @@ export default function PulsePreview() {
         ))}
       </div>
 
-      {/* takt strip — 14 days as andon ticks */}
+      {/* takt strip 14 days as andon ticks */}
       <div className="px-4 py-3">
         <div className="flex items-center justify-between mb-1.5">
           <span className="font-mono text-[10px] tracking-widest uppercase text-white/50">14-day takt</span>

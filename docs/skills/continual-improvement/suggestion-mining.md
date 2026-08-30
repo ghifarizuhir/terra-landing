@@ -13,13 +13,13 @@ description: Use when postmortems contain what could be better but no improvemen
 
 ## Overview
 
-Suggestion mining extracts improvement candidates from incident comments and postmortems. Core principle: the postmortem already contains the improvement — “should / could / need to” are the signals.
+Suggestion mining extracts improvement candidates from incident comments and postmortems. Core principle: the postmortem already contains the improvement “should / could / need to” are the signals.
 
 ## When to Use
 
 - Postmortem contains “what could be better”
 - No improvement created after incident
-- When NOT to use: no retrospective or postmortem — no source
+- When NOT to use: no retrospective or postmortem no source
 
 ## Core Pattern
 
@@ -27,7 +27,7 @@ Suggestion mining extracts improvement candidates from incident comments and pos
 
 ```js
 // Before: lessons in comments
-// “should add DB pool alert” — stays in comment
+// “should add DB pool alert” stays in comment
 ```
 
 ### After

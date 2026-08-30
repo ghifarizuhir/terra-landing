@@ -1,4 +1,4 @@
-# Change Cycle Skills — Design
+# Change Cycle Skills Design
 
 Date: 2026-08-25
 Status: Approved (user confirmed mapping table)
@@ -27,7 +27,7 @@ Drafts the change record from similar completed changes: intent, rollout steps, 
 Compiles risk score + predicted impact + schedule conflicts (freezes, overlapping changes on same CI) into one reviewer pack with an approve/reject rationale draft. Approve/reject stays human; the pack makes the decision fast and evidence-based.
 
 ### Post-deploy sentinel (Deploy & verify)
-Watches service metrics during the monitoring period against a pre-change baseline; flags anomalies and proposes hold or rollback. Proposes only — execution is human. Baseline = same weekday/time window pre-deploy.
+Watches service metrics during the monitoring period against a pre-change baseline; flags anomalies and proposes hold or rollback. Proposes only execution is human. Baseline = same weekday/time window pre-deploy.
 
 ### Closure & drift report (Close & learn)
 After monitoring passes, checks whether the change held over time (no related incidents, config matches intent) and lists docs/runbooks to update. A change is closed when it stopped generating work, not when it deployed.

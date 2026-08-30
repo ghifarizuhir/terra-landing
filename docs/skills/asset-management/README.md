@@ -7,7 +7,7 @@ Lane: **foundation** · workflow coverage: 7/7 stages
 ## What it does
 
 - Inventories hardware, licenses and service assets with location and environment
-- Connects ownership to operational reality — what runs where
+- Connects ownership to operational reality what runs where
 - Informs cost, compliance and replacement decisions
 
 ## AI skills

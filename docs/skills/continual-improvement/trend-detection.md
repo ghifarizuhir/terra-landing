@@ -13,7 +13,7 @@ description: Use when many improvements share the same source or keywords but ar
 
 ## Overview
 
-Trend detection spots repeating improvement themes across retro notes and postmortems. Core principle: repetition is the systemic signal — five “onboarding docs” improvements should become one.
+Trend detection spots repeating improvement themes across retro notes and postmortems. Core principle: repetition is the systemic signal five “onboarding docs” improvements should become one.
 
 ## When to Use
 

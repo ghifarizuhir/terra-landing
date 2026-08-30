@@ -1,11 +1,11 @@
-# Incident Cycle Skills — Design
+# Incident Cycle Skills Design
 
 Date: 2026-08-25
 Status: Approved (user confirmed 6-stage cycle, 1 skill/stage, cycle strip + chip)
 
 ## Goal
 
-Complete Incident Management AI-skill coverage so all 6 stages of one incident cycle are covered — no more adding skills one by one without a map.
+Complete Incident Management AI-skill coverage so all 6 stages of one incident cycle are covered no more adding skills one by one without a map.
 
 ## Cycle → Skill mapping
 
@@ -25,7 +25,7 @@ Complete Incident Management AI-skill coverage so all 6 stages of one incident c
 - 3 new skills written in full SKILL.md structure. Shared principle: AI suggests, human confirms; restore-first mindset during outage; extractive summaries only.
 
 ### Auto-log enrichment (Detect & log)
-Merges correlated alert bursts into one incident and pre-fills fields from the monitoring payload (service, component, start time, error signature). Never invents — copies structured facts only. Mistakes to avoid: merging across services, overwriting human-entered fields, paging on maintenance windows.
+Merges correlated alert bursts into one incident and pre-fills fields from the monitoring payload (service, component, start time, error signature). Never invents copies structured facts only. Mistakes to avoid: merging across services, overwriting human-entered fields, paging on maintenance windows.
 
 ### Resolution suggester (Resolve & restore)
 Ranks candidate workarounds/resolutions from similar resolved incidents + matched runbooks, with past success rate and source. Restore first, root-cause later. Mistakes: hiding blast radius, treating workaround as fix, stale runbooks.

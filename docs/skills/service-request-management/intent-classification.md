@@ -13,14 +13,14 @@ description: Use when users write free-text and it is ambiguous whether the inpu
 
 ## Overview
 
-Intent classification decides whether incoming text is a service request or an incident, and which catalog item it maps to. Core principle: the catalog is the vocabulary — the model maps free text to a fixed enum (access/hardware/info/…), not to open-ended labels.
+Intent classification decides whether incoming text is a service request or an incident, and which catalog item it maps to. Core principle: the catalog is the vocabulary the model maps free text to a fixed enum (access/hardware/info/…), not to open-ended labels.
 
 ## When to Use
 
-- User writes “need laptop” vs “cannot login” — request vs incident is unclear
+- User writes “need laptop” vs “cannot login” request vs incident is unclear
 - Requests appear in incident queue or vice versa
 - Wrong SLA applied because request_type was guessed
-- When NOT to use: form already has a selected catalog item — no classification needed
+- When NOT to use: form already has a selected catalog item no classification needed
 
 ## Core Pattern
 
@@ -44,12 +44,12 @@ return confidence > 0.7 ? type : askQuestion(text)
 | Signal | Result | Action |
 | --- | --- | --- |
 | Confidence ≥0.7 | request_type + catalog | auto-fill |
-| Confidence 0.5–0.7 | Ask 1 question (2–4 options) | human picks |
+| Confidence 0.50.7 | Ask 1 question (24 options) | human picks |
 | Confidence <0.5 | Leave blank | human decides |
 
 ## Implementation
 
-Classifier maps text to request_type enum vs incident. Confidence 0.7 threshold; below, ask one clarifying question with 2–4 options. Input: free text. Output: type + confidence + reason.
+Classifier maps text to request_type enum vs incident. Confidence 0.7 threshold; below, ask one clarifying question with 24 options. Input: free text. Output: type + confidence + reason.
 
 ## Common Mistakes
 

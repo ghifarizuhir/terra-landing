@@ -13,14 +13,14 @@ description: Use when three-year-old runbooks still claim to be truth, the servi
 
 ## Overview
 
-Freshness watchdog watches staleness signals — linked CI changed, product version moved, no confirmed success in months — and proposes update or retirement with evidence. Core principle: a wrong article is worse than no article; stale knowledge actively misleads at the worst moment.
+Freshness watchdog watches staleness signals linked CI changed, product version moved, no confirmed success in months and proposes update or retirement with evidence. Core principle: a wrong article is worse than no article; stale knowledge actively misleads at the worst moment.
 
 ## When to Use
 
 - CI referenced by an article was modified or replaced
 - Article had zero confirmed successes for N months while its topic recurred
 - Periodic KB hygiene sweep before audit or review
-- When NOT to use: reference material that does not decay (architecture decision records) — age alone is not staleness
+- When NOT to use: reference material that does not decay (architecture decision records) age alone is not staleness
 
 ## Core Pattern
 
@@ -51,7 +51,7 @@ onStale((kb, evidence) => proposeUpdateOrRetire(kb))
 
 ## Implementation
 
-Subscribes to change events on CIs and products referenced in each article’s tags and body entities; combines signal strength (how central was the changed component) with usefulness data from the tracker. Proposals come as evidence packages — what changed, what likely broke, suggested owner — routed to the last author or domain reviewer. Humans update or retire.
+Subscribes to change events on CIs and products referenced in each article’s tags and body entities; combines signal strength (how central was the changed component) with usefulness data from the tracker. Proposals come as evidence packages what changed, what likely broke, suggested owner routed to the last author or domain reviewer. Humans update or retire.
 
 ## Common Mistakes
 

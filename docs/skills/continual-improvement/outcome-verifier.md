@@ -13,14 +13,14 @@ description: Use when improvements get marked done the moment the task closes, w
 
 ## Overview
 
-Outcome verifier compares the target metric after implementation against the pre-improvement baseline and issues a verdict: verified, partial, or no effect. Core principle: task completion is not improvement — the metric is the only judge, and it votes after, not before.
+Outcome verifier compares the target metric after implementation against the pre-improvement baseline and issues a verdict: verified, partial, or no effect. Core principle: task completion is not improvement the metric is the only judge, and it votes after, not before.
 
 ## When to Use
 
 - Implementation marked done with a stated target (“cut MTTR”, “fewer misrouted requests”)
 - Quarterly review: which shipped improvements actually paid off?
 - Deciding whether to double down, adjust, or abandon an approach
-- When NOT to use: improvement has no measurable target defined — send back to planning with a metric requirement
+- When NOT to use: improvement has no measurable target defined send back to planning with a metric requirement
 
 ## Core Pattern
 
@@ -55,7 +55,7 @@ return attachEvidence(v)
 
 ## Implementation
 
-Resolves each improvement’s target to a measurable series (incident metrics, request volumes, KB success rates), builds a pre/post window around completion, and reports the delta with sample sizes so noise is visible. Verdicts attach to the record permanently — feeding practice embedder on success and progress tracker on failure. Humans decide iteration vs acceptance.
+Resolves each improvement’s target to a measurable series (incident metrics, request volumes, KB success rates), builds a pre/post window around completion, and reports the delta with sample sizes so noise is visible. Verdicts attach to the record permanently feeding practice embedder on success and progress tracker on failure. Humans decide iteration vs acceptance.
 
 ## Common Mistakes
 

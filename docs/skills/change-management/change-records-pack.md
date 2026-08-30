@@ -13,14 +13,14 @@ description: Use when changes ship with scattered intent, CAB decisions lack min
 
 ## Overview
 
-Change records pack standardizes the documents every change leaves: the change plan/RFC, the CAB agenda and minutes, the deployment checklist, the post-implementation review. Core principle: a change without its records is an undocumented edit to production — unreviewable, unauditable, unlearnable.
+Change records pack standardizes the documents every change leaves: the change plan/RFC, the CAB agenda and minutes, the deployment checklist, the post-implementation review. Core principle: a change without its records is an undocumented edit to production unreviewable, unauditable, unlearnable.
 
 ## When to Use
 
-- Any prod change entering approval — CAB packet due before the meeting
-- Change deployed — PIR-change due after the monitoring period
+- Any prod change entering approval CAB packet due before the meeting
+- Change deployed PIR-change due after the monitoring period
 - Audit or incident review asks “who approved CHG-118 and why?”
-- When NOT to use: pre-approved Standard change with a fixed low-risk package — single record suffices
+- When NOT to use: pre-approved Standard change with a fixed low-risk package single record suffices
 
 ## Core Pattern
 

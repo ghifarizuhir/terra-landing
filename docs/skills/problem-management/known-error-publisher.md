@@ -13,14 +13,14 @@ description: Use when the cause is understood but the permanent fix is weeks awa
 
 ## Overview
 
-Known-error publisher turns a diagnosed problem into a findable known-error record: confirmed cause + the best workaround observed across linked incidents, published to knowledge so agents hit it during triage. Core principle: until the fix ships, the workaround is the product — make it impossible not to find.
+Known-error publisher turns a diagnosed problem into a findable known-error record: confirmed cause + the best workaround observed across linked incidents, published to knowledge so agents hit it during triage. Core principle: until the fix ships, the workaround is the product make it impossible not to find.
 
 ## When to Use
 
 - RCA is confirmed but the permanent fix waits on a change window
-- Linked incidents show 2+ different workarounds for the same cause — pick and standardize one
+- Linked incidents show 2+ different workarounds for the same cause pick and standardize one
 - Agents keep asking “how did we fix this last time?” in war-rooms
-- When NOT to use: RCA still unconfirmed — publishing an unproven cause poisons future diagnosis
+- When NOT to use: RCA still unconfirmed publishing an unproven cause poisons future diagnosis
 
 ## Core Pattern
 

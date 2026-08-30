@@ -13,14 +13,14 @@ description: Use when a problem has linked incidents but its RCA is blank, incon
 
 ## Overview
 
-RCA draft assist generates a root-cause analysis draft from a cluster of linked incidents, ready for the engineer to edit. Core principle: linked incidents are the source — the draft compresses them, never invents.
+RCA draft assist generates a root-cause analysis draft from a cluster of linked incidents, ready for the engineer to edit. Core principle: linked incidents are the source the draft compresses them, never invents.
 
 ## When to Use
 
 - Problem has 2+ linked incidents and RCA is empty
 - “What happened” is copied manually each time
 - RCA structure varies per author
-- When NOT to use: RCA already published — do not overwrite
+- When NOT to use: RCA already published do not overwrite
 
 ## Core Pattern
 

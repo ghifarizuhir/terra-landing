@@ -13,14 +13,14 @@ description: Use when a new CI is created or a description mentions depends on a
 
 ## Overview
 
-Dependency mapping suggests dependency edges between CIs from descriptions and app links. Core principle: the description already says it — “depends on / calls / uses” are the signals.
+Dependency mapping suggests dependency edges between CIs from descriptions and app links. Core principle: the description already says it “depends on / calls / uses” are the signals.
 
 ## When to Use
 
 - New CI is created
 - Description mentions “depends on”
 - Graph has isolated nodes
-- When NOT to use: CI is intentionally isolated — no deps
+- When NOT to use: CI is intentionally isolated no deps
 
 ## Core Pattern
 
@@ -35,7 +35,7 @@ graph = [CI-A, CI-B] // no edge, impact empty
 
 ```js
 // After: suggested edge
-edge = parse("checkout — depends on payment-api") // {from: checkout, to: payment-api, confidence:0.88}
+edge = parse("checkout depends on payment-api") // {from: checkout, to: payment-api, confidence:0.88}
 ```
 
 ## Quick Reference
@@ -57,4 +57,4 @@ Parses “depends on / calls / uses” mentions + app-CI links to propose ci_dep
 
 ## Example
 
-CI “checkout-service — depends on payment-api” → suggests edge checkout → payment-api (0.88).
+CI “checkout-service depends on payment-api” → suggests edge checkout → payment-api (0.88).

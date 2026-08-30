@@ -13,14 +13,14 @@ description: Use when catalog items live without a written spec, SLA is a guess,
 
 ## Overview
 
-Request records pack standardizes the documents every fulfilled request journey must leave: the catalog item spec, the SLA sheet, the monthly fulfillment report, the approval audit trail. Core principle: requests are not favors — they are measurable services; whatever is not defined and counted will be debated and ignored.
+Request records pack standardizes the documents every fulfilled request journey must leave: the catalog item spec, the SLA sheet, the monthly fulfillment report, the approval audit trail. Core principle: requests are not favors they are measurable services; whatever is not defined and counted will be debated and ignored.
 
 ## When to Use
 
 - New catalog item added without its spec and approval rules documented
-- Monthly service review asks for volume, timing and satisfaction — nobody has numbers
+- Monthly service review asks for volume, timing and satisfaction nobody has numbers
 - Approval for costly access is questioned and no trail exists to defend it
-- When NOT to use: one-off exception request with no repeat value — note the trail only
+- When NOT to use: one-off exception request with no repeat value note the trail only
 
 ## Core Pattern
 
@@ -51,7 +51,7 @@ const pack = buildRequestRecords(req)
 
 ## Implementation
 
-Catalog specs are templates enforced at catalog creation; approval trails auto-attach from approval router events; fulfillment records feed a monthly aggregation job that outputs the standard report structure — humans review and publish before it reaches stakeholders.
+Catalog specs are templates enforced at catalog creation; approval trails auto-attach from approval router events; fulfillment records feed a monthly aggregation job that outputs the standard report structure humans review and publish before it reaches stakeholders.
 
 ## Common Mistakes
 

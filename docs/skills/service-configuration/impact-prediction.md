@@ -13,13 +13,13 @@ description: Use when an incident or change touches a CI and impact is discovere
 
 ## Overview
 
-Impact prediction lists all downstream apps and CIs that would be affected if this CI fails. Core principle: the graph already knows — traverse it downstream from the touched CI.
+Impact prediction lists all downstream apps and CIs that would be affected if this CI fails. Core principle: the graph already knows traverse it downstream from the touched CI.
 
 ## When to Use
 
 - Incident or change touches a CI
 - “We didn’t know X would break” after deploy
-- When NOT to use: CI has no downstream — no impact
+- When NOT to use: CI has no downstream no impact
 
 ## Core Pattern
 

@@ -13,14 +13,14 @@ description: Use when the improvement backlog is ordered by whoever shouted last
 
 ## Overview
 
-Impact-effort ranker orders the improvement backlog by expected impact × confidence ÷ effort, where impact comes from evidence attached to each idea — how often the pain recurred, how many people or tickets it touches. Core principle: a backlog is a bet portfolio; rank it by expected return, not by recency or volume of complaining.
+Impact-effort ranker orders the improvement backlog by expected impact × confidence ÷ effort, where impact comes from evidence attached to each idea how often the pain recurred, how many people or tickets it touches. Core principle: a backlog is a bet portfolio; rank it by expected return, not by recency or volume of complaining.
 
 ## When to Use
 
 - Improvement backlog exceeds what the team can do this quarter
 - Two ideas compete and the debate is opinion vs opinion
 - Small easy wins crowd out systemic improvements quarter after quarter
-- When NOT to use: compliance/security-mandated changes — they skip the queue by policy
+- When NOT to use: compliance/security-mandated changes they skip the queue by policy
 
 ## Core Pattern
 
@@ -54,7 +54,7 @@ return reviewTop(ranked.slice(0, 5))
 
 ## Implementation
 
-Joins each improvement with its source evidence (mined suggestions carry incident links; trends carry cluster size), computes expected-return score with all factors shown inline, and presents the ranked top slice for human confirmation. Scores are transparent arithmetic — every factor is inspectable so the order can be argued and overridden.
+Joins each improvement with its source evidence (mined suggestions carry incident links; trends carry cluster size), computes expected-return score with all factors shown inline, and presents the ranked top slice for human confirmation. Scores are transparent arithmetic every factor is inspectable so the order can be argued and overridden.
 
 ## Common Mistakes
 

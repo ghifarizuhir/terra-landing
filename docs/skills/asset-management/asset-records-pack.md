@@ -29,7 +29,7 @@ Asset records pack standardizes what the inventory must maintain: the register s
 ```js
 // Before: records per habit
 // “laptop → in list?” depends on who bought it
-// warranties expiring — surprise at renewal failure
+// warranties expiring surprise at renewal failure
 ```
 
 ### After
@@ -51,7 +51,7 @@ const pack = buildAssetRecords()
 
 ## Implementation
 
-Receiving registrar and retirement planner emit their logs as sections; lifecycle classifier enforces the register standard at record creation; status tracker and audit reconciler feed renewal dates and reconciliation reports — one rolling calendar plus one archived reconciliation per cycle.
+Receiving registrar and retirement planner emit their logs as sections; lifecycle classifier enforces the register standard at record creation; status tracker and audit reconciler feed renewal dates and reconciliation reports one rolling calendar plus one archived reconciliation per cycle.
 
 ## Common Mistakes
 
