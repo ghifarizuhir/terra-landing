@@ -1,4 +1,10 @@
 import '@testing-library/jest-dom'
+import { afterEach } from 'vitest'
+
+afterEach(() => {
+  window.location.hash = ''
+  history.replaceState(null, '', window.location.pathname + window.location.search)
+})
 
 // Polyfill IntersectionObserver for framer-motion whileInView in jsdom
 if (typeof window !== 'undefined' && !('IntersectionObserver' in window)) {

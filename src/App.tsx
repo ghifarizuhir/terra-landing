@@ -51,8 +51,9 @@ export default function App() {
               <span className="text-[#666] font-medium">and what AI skill it needs.</span>
             </h1>
             <p className="mx-auto max-w-[640px] text-[15px] leading-[1.6] text-[#666] mt-4">
-              Eight ITSM practices, mapped end to end. Generic operational knowledge — no ITIL4 verbatim,
-              no codebase. One AI skill per lifecycle stage. Human confirms every proposal.
+              The 8 practices your team lives every day — triaging incidents, fulfilling requests,
+              shipping changes, and keeping knowledge current — each paired with one AI agent skill
+              that handles the busywork (classify, route, score risk, summarize) so humans decide faster.
             </p>
           </div>
 
@@ -146,7 +147,7 @@ export default function App() {
 
       <footer className="border-t border-[#eaeaea] bg-white">
         <div className="max-w-[1100px] mx-auto px-6 py-3 sm:h-[52px] sm:py-0 flex flex-col sm:flex-row gap-1 sm:gap-0 sm:items-center sm:justify-between font-mono text-[11px]">
-          <span className="text-[#999] leading-relaxed">© 2026 Terra · 8 practices · {totalSkills} AI skills · Knowledge-first, not product-first.</span>
+          <span className="text-[#999] leading-relaxed">© 2026 Terra · 8 practices · {totalSkills} AI skills</span>
           <span className="text-[#999]">AI proposes · humans confirm</span>
         </div>
       </footer>

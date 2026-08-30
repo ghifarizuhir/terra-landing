@@ -7,11 +7,46 @@ type Props = {
   filter?: 'all' | 'lifecycle' | 'foundation'
 }
 
+function slugify(s: string) {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+}
+function skillToMarkdown(m: (typeof managements)[number], skill: (typeof managements)[number]['skills'][number]) {
+  const lines: string[] = []
+  lines.push(`# ${skill.name}`)
+  if (skill.stage) lines.push(`> ${skill.stage} · ${m.title} (${m.prefix})`)
+  if (skill.description) lines.push('', skill.description)
+  lines.push('', `## Overview`, '', skill.overview)
+  lines.push('', `## When to use`)
+  if (Array.isArray(skill.whenToUse)) skill.whenToUse.forEach((w) => lines.push(`- ${w}`))
+  else lines.push(skill.whenToUse)
+  if (skill.corePattern) {
+    lines.push('', `## Core Pattern`, '', '```js', skill.corePattern.before.trim(), '```', '', '```js', skill.corePattern.after.trim(), '```')
+  }
+  if (skill.quickReference) {
+    lines.push('', `## Quick Reference`, '', `| ${skill.quickReference.headers.join(' | ')} |`, `| ${skill.quickReference.headers.map(() => '---').join(' | ')} |`)
+    skill.quickReference.rows.forEach((r) => lines.push(`| ${r.join(' | ')} |`))
+  }
+  lines.push('', `## Implementation`, '', skill.how)
+  if (skill.commonMistakes?.length) {
+    lines.push('', `## Common Mistakes`)
+    skill.commonMistakes.forEach((c) => lines.push(`- ${c}`))
+  }
+  if (skill.example) lines.push('', `## Example`, '', `> ${skill.example}`)
+  lines.push('', `---`, `*Terra — AI for ITSM · ${m.title}*`)
+  return lines.join('\n')
+}
+
 export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
   const [open, setOpen] = useState<string | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
+  const [copied, setCopied] = useState<string | null>(null)
   const active = open ? managements.find((m) => m.id === open) ?? null : null
   const shouldReduceMotion = useReducedMotion()
+
+  const copy = async (text: string, key: string) => {
+    try { await navigator.clipboard.writeText(text) } catch { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove() }
+    setCopied(key); setTimeout(() => setCopied(null), 1400)
+  }
 
   const sortedSkills = useMemo(
     () => (active ? [...active.skills].sort((a, b) => (a.stage ?? '').localeCompare(b.stage ?? '')) : []),
@@ -23,15 +58,50 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
     : sortedSkills[0]
 
   useEffect(() => {
-    if (active) setSelected(sortedSkills[0]?.name ?? null)
+    if (!active) return
+    if (selected && sortedSkills.some((s) => s.name === selected)) return
+    setSelected(sortedSkills[0]?.name ?? null)
   }, [active?.id])
 
   // keep active rail pill visible on mobile horizontal scroll
   useEffect(() => {
     if (!selected) return
-    const el = document.querySelector(`[data-rail='${CSS.escape(selected)}']`)
-    if (el && 'scrollIntoView' in el) (el as HTMLElement).scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
+    try {
+      const esc = typeof CSS !== 'undefined' && CSS.escape ? CSS.escape(selected) : selected.replace(/"/g, '\\"')
+      const el = document.querySelector(`[data-rail='${esc}']`)
+      if (el && 'scrollIntoView' in el) (el as HTMLElement).scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
+    } catch {}
   }, [selected])
+
+  // deep link: read #<id> or #<id>/<slug>
+  useEffect(() => {
+    const applyHash = () => {
+      const raw = window.location.hash.slice(1)
+      if (!raw) return
+      const [id, slug] = raw.split('/')
+      const m = managements.find((x) => x.id === id)
+      if (!m) return
+      setOpen(m.id)
+      if (slug) {
+        const sk = m.skills.find((s) => slugify(s.name) === slug)
+        if (sk) setSelected(sk.name)
+      }
+    }
+    applyHash()
+    window.addEventListener('hashchange', applyHash)
+    return () => window.removeEventListener('hashchange', applyHash)
+  }, [])
+
+  // deep link: write hash when open/selected changes
+  useEffect(() => {
+    if (!open) {
+      if (window.location.hash) history.replaceState(null, '', window.location.pathname + window.location.search)
+      return
+    }
+    const slug = selected ? `/${slugify(selected)}` : ''
+    const next = `#${open}${slug}`
+    if (window.location.hash !== next) history.replaceState(null, '', next)
+  }, [open, selected])
 
   // filter + search like skills.sh
   const filtered = useMemo(() => {
@@ -129,14 +199,16 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
             transition={{ duration: 0.18 }}
             className="fixed inset-0 z-50 bg-white flex flex-col overflow-hidden"
           >
-            <div className="shrink-0 min-h-[49px] py-2 border-b border-[#eaeaea] bg-white flex items-center px-4 lg:px-6 gap-3">
-              <button onClick={() => setOpen(null)} className="h-9 px-4 border border-black bg-black text-white font-mono text-[12px] flex items-center gap-2 rounded-full hover:bg-[#111] shrink-0">
-                ← All practices
-              </button>
-              <span className="h-6 w-px bg-[#eaeaea] hidden sm:block" />
-              <span className="font-mono text-[11px] tracking-wide uppercase bg-black text-white px-2 py-1 rounded-full hidden sm:inline">{active.prefix}</span>
-              <span className="text-[13px] font-medium tracking-tight hidden sm:inline">{active.title}</span>
+            <div className="shrink-0 border-b border-[#eaeaea] bg-white">
+              <div className="max-w-[1100px] mx-auto px-4 sm:px-6 min-h-[49px] py-2 flex items-center gap-3">
+                <button onClick={() => setOpen(null)} className="h-9 px-4 border border-black bg-black text-white font-mono text-[12px] flex items-center gap-2 rounded-full hover:bg-[#111] shrink-0">
+                  ← All practices
+                </button>
+                <span className="h-6 w-px bg-[#eaeaea] hidden sm:block" />
+                <span className="font-mono text-[11px] tracking-wide uppercase bg-black text-white px-2 py-1 rounded-full hidden sm:inline">{active.prefix}</span>
+                <span className="text-[13px] font-medium tracking-tight hidden sm:inline">{active.title}</span>
               <span className="ml-auto font-mono text-[11px] text-[#999]">{active.skills.length} stages · select one to read</span>
+              </div>
             </div>
 
             <div className="flex-1 overflow-auto">
@@ -232,6 +304,14 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                                 </div>
                                 <h3 className="font-semibold text-[20px] sm:text-[22px] leading-[1.25] tracking-[-0.02em] mt-2">{selectedSkill.name}</h3>
                               </div>
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                <button onClick={() => copy(skillToMarkdown(active!, selectedSkill), `md-${selectedSkill.name}`)} className="h-8 px-3 rounded-full border border-[#eaeaea] bg-white font-mono text-[11px] hover:border-black hover:bg-white transition">
+                                  {copied === `md-${selectedSkill.name}` ? 'Copied!' : 'Copy MD'}
+                                </button>
+                                <button onClick={() => copy(window.location.href, `link-${selectedSkill.name}`)} className="h-8 px-3 rounded-full border border-[#eaeaea] bg-white font-mono text-[11px] hover:border-black transition hidden sm:inline-flex items-center">
+                                  {copied === `link-${selectedSkill.name}` ? 'Link copied' : 'Copy link'}
+                                </button>
+                              </div>
                             </div>
                             {selectedSkill.description && (
                               <p className="text-[13px] sm:text-[14px] leading-[1.6] mt-3 text-[#444] bg-white border border-[#eaeaea] rounded-xl p-3.5">{selectedSkill.description}</p>
@@ -259,11 +339,17 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                                 <h4 className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#999] flex items-center gap-2"><span className="h-px w-4 bg-[#eaeaea]" /> Core Pattern</h4>
                                 <div className="mt-3 grid gap-3">
                                   <div className="rounded-xl overflow-hidden border border-[#222] bg-[#0a0a0a]">
-                                    <div className="flex items-center justify-between px-3 py-2 border-b border-white/10 bg-white/[0.03]"><span className="font-mono text-[10px] tracking-wide uppercase text-white/60">Before</span><span className="font-mono text-[10px] text-white/30">manual</span></div>
+                                    <div className="flex items-center justify-between px-3 py-2 border-b border-white/10 bg-white/[0.03]">
+                                      <span className="font-mono text-[10px] tracking-wide uppercase text-white/60">Before</span>
+                                      <button onClick={() => copy(selectedSkill.corePattern!.before, `before-${selectedSkill.name}`)} className="font-mono text-[10px] px-2 py-1 rounded-full border border-white/20 text-white/70 hover:text-white hover:border-white/40 bg-white/5">{copied === `before-${selectedSkill.name}` ? 'Copied' : 'Copy'}</button>
+                                    </div>
                                     <pre className="text-[#fafafa] p-3 sm:p-4 text-[12px] sm:text-[12.5px] leading-[1.55] overflow-x-auto whitespace-pre">{selectedSkill.corePattern.before}</pre>
                                   </div>
                                   <div className="rounded-xl overflow-hidden border border-[#eaeaea] bg-white">
-                                    <div className="flex items-center justify-between px-3 py-2 border-b border-[#eaeaea] bg-[#fafafa]"><span className="font-mono text-[10px] tracking-wide uppercase text-[#999]">After</span><span className="font-mono text-[10px] text-[#999]">AI-assisted</span></div>
+                                    <div className="flex items-center justify-between px-3 py-2 border-b border-[#eaeaea] bg-[#fafafa]">
+                                      <span className="font-mono text-[10px] tracking-wide uppercase text-[#999]">After</span>
+                                      <button onClick={() => copy(selectedSkill.corePattern!.after, `after-${selectedSkill.name}`)} className="font-mono text-[10px] px-2 py-1 rounded-full border border-[#eaeaea] bg-white text-[#666] hover:border-black hover:text-black">{copied === `after-${selectedSkill.name}` ? 'Copied' : 'Copy'}</button>
+                                    </div>
                                     <pre className="p-3 sm:p-4 text-[12px] sm:text-[12.5px] leading-[1.55] overflow-x-auto whitespace-pre text-[#111]">{selectedSkill.corePattern.after}</pre>
                                   </div>
                                 </div>
