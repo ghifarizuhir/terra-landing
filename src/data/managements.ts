@@ -1,4 +1,4 @@
-// src/data/managements.ts Terra AI for ITSM: clear knowledge + real AI skills (full SKILL.md structure) per management.
+// src/data/managements.ts Terraline AI for ITSM: clear knowledge + real AI skills (full SKILL.md structure) per management.
 export type SkillDetail = {
   name: string
   stage?: string

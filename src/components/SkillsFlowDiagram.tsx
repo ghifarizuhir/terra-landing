@@ -93,7 +93,7 @@ export default function SkillsFlowDiagram() {
         <div className="px-5 sm:px-7 pt-6 pb-4">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#FAFF00]">Terra · ITSM Skills System</p>
+              <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#FAFF00]">Terraline · ITSM Skills System</p>
               <h2 className="font-display font-semibold text-[22px] sm:text-[28px] tracking-[-0.02em] leading-[1] mt-2">
                 A skill is a <span className="text-white/60 font-medium">reusable way</span><br />to do one thing right.
               </h2>
@@ -328,7 +328,7 @@ export default function SkillsFlowDiagram() {
           <span>56 skills total</span>
           <span className="h-3 w-px bg-white/10" />
           <span className="text-white/50">Hover steps above · switch example incident / request / change</span>
-          <span className="ml-auto hidden sm:inline text-white/20">Terra Platform · AI proposes, humans confirm</span>
+          <span className="ml-auto hidden sm:inline text-white/20">Terraline · AI proposes, humans confirm</span>
         </div>
       </div>
     </section>

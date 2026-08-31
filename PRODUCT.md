@@ -8,19 +8,19 @@ web
 
 ## Users
 
-Knowledge seekers for **Terra AI for ITSM**:
+Knowledge seekers for **Terraline AI for ITSM**:
 - **IT practitioners & team leads** want to understand what each ITSM management does (not ITIL4-certified, generic operational knowledge) + what AI skills are needed per management.
 - **Secondary: partners / internal enablement** needs 30-second comprehension of the 8 managements as a connected system.
 
-Landing purpose is **Read**: visitor *understands* what each management does + what AI skills it needs. Not marketing the Terra codebase implementation (no `entity_links`, no `apps/*` details). Terra is the framing, not the proof.
+Landing purpose is **Read**: visitor *understands* what each management does + what AI skills it needs. Not marketing the Terraline codebase implementation (no `entity_links`, no `apps/*` details). Terraline is the framing, not the proof.
 
 ## Product Purpose
 
-Terra AI for ITSM knowledge landing: explain 8 core managements as standalone knowledge (what each does, why it matters) and pair each with the AI-augmented skills it needs. Success: visitor can recount the 8 managements + name one AI skill per management, without needing to understand Terra's internal implementation.
+Terraline AI for ITSM knowledge landing: explain 8 core managements as standalone knowledge (what each does, why it matters) and pair each with the AI-augmented skills it needs. Success: visitor can recount the 8 managements + name one AI skill per management, without needing to understand Terraline's internal implementation.
 
 ## Positioning
 
-Knowledge-first, not product-first: we do not claim ITIL4 certification or reproduce ITIL4 verbatim. We describe generic ITSM management knowledge in operational language, with AI as the enabler per station. Terra is the host for that knowledge.
+Knowledge-first, not product-first: we do not claim ITIL4 certification or reproduce ITIL4 verbatim. We describe generic ITSM management knowledge in operational language, with AI as the enabler per station. Terraline is the host for that knowledge.
 
 ## Operating Context
 
@@ -46,14 +46,14 @@ Knowledge to show (8 managements, generic):
 Constraints:
 - Do not claim ITIL4 certification or quote ITIL4 verbatim.
 - Do not fabricate pricing, testimonials, case studies.
-- Do not expose Terra codebase internals.
+- Do not expose Terraline codebase internals.
 - English concise operational voice; monospace IDs as light illustration only, not as data proof.
 - Static only, Vite + React + Tailwind, deploy Cloudflare Pages/Vercel, no backend fetch.
 - Performance: split chunks (react/motion/lucide separately), tree-shake lucide.
 
 ## Brand Commitments
 
-- Product name: **Terra Platform AI for ITSM** (short: Terra Platform).
+- Product name: **Terraline — AI for ITSM** (short: Terraline, domain: terraline.space).
 - Keep entity-type color hints (Incident red, Problem purple, etc.) as wayfinding, not as spec.
 - Andon world (graphite/steel/off-white, hazard yellow for pull) already shipped.
 
@@ -65,7 +65,7 @@ Constraints:
 
 ## Product Principles
 
-1. Knowledge over marketing explain what each management does before how Terra does it.
+1. Knowledge over marketing explain what each management does before how Terraline does it.
 2. One skill per station every management has an AI skill that makes it better.
 3. No certification theater generic operational language, no ITIL4 verbatim.
 4. AI augments, not replaces human judgment stays, AI speeds the call.

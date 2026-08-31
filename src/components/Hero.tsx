@@ -19,7 +19,7 @@ export default function Hero() {
       <div className="relative max-w-[1280px] mx-auto px-6 lg:px-8 pt-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="h-7 w-7 bg-[#1a1d23] text-[#fafaf7] grid place-items-center font-display font-bold tracking-widest text-[12px]">T</div>
-          <span className="font-mono text-[11px] tracking-widest uppercase font-semibold text-[#1a1d23]">Terra Platform AI for ITSM</span>
+          <span className="font-mono text-[11px] tracking-widest uppercase font-semibold text-[#1a1d23]">Terraline AI for ITSM</span>
           <span className="hidden sm:inline-flex h-5 items-center gap-1.5 bg-[#1a1d23] text-[#fafaf7] font-mono text-[10px] tracking-widest uppercase px-2 rounded-sm">
             <span className="h-1.5 w-1.5 rounded-full bg-[#10b981] animate-pulse" /> Line live
           </span>
@@ -47,7 +47,7 @@ export default function Hero() {
           </motion.div>
 
           <motion.h1 variants={item} className="mt-4 font-display font-bold tracking-tight leading-[0.9] text-[#1a1d23]">
-            <span className="block text-[42px] lg:text-[64px] uppercase">Terra Platform</span>
+            <span className="block text-[42px] lg:text-[64px] uppercase">Terraline</span>
             <span className="block text-[42px] lg:text-[64px] uppercase text-[#8a8f98]">AI for ITSM</span>
             <span className="block text-[20px] lg:text-[22px] font-sans font-medium tracking-tight normal-case text-[#3a3f4a] mt-2">What each management does + what AI skills it needs</span>
           </motion.h1>

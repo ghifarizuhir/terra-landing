@@ -10,6 +10,10 @@
   --color-border-strong: #000000;
   --color-card: #ffffff;
   --color-subtle: #fafafa;
+  --color-hazard: #FAFF00;
+  --color-hazard-dim: #e6e600;
+  --color-rail: #0a0a0a;
+  --color-rail-soft: #141414;
   --font-display: "Geist", "Instrument Sans", system-ui, sans-serif;
   --font-body: "Geist", system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, monospace;

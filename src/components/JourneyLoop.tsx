@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { managements } from '../data/managements'
+import HazardTape, { DottedDivider } from './HazardTape'
 
 type Props = {
   q?: string
@@ -32,7 +33,7 @@ function skillToMarkdown(m: (typeof managements)[number], skill: (typeof managem
     skill.commonMistakes.forEach((c) => lines.push(`- ${c}`))
   }
   if (skill.example) lines.push('', `## Example`, '', `> ${skill.example}`)
-  lines.push('', `---`, `*Terra AI for ITSM · ${m.title}*`)
+  lines.push('', `---`, `*Terraline AI for ITSM · ${m.title}*`)
   return lines.join('\n')
 }
 
@@ -127,17 +128,17 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
 
   return (
     <>
-      {/* Leaderboard skills.sh style */}
+      {/* Leaderboard skills.sh style — B: dotted dividers + yellow hover */}
       <div className="rounded-lg border border-[#eaeaea] overflow-hidden bg-white">
-        {/* table header like skills.sh */}
-        <div className="hidden sm:grid grid-cols-[44px_1fr_140px_90px] gap-0 border-b border-[#eaeaea] bg-[#fafafa] px-4 py-2 font-mono text-[11px] tracking-wide uppercase text-[#999]">
+        {/* table header like skills.sh with dotted bottom */}
+        <div className="hidden sm:grid grid-cols-[44px_1fr_140px_90px] gap-0 border-b border-dashed border-[#1a1d23]/12 bg-[#fafafa] px-4 py-2 font-mono text-[11px] tracking-wide uppercase text-[#999]">
           <span>#</span>
           <span>Practice</span>
           <span className="text-right">AI skills</span>
           <span className="text-right">Type</span>
         </div>
 
-        <div className="divide-y divide-[#eaeaea]">
+        <div className="divide-y divide-dashed divide-[#1a1d23]/10">
           {filtered.map((m, idx) => {
             const isOpen = m.id === open
             if (isOpen) {
@@ -148,10 +149,13 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
               <button
                 key={m.id}
                 onClick={() => setOpen(m.id)}
-                className="w-full text-left grid grid-cols-1 sm:grid-cols-[44px_1fr_140px_90px] gap-1 sm:gap-0 items-center px-4 py-4 hover:bg-[#fafafa] transition-colors focus:outline-none focus-visible:bg-[#fafafa]"
+                className="group w-full text-left grid grid-cols-1 sm:grid-cols-[44px_1fr_140px_90px] gap-1 sm:gap-0 items-center px-4 py-4 hover:bg-[#FAFF00]/[0.06] hover:border-l-[3px] hover:border-l-[#FAFF00] hover:pl-[13px] transition-all focus:outline-none focus-visible:bg-[#FAFF00]/[0.06] border-l-[3px] border-l-transparent"
               >
-                {/* rank + prefix */}
-                <span className="hidden sm:block font-mono text-[13px] text-[#999] tabular-nums">#{rank}</span>
+                {/* rank + prefix — B: yellow dot on hover */}
+                <span className="hidden sm:block font-mono text-[13px] tabular-nums flex items-center gap-1.5">
+                  <span className="text-[#999] group-hover:text-black">#{rank}</span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#FAFF00] border border-black/10 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden />
+                </span>
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-mono text-[11px] tracking-wide uppercase border border-[#eaeaea] bg-white px-1.5 py-0.5 text-[#666]">{m.prefix}</span>
@@ -170,17 +174,17 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                   </div>
                 </div>
 
-                {/* skills desktop */}
+                {/* skills desktop — B: hover yellow tint */}
                 <div className="hidden sm:flex flex-wrap justify-end gap-1.5">
                   {m.skills.slice(0, 2).map((s) => (
-                    <span key={s.name} className="font-mono text-[11px] bg-black text-white px-2 py-1 rounded-full max-w-[120px] truncate">{s.name}</span>
+                    <span key={s.name} className="font-mono text-[11px] bg-black group-hover:bg-[#1a1a1a] text-white px-2 py-1 rounded-full max-w-[120px] truncate border border-transparent group-hover:border-[#FAFF00]/30 transition-colors">{s.name}</span>
                   ))}
-                  {m.skills.length > 2 && <span className="font-mono text-[11px] border border-[#eaeaea] bg-white px-2 py-1 rounded-full text-[#666]">+{m.skills.length - 2}</span>}
+                  {m.skills.length > 2 && <span className="font-mono text-[11px] border border-[#eaeaea] group-hover:border-[#FAFF00]/30 bg-white px-2 py-1 rounded-full text-[#666]">+{m.skills.length - 2}</span>}
                 </div>
 
                 <div className="hidden sm:flex items-center justify-end gap-2">
-                  <span className="font-mono text-[11px] text-[#999] border border-[#eaeaea] rounded-full px-2 py-1 bg-white">{m.skills.length} stages</span>
-                  <span className="text-[#999]">›</span>
+                  <span className="font-mono text-[11px] text-[#999] border border-[#eaeaea] group-hover:border-black/15 rounded-full px-2 py-1 bg-white group-hover:bg-[#FAFF00] group-hover:text-black transition-colors">{m.skills.length} stages</span>
+                  <span className="text-[#999] group-hover:text-black transition-colors">›</span>
                 </div>
                 <span className="sm:hidden font-mono text-[11px] text-[#999] mt-1">{m.skills.length} AI skills · {m.lane === 'foundation' ? 'Foundation' : 'Lifecycle'} →</span>
               </button>
@@ -192,11 +196,9 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
         </div>
       </div>
 
-      <div className="pt-3 flex items-center gap-3 font-mono text-[11px] text-[#999]">
-        <span className="h-px flex-1 bg-[#eaeaea]" />
+      <DottedDivider className="pt-3">
         8 practices · {managements.reduce((n, m) => n + m.skills.length, 0)} AI skills · Assets &amp; configuration as the foundation
-        <span className="h-px flex-1 bg-[#eaeaea]" />
-      </div>
+      </DottedDivider>
 
       {/* Detail Rail + Reader clean */}
       <AnimatePresence>
@@ -209,15 +211,19 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
             transition={{ duration: 0.18 }}
             className="fixed inset-0 z-50 bg-white flex flex-col overflow-hidden"
           >
-            <div className="shrink-0 border-b border-[#eaeaea] bg-white">
-              <div className="max-w-[1100px] mx-auto px-4 sm:px-6 min-h-[49px] py-2 flex items-center gap-3">
+            <div className="shrink-0 bg-white">
+              <HazardTape variant="thin" />
+              <div className="border-b border-[#eaeaea] max-w-[1100px] mx-auto px-4 sm:px-6 min-h-[49px] py-2 flex items-center gap-3">
                 <button onClick={() => setOpen(null)} className="h-9 px-4 border border-black bg-black text-white font-mono text-[12px] flex items-center gap-2 rounded-full hover:bg-[#111] shrink-0">
                   ← All practices
                 </button>
                 <span className="h-6 w-px bg-[#eaeaea] hidden sm:block" />
                 <span className="font-mono text-[11px] tracking-wide uppercase bg-black text-white px-2 py-1 rounded-full hidden sm:inline">{active.prefix}</span>
                 <span className="text-[13px] font-medium tracking-tight hidden sm:inline">{active.title}</span>
-              <span className="ml-auto font-mono text-[11px] text-[#999]">{active.skills.length} stages</span>
+              <span className="ml-auto font-mono text-[11px] text-[#999] flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#FAFF00] border border-black/10" aria-hidden />
+                {active.skills.length} stages
+              </span>
               </div>
             </div>
 
@@ -232,8 +238,12 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
 
                 <div className="mt-5 grid sm:grid-cols-3 gap-3">
                   {active.bullets.map((b, i) => (
-                    <div key={b} className="rounded-lg border border-[#eaeaea] bg-[#fafafa] p-3">
-                      <div className="font-mono text-[11px] tracking-wide uppercase text-[#999]">0{i + 1} What it does</div>
+                    <div key={b} className="rounded-lg border border-dashed border-[#1a1d23]/12 bg-[#fafafa] p-3 relative overflow-hidden">
+                      <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#FAFF00]/0 group-hover:bg-[#FAFF00]" aria-hidden />
+                      <div className="font-mono text-[11px] tracking-wide uppercase text-[#999] flex items-center gap-1.5">
+                        <span className="h-1 w-1 rounded-full bg-[#1a1d23]/20" aria-hidden />
+                        0{i + 1} What it does
+                      </div>
                       <p className="text-[13px] leading-[1.5] mt-1">{b}</p>
                     </div>
                   ))}
@@ -259,8 +269,11 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                 <div className="mt-4 grid lg:grid-cols-[240px_1fr] gap-0 rounded-xl border border-[#eaeaea] overflow-hidden bg-white shadow-sm">
                   {/* Rail sticky on both */}
                   <nav className="sticky top-0 z-10 lg:static border-b lg:border-b-0 lg:border-r border-[#eaeaea] bg-white flex flex-col max-lg:overflow-hidden" aria-label="Stage rail">
-                    <div className="px-3 py-3 border-b border-[#eaeaea] bg-[#fafafa]">
-                      <p className="font-mono text-[11px] tracking-wide uppercase text-[#999]">Stages</p>
+                    <div className="px-3 py-3 border-b border-dashed border-[#1a1d23]/10 bg-[#FAFF00]/[0.06]">
+                      <p className="font-mono text-[11px] tracking-wide uppercase text-[#999] flex items-center gap-1.5">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#FAFF00] border border-black/10" aria-hidden />
+                        Stages
+                      </p>
                       <p className="font-mono text-[11px] text-[#111] mt-0.5">{sortedSkills.findIndex((s) => s.name === selectedSkill?.name) + 1} / {active.skills.length} · {active.skills.length} stages</p>
                     </div>
                     <div className="p-2 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible snap-x snap-mandatory scrollbar-thin">
@@ -273,7 +286,7 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                             data-rail={s.name}
                             onClick={() => setSelected(s.name)}
                             aria-selected={isActive}
-                            className={`text-left snap-start rounded-xl border p-3 shrink-0 lg:shrink min-w-[176px] lg:min-w-0 flex lg:block items-center lg:items-start gap-3 transition-all ${isActive ? 'bg-black text-white border-black shadow-sm' : 'bg-white border-[#eaeaea] hover:border-[#ccc] hover:bg-[#fafafa] active:bg-[#f5f5f5]'}`}
+                            className={`text-left snap-start rounded-xl border p-3 shrink-0 lg:shrink min-w-[176px] lg:min-w-0 flex lg:block items-center lg:items-start gap-3 transition-all ${isActive ? 'bg-black text-white border-black shadow-sm ring-1 ring-[#FAFF00]/40' : 'bg-white border-[#eaeaea] hover:border-[#FAFF00]/40 hover:bg-[#FAFF00]/[0.06] active:bg-[#f5f5f5]'}`}
                           >
                             <span className={`hidden lg:block font-mono text-[10px] tracking-wide uppercase ${isActive ? 'text-white/60' : 'text-[#999]'}`}>{s.stage}</span>
                             <span className={`lg:hidden font-mono text-[10px] leading-none px-1.5 py-1 rounded-full border ${isActive ? 'bg-white/15 border-white/20 text-white' : 'bg-[#fafafa] border-[#eaeaea] text-[#999]'}`}>{String(idx).padStart(2, '0')}</span>

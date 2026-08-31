@@ -130,7 +130,7 @@ const mgmtIndex = (mgmt, files) => {
 const rootIndex = (entries) => {
   const totalSkills = entries.reduce((n, [, m]) => n + m.skills.length, 0)
   const parts = []
-  parts.push('# Terra AI for ITSM · Skill Library')
+  parts.push('# Terraline AI for ITSM · Skill Library')
   parts.push('')
   parts.push(`${entries.length} management workflows · ${totalSkills} AI skills · one skill per lifecycle/workflow stage.`)
   parts.push('')

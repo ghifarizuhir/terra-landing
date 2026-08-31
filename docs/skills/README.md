@@ -1,4 +1,4 @@
-# Terra AI for ITSM · Skill Library
+# Terraline AI for ITSM · Skill Library
 
 8 management workflows · 56 AI skills · one skill per lifecycle/workflow stage.
 
