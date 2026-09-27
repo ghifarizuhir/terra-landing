@@ -120,17 +120,44 @@ async function ensureDemo(page) {
   return { slug: demo.slug, projectId: project.id, identifier, issueName: issue?.name ?? null, workspaces }
 }
 
-async function findServices(page, workspaces) {
-  for (const ws of workspaces) {
-    const projects = rows(await api(page, `/api/workspaces/${ws.slug}/projects/`))
-    for (const p of projects) {
-      const services = rows(await api(page, `/api/workspaces/${ws.slug}/projects/${p.id}/services/`))
-      if (services.length > 0) {
-        return { slug: ws.slug, projectId: p.id, serviceId: services[0].id }
-      }
+async function ensureDemoServices(page, demo) {
+  const url = `/api/workspaces/${demo.slug}/projects/${demo.projectId}/services/`
+  let services = rows(await api(page, url))
+  if (services.length > 0) return services
+
+  console.log('seeding demo services')
+  const seed = [
+    { name: 'Payment Gateway', status: 'active', criticality: 'critical', type: 'internal', description: 'Handles all card payments.' },
+    { name: 'Auth Service', status: 'active', criticality: 'critical', type: 'internal', description: 'Authentication and sessions.' },
+    { name: 'Notification Service', status: 'maintenance', criticality: 'medium', type: 'internal', description: 'Email and push notifications.' },
+    { name: 'Postgres Primary', status: 'active', criticality: 'critical', type: 'infrastructure', description: 'Primary relational database.' },
+    { name: 'Email Provider', status: 'active', criticality: 'high', type: 'third_party', description: 'External SMTP provider.' },
+    { name: 'Analytics Pipeline', status: 'planned', criticality: 'low', type: 'internal', description: 'Batch analytics ingestion.' },
+  ]
+  for (const s of seed) {
+    await api(page, url, {
+      method: 'POST',
+      body: { ...s, description_html: `<p>${s.description}</p>` },
+    })
+  }
+  services = rows(await api(page, url))
+  const byName = Object.fromEntries(services.map((s) => [s.name, s.id]))
+  const deps = [
+    ['Payment Gateway', 'Auth Service'],
+    ['Payment Gateway', 'Postgres Primary'],
+    ['Auth Service', 'Postgres Primary'],
+    ['Notification Service', 'Email Provider'],
+    ['Analytics Pipeline', 'Postgres Primary'],
+  ]
+  for (const [from, to] of deps) {
+    if (byName[from] && byName[to]) {
+      await api(page, `/api/workspaces/${demo.slug}/projects/${demo.projectId}/service-dependencies/`, {
+        method: 'POST',
+        body: { from_service_id: byName[from], to_service_id: byName[to] },
+      })
     }
   }
-  return null
+  return rows(await api(page, url))
 }
 
 async function settle(page, ms = 900) {
@@ -159,10 +186,10 @@ async function main() {
   await context.storageState({ path: STATE })
 
   const demo = await ensureDemo(page)
-  const services = await findServices(page, demo.workspaces)
-  if (!services) console.warn('no project with services found — services screenshots will use the demo project')
-  const svc = services ?? { slug: demo.slug, projectId: demo.projectId, serviceId: null }
-  const schedulerSlug = svc.slug
+  const demoServices = await ensureDemoServices(page, demo)
+  const detailService = demoServices.find((s) => s.name === 'Payment Gateway') ?? demoServices[0] ?? null
+  const svc = { slug: demo.slug, projectId: demo.projectId, serviceId: detailService?.id ?? null }
+  const schedulerSlug = demo.slug
 
   const goto = async (url, action, ms) => {
     await page.goto(BASE + url, { waitUntil: 'domcontentloaded' }).catch(() => {})
@@ -170,13 +197,27 @@ async function main() {
     if (action) await action(page)
   }
 
-  await goto(`/${demo.slug}/projects/${demo.projectId}/issues/`)
+  await goto(`/${demo.slug}/projects/${demo.projectId}/issues/`, async (p) => {
+    const list = p.getByRole('button', { name: /list layout/i }).first()
+    try {
+      await list.waitFor({ timeout: 15000 })
+      await list.click()
+    } catch {
+      console.warn('list layout button not found')
+    }
+    await settle(p, 1500)
+  })
   await shoot(page, 'work-items-list')
 
   await goto(`/${demo.slug}/projects/${demo.projectId}/issues/`, async (p) => {
     const board = p.getByRole('button', { name: /board layout/i }).first()
-    if (await board.count()) await board.click().catch(() => {})
-    await settle(p, 1200)
+    try {
+      await board.waitFor({ timeout: 15000 })
+      await board.click()
+    } catch {
+      console.warn('board layout button not found')
+    }
+    await settle(p, 1500)
   })
   await shoot(page, 'work-items-board')
 
@@ -209,7 +250,12 @@ async function main() {
 
   await goto(`/${svc.slug}/projects/${svc.projectId}/services/`, async (p) => {
     const graph = p.locator('div.bg-layer-3.rounded-sm button').nth(1)
-    if (await graph.count()) await graph.click().catch(() => {})
+    try {
+      await graph.waitFor({ timeout: 15000 })
+      await graph.click()
+    } catch {
+      console.warn('services graph toggle not found')
+    }
     await settle(p, 1500)
   })
   await shoot(page, 'services-graph')
