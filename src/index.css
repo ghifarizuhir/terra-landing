@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -7,11 +7,32 @@
   --color-muted: #5b6472;
   --color-border: #e2e6ee;
   --color-subtle: #f7f9fc;
+  --color-panel: #ffffff;
   --color-brand: #3f76ff;
   --color-brand-strong: #2a5ce0;
   --font-display: "Inter", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+/* Control room: the tour redefines the same tokens, so every Tailwind
+   utility inside .tour resolves to the dark palette while /learn keeps
+   the light one. Background matches the app's own dark chrome (#101518)
+   so full-bleed screenshots melt into the page. */
+.tour {
+  --color-bg: #101518;
+  --color-ink: #e9edf1;
+  --color-muted: #8d979f;
+  --color-border: #232b31;
+  --color-subtle: #141a1e;
+  --color-panel: #151b20;
+  --color-brand: #5b8bff;
+  --color-brand-strong: #2f62e8;
+  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-body: "Geist", system-ui, -apple-system, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  overscroll-behavior: none;
 }
 
 html { scrollbar-gutter: stable; overflow-x: hidden; }
@@ -25,9 +46,30 @@ body {
   overflow-x: hidden;
 }
 ::selection { background: var(--color-brand); color: #ffffff; }
-:focus-visible { outline: 2px solid var(--color-brand-strong); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; }
 :where(.font-mono) { font-variant-numeric: tabular-nums; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--color-border); }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-muted); }
+
+.tour .grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+@keyframes tour-drift {
+  from { transform: scale(1); }
+  to { transform: scale(1.045); }
+}
+.tour .drift { animation: tour-drift 32s ease-in-out infinite alternate; }
+
+@keyframes tour-hairline {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.9; }
+}
+.tour .hairline { animation: tour-hairline 3.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tour .drift, .tour .hairline { animation: none !important; }
+}
