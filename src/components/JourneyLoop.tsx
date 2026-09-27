@@ -114,14 +114,34 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
     if (window.location.hash !== next) history.replaceState(null, '', next)
   }, [open, selected])
 
-  // filter + search like skills.sh
+  // a11y: Esc to close + arrow to navigate skills, lock body scroll when dialog open
+  useEffect(() => {
+    if (!active) return
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(null)
+      if ((e.key === 'ArrowRight' || e.key === 'ArrowLeft') && selectedSkill) {
+        const idx = sortedSkills.findIndex((s) => s.name === selectedSkill.name)
+        if (e.key === 'ArrowRight' && idx < sortedSkills.length - 1) setSelected(sortedSkills[idx + 1].name)
+        if (e.key === 'ArrowLeft' && idx > 0) setSelected(sortedSkills[idx - 1].name)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = prevOverflow
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [active, selectedSkill, sortedSkills])
+
+  // filter + search like skills.sh — deep hay
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase()
     return managements.filter((m) => {
       if (filter === 'lifecycle' && m.lane !== 'cycle' && m.lane !== 'parallel') return false
       if (filter === 'foundation' && m.lane !== 'foundation') return false
       if (!needle) return true
-      const hay = `${m.title} ${m.prefix} ${m.oneLiner} ${m.skills.map((s) => s.name).join(' ')}`.toLowerCase()
+      const hay = `${m.title} ${m.prefix} ${m.oneLiner} ${m.bullets.join(' ')} ${m.skills.map((s) => `${s.name} ${s.overview} ${Array.isArray(s.whenToUse) ? s.whenToUse.join(' ') : s.whenToUse} ${s.description ?? ''}`).join(' ')}`.toLowerCase()
       return hay.includes(needle)
     })
   }, [q, filter])
@@ -205,16 +225,20 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
         {active && (
           <motion.div
             key={active.id}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="detail-title"
+            onClick={(e) => { if (e.target === e.currentTarget) setOpen(null) }}
             initial={shouldReduceMotion ? undefined : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="fixed inset-0 z-50 bg-white flex flex-col overflow-hidden"
+            className="fixed inset-0 z-50 bg-white/95 backdrop-blur-sm flex flex-col overflow-hidden"
           >
             <div className="shrink-0 bg-white">
               <HazardTape variant="thin" />
               <div className="border-b border-[#eaeaea] max-w-[1100px] mx-auto px-4 sm:px-6 min-h-[49px] py-2 flex items-center gap-3">
-                <button onClick={() => setOpen(null)} className="h-9 px-4 border border-black bg-black text-white font-mono text-[12px] flex items-center gap-2 rounded-full hover:bg-[#111] shrink-0">
+                <button autoFocus onClick={() => setOpen(null)} className="h-9 px-4 border border-black bg-black text-white font-mono text-[12px] flex items-center gap-2 rounded-full hover:bg-[#111] shrink-0 focus-visible:ring-2 focus-visible:ring-[#FAFF00] focus-visible:ring-offset-2">
                   ← All practices
                 </button>
                 <span className="h-6 w-px bg-[#eaeaea] hidden sm:block" />
@@ -233,7 +257,7 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                   <span className="h-px w-6 bg-black" />
                   {active.lane === 'foundation' ? 'Foundation' : 'Lifecycle'} · {active.skills.length} stages
                 </div>
-                <h2 className="font-display font-semibold text-[28px] lg:text-[34px] leading-[1.05] tracking-[-0.02em] mt-2">{active.title}</h2>
+                <h2 id="detail-title" className="font-display font-semibold text-[28px] lg:text-[34px] leading-[1.05] tracking-[-0.02em] mt-2">{active.title}</h2>
                 <p className="text-[14px] leading-[1.6] mt-2 text-[#666] max-w-[720px]">{active.oneLiner}</p>
 
                 <div className="mt-5 grid sm:grid-cols-3 gap-3">

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 
 type FlowStep = {
   id: string
@@ -36,6 +36,7 @@ const managementsMap = [
 ]
 
 export default function SkillsFlowDiagram() {
+  const shouldReduceMotion = useReducedMotion()
   const [active, setActive] = useState(2) // default on Draft
   const [example, setExample] = useState<'incident' | 'request' | 'change'>('incident')
 
@@ -162,7 +163,7 @@ export default function SkillsFlowDiagram() {
                     className="absolute top-[18px] h-[2px] bg-[#FAFF00]"
                     initial={false}
                     animate={{ width: `${(active / (steps.length - 1)) * 100}%` }}
-                    transition={{ duration: 0.4 }}
+                    transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.4 }}
                     style={{ left: 18 }}
                   />
                   {steps.map((s, i) => {
@@ -185,7 +186,7 @@ export default function SkillsFlowDiagram() {
                 {/* detail card */}
                 <motion.div
                   key={active}
-                  initial={{ opacity: 0, y: 6 }}
+                  initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
                   className="mt-6 rounded-xl border border-[#111] overflow-hidden"
@@ -230,7 +231,7 @@ export default function SkillsFlowDiagram() {
                   className="absolute left-[11px] w-[2px] bg-[#FAFF00]"
                   style={{ top: 8 }}
                   animate={{ height: `${(active / (steps.length - 1)) * 88}%` }}
-                  transition={{ duration: 0.3 }}
+                  transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.3 }}
                 />
                 <div className="grid gap-2">
                   {steps.map((s, i) => (

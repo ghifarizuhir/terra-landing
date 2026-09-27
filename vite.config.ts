@@ -15,7 +15,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           react: ['react', 'react-dom'],
-          motion: ['framer-motion'],
+          motion: ['framer-motion', 'motion'],
           lucide: ['lucide-react'],
         },
       },

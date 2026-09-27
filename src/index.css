@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -14,7 +14,7 @@
   --color-hazard-dim: #e6e600;
   --color-rail: #0a0a0a;
   --color-rail-soft: #141414;
-  --font-display: "Geist", "Instrument Sans", system-ui, sans-serif;
+  --font-display: "Geist", system-ui, sans-serif;
   --font-body: "Geist", system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, monospace;
 }
