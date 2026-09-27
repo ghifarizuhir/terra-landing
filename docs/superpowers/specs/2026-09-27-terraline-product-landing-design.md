@@ -64,7 +64,7 @@ Every homepage claim must map to evidence before copy is written; the audit tabl
 ## 3. `/learn` — Knowledge Page
 
 - New Vite entry `learn/index.html` + `src/learn-main.tsx` → URL `/learn` (no router dependency).
-- Content: compact knowledge hero, `JourneyLoop` + `ManagementCard` (8 managements), `SkillsSection` (56 skills), and one small static "Traceability" section (comments, timelines, versions, links between records) replacing `EntityGraphProof`.
+- Content: compact knowledge hero, `JourneyLoop` + `ManagementCard` (8 managements with the 56-skill library and copyable skill specs), `SkillsSection` (default skills summary), and one small static "Traceability" section — comments, timelines, versions, links between records — replacing `EntityGraphProof`.
 - Dropped from the old landing: `PulsePreview` (mock of the old product), `SkillsFlowDiagram` (redundant with `SkillsSection`), and the old hero copy.
 - `docs:skills` generator and `docs/skills/**` stay as the skill library.
 - `/learn` header links back to `/` and to Request access.
