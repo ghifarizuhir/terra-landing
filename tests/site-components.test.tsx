@@ -5,6 +5,9 @@ import Footer from '../src/components/Footer'
 import Hero from '../src/components/Hero'
 import FactsStrip from '../src/components/FactsStrip'
 import FeatureBlock from '../src/components/FeatureBlock'
+import CompareCards from '../src/components/CompareCards'
+import RoadmapColumns from '../src/components/RoadmapColumns'
+import CTABand from '../src/components/CTABand'
 import { product } from '../src/data/product'
 
 describe('Nav', () => {
@@ -49,5 +52,32 @@ describe('FeatureBlock', () => {
     expect(screen.getByText(feature.eyebrow)).toBeInTheDocument()
     for (const bullet of feature.bullets) expect(screen.getByText(bullet)).toBeInTheDocument()
     for (const s of feature.screenshots) expect(screen.getByAltText(s.alt)).toBeInTheDocument()
+  })
+})
+
+describe('CompareCards', () => {
+  it('renders both comparisons with their points', () => {
+    render(<CompareCards />)
+    for (const c of product.comparisons) {
+      expect(screen.getByRole('heading', { level: 3, name: c.title })).toBeInTheDocument()
+      for (const point of c.points) expect(screen.getByText(point)).toBeInTheDocument()
+    }
+  })
+})
+
+describe('RoadmapColumns', () => {
+  it('renders shipped and next columns', () => {
+    render(<RoadmapColumns />)
+    expect(screen.getByRole('heading', { level: 3, name: /shipped today/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 3, name: /^next$/i })).toBeInTheDocument()
+    expect(screen.getByText(product.roadmap.next[0])).toBeInTheDocument()
+  })
+})
+
+describe('CTABand', () => {
+  it('renders the request-access CTA', () => {
+    render(<CTABand />)
+    expect(screen.getByRole('heading', { level: 2, name: product.cta.title })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: product.cta.label })).toHaveAttribute('href', product.cta.href)
   })
 })

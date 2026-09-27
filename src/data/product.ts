@@ -1,17 +1,17 @@
 export type Screenshot = {
-  src: string
-  alt: string
-  width: number
-  height: number
+  readonly src: string
+  readonly alt: string
+  readonly width: number
+  readonly height: number
 }
 
 export type Feature = {
-  id: string
-  eyebrow: string
-  title: string
-  body: string
-  bullets: string[]
-  screenshots: Screenshot[]
+  readonly id: string
+  readonly eyebrow: string
+  readonly title: string
+  readonly body: string
+  readonly bullets: readonly string[]
+  readonly screenshots: readonly Screenshot[]
 }
 
 const shot = (name: string, alt: string): Screenshot => ({
