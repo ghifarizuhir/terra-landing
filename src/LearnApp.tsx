@@ -134,7 +134,7 @@ export default function App() {
             <div className="p-6 sm:p-7 bg-[#FAFF00]/[0.07] border-y md:border-y-0 md:border-x border-[#FAFF00]/20 relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#FAFF00]" aria-hidden />
               <div className="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.14em] uppercase bg-black text-[#FAFF00] px-2 py-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#FAFF00] animate-pulse" aria-hidden />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#FAFF00] animate-pulse motion-reduce:animate-none" aria-hidden />
                 Core idea
               </div>
               <div className="font-mono text-[11px] tracking-[0.14em] uppercase text-black/60 mt-2">02 · What a skill is</div>
@@ -241,7 +241,7 @@ export default function App() {
           <div className="px-6 sm:px-8 py-7 sm:py-8 flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
             <div>
               <div className="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.14em] uppercase bg-black text-[#FAFF00] px-2 py-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#FAFF00] animate-pulse" aria-hidden />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#FAFF00] animate-pulse motion-reduce:animate-none" aria-hidden />
                 Start here
               </div>
               <h2 className="font-display font-semibold text-[22px] sm:text-[26px] tracking-[-0.02em] leading-[1.1] mt-3">Pick a practice. Copy a pattern. Use it today.</h2>

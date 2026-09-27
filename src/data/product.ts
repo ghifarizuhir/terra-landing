@@ -107,7 +107,7 @@ export const product = {
       bullets: [
         'Triage queue separate from the backlog',
         'Accept, decline, snooze or mark duplicate',
-        'Every decision keeps its trail',
+        'Decisions stay on the intake record',
       ],
       screenshots: [shot('intake', 'Intake triage queue with incoming work items')],
     },
@@ -119,7 +119,7 @@ export const product = {
       bullets: [
         'Rich-text pages for runbooks, postmortems and SOPs',
         'Real-time collaboration built on Yjs',
-        'Seeded on first workspace run with a service runbook and a postmortem template',
+        'Every new workspace starts with a service runbook and a postmortem template',
       ],
       screenshots: [shot('pages', 'Pages list with the seeded service runbook')],
     },
@@ -127,11 +127,11 @@ export const product = {
       id: 'ai',
       eyebrow: 'Galileo AI',
       title: 'An assistant grounded in the record on screen',
-      body: 'Galileo drafts summaries, descriptions and comments from the work item you are looking at — suggesting, never overwriting.',
+      body: 'Galileo drafts summaries, descriptions and comments from the work item you are looking at, so you start from a draft instead of a blank page.',
       bullets: [
-        'Sidebar assistant with workspace chat history',
-        'Editor AI for pages and descriptions',
-        'Human confirms every suggestion',
+        'Sidebar assistant with your chat history',
+        'AI drafting for work item descriptions',
+        'Nothing runs until you ask',
       ],
       screenshots: [shot('galileo', 'Galileo AI sidebar open on a work item')],
     },
@@ -139,7 +139,7 @@ export const product = {
       id: 'scheduler',
       eyebrow: 'AI Scheduler',
       title: 'Recurring agent runs with a recipe',
-      body: 'Schedule an agent to run on a cadence; each schedule carries a structured recipe — description, steps, tools, expected output — and keeps its run history.',
+      body: 'Schedule an agent to run on a cadence; each schedule can carry a structured recipe — description, steps, tools, expected output — and keeps its run history.',
       bullets: [
         'Presets: hourly, daily, weekly, monthly',
         'Hard tool allowlist per recipe',

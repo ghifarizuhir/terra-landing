@@ -22,7 +22,7 @@ export default function HazardTape({ variant = 'rail', className = '' }: Props) 
     <div className={`overflow-hidden rounded-none border-y border-black/5 ${className}`} aria-hidden>
       <div className="h-[28px] bg-[#141414] border-b border-white/10 flex items-center justify-between px-4">
         <div className="flex items-center gap-3">
-          <span className="h-2 w-2 rounded-full bg-[#FAFF00] shadow-[0_0_8px_rgba(250,255,0,0.6)] animate-pulse" />
+          <span className="h-2 w-2 rounded-full bg-[#FAFF00] shadow-[0_0_8px_rgba(250,255,0,0.6)] animate-pulse motion-reduce:animate-none" />
           <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-white/60 hidden sm:inline">Terraline line live</span>
           <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-white/40 sm:hidden">Line live</span>
         </div>

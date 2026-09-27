@@ -1832,6 +1832,39 @@ git commit -m "fix: landing verification follow-ups"
 
 ---
 
+## Claim Audit Results (Task 13 Step 4)
+
+Audited against `/home/ghifari/plane-for-itsm` on 2026-09-27. Copy fixes applied in `src/data/product.ts`.
+
+| Claim (landing copy) | Evidence (product repo) | Status |
+| --- | --- | --- |
+| Rust API (Axum) + Postgres | `apps/api-rs/Cargo.toml:7,10`; `crates/api/src/main.rs:51` | Verified |
+| Redis Stream jobs | `crates/common/src/stream.rs:4-39`; `crates/worker/src/main.rs:20-31` | Verified |
+| Real-time pages (Yjs) via dedicated live server | `apps/live/src/hocuspocus.ts:7,45`; `packages/editor/src/hooks/use-yjs-setup.ts:7` | Verified |
+| Docker Compose self-host | `docker-compose.yml:69-159` | Verified |
+| AGPL-3.0 | `LICENSE.txt:1-3` | Verified |
+| Layouts: list, board, calendar, spreadsheet, timeline | `packages/types/src/issues/issue.ts:15-21` | Verified |
+| Versions, sub-items, relations, attachments, comments, activity | `apps/api-rs/migrations/0001_initial.sql:1108-1237,1319-1331,1490-1519`; `routes/issue_version_write.rs`, `issue_activity_write.rs` | Verified |
+| Per-type states + transitions; workflow editor in settings | `crates/api/src/seed.rs:296-373`; `routes/workflow.rs:79-95,203-219`; `apps/web/core/components/workflows/workflow-editor.tsx` | Verified |
+| Type-aware boards/filters/create forms | `use-work-item-filters-config.tsx:322-333`; `issue-layouts/kanban/default.tsx:113-124` | Verified |
+| Services: status, criticality, ownership, dependencies | `apps/api-rs/migrations/0003_services.sql:4-65`; `routes/service.rs:74-113` | Verified |
+| Health-first board, dependency graph, service detail with linked work | `services/service.helpers.ts:98-123`; `services/graph/service-graph.tsx:10-19`; `services/detail/work-items.tsx:34-42` | Verified |
+| Service health is seeded demo data, not live monitoring | `services/service-health.helpers.ts:16-110` (FNV-1a + mulberry32 from `service.id`); no `health` column in `0003_services.sql` | Verified (claim boundary holds) |
+| Intake triage: accept/decline/snooze/duplicate | `0001_initial.sql:1035-1053`; `routes/intake.rs:1115-1117`; `inbox/modals/*` | Verified |
+| "Decisions stay on the intake record" | `routes/intake.rs:1602-1652` persists status/duplicate/snooze/updated_by; no activity log (`intake.rs:1045-1047`) | Verified after copy fix (was "Every decision keeps its trail") |
+| Pages rich text + multi-user Yjs collaboration | `pages/editor/editor-body.tsx:275`; `collaborative-editor.tsx:158` | Verified |
+| "Every new workspace starts with a service runbook and a postmortem template" | `crates/api/assets/seeds/data/pages.json:4,20`; `crates/api/src/seed.rs:919`; triggered on workspace create `routes/workspace.rs:398-402` | Verified after copy fix (was "Seeded on first workspace run") |
+| Galileo sidebar grounded in on-screen work item | `ai/assistant-sidebar/root.tsx:90-112`; `lib/ai-context.ts:85-97` | Verified |
+| "Sidebar assistant with your chat history" | `migrations/0008_ai_conversations.sql`; owner-scoped reads `routes/ai_conversations.rs:204-211` | Verified after copy fix (was "workspace chat history"; history is per-user) |
+| "AI drafting for work item descriptions" | `/ai-complete/` `main.rs:1815`; `issue-modal/components/description-editor.tsx:268-294` | Verified after copy fix (was "Editor AI for pages and descriptions"; page-editor AI is not wired — `pages/editor/ai/menu.tsx:80-96`) |
+| "Nothing runs until you ask" | Assistant and scheduler only act on user/trigger input; "Use this response" flow `gpt-assistant-popover.tsx:178-188` | Verified after copy fix (was "Human confirms every suggestion"; "I'm feeling lucky" inserts without a review step) |
+| Scheduler: recipes, presets, tool allowlist, run history, runs execute | `migrations/0009_ai_schedule_spec.sql`; `crates/ai/src/schedule.rs:18-26,176-247`; beat cron `crates/beat/src/main.rs:99-115`; worker `handlers/ai_schedule.rs:72-260`; history `routes/ai_schedule.rs:429-437` | Verified; copy says "can carry a structured recipe" (legacy prompt-only shape still accepted) |
+| Cycles progress/burndown, modules, saved views, analytics | `cycles/analytics-sidebar/issue-progress.tsx:41`; `routes/view.rs:476`; `routes/analytic.rs:277` | Verified |
+| Mobile: view/update, comment, attach, nav + search | `hooks/use-mobile-viewport.ts:1`; `issue-layouts/mobile-layout.ts`; `comments/comment-create.tsx:96`; `issues/attachment/root.tsx:30`; spec `2026-09-23-mobile-mode-design.md` | Verified for stated flows (no create/settings/pages on mobile) |
+| MCP API (v1 core) | `main.rs:1362-1446`; `routes/v1/{project,work_item,subresource,activity,relation,work_item_type}.rs`; spec `2026-09-18-mcp-public-api-v1-core-design.md` | Verified as "v1 core" (custom relation CRUD stubbed; spec still Draft) |
+
+---
+
 ## Self-Review Notes
 
 - Spec §1 IA → Tasks 3–8 (nav, hero, facts, 9 feature blocks, compare, architecture, roadmap, CTA, footer).
