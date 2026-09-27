@@ -8,6 +8,7 @@ import FeatureBlock from '../src/components/FeatureBlock'
 import CompareCards from '../src/components/CompareCards'
 import RoadmapColumns from '../src/components/RoadmapColumns'
 import CTABand from '../src/components/CTABand'
+import ArchDiagram from '../src/components/ArchDiagram'
 import { product } from '../src/data/product'
 
 describe('Nav', () => {
@@ -79,5 +80,13 @@ describe('CTABand', () => {
     render(<CTABand />)
     expect(screen.getByRole('heading', { level: 2, name: product.cta.title })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: product.cta.label })).toHaveAttribute('href', product.cta.href)
+  })
+})
+
+describe('ArchDiagram', () => {
+  it('renders the architecture diagram with the stack facts', () => {
+    render(<ArchDiagram />)
+    expect(screen.getByRole('img', { name: /architecture/i })).toBeInTheDocument()
+    for (const fact of product.architecture.facts) expect(screen.getByText(fact)).toBeInTheDocument()
   })
 })
