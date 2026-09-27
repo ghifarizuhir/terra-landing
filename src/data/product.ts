@@ -117,11 +117,11 @@ export const product = {
       title: 'Runbooks and postmortems, live',
       body: 'Pages are a rich-text editor with multi-user collaboration — runbooks, postmortems and SOPs live next to the work they describe.',
       bullets: [
-        'TipTap editor with real-time Yjs sessions',
-        'Seeded on first workspace run: a service runbook and a postmortem template',
-        'Pages link to the projects and work they describe',
+        'Rich-text pages for runbooks, postmortems and SOPs',
+        'Real-time collaboration built on Yjs',
+        'Seeded on first workspace run with a service runbook and a postmortem template',
       ],
-      screenshots: [shot('pages-live', 'Page editor with live collaboration')],
+      screenshots: [shot('pages', 'Pages list with the seeded service runbook')],
     },
     {
       id: 'ai',
@@ -157,7 +157,7 @@ export const product = {
         'Modules for longer efforts',
         'Saved views and analytics across work',
       ],
-      screenshots: [shot('analytics', 'Analytics dashboard with work trends')],
+      screenshots: [shot('cycles', 'Cycles with progress for service work')],
     },
     {
       id: 'mobile',

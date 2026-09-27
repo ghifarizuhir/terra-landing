@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
+import { existsSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { product } from '../src/data/product'
+
+const publicDir = resolve(process.cwd(), 'public')
 
 describe('product data', () => {
   it('has hero, facts, features, comparisons, roadmap and cta', () => {
@@ -22,5 +26,16 @@ describe('product data', () => {
         expect(s.alt.length).toBeGreaterThan(10)
       }
     }
+  })
+})
+
+describe('screenshot files', () => {
+  it('every referenced screenshot exists on disk', () => {
+    for (const feature of product.features) {
+      for (const screenshot of feature.screenshots) {
+        expect(existsSync(publicDir + screenshot.src), `missing ${screenshot.src}`).toBe(true)
+      }
+    }
+    expect(existsSync(publicDir + product.hero.screenshot.src)).toBe(true)
   })
 })
