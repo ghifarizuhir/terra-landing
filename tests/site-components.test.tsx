@@ -4,6 +4,7 @@ import Nav from '../src/components/Nav'
 import Footer from '../src/components/Footer'
 import Hero from '../src/components/Hero'
 import FactsStrip from '../src/components/FactsStrip'
+import FeatureBlock from '../src/components/FeatureBlock'
 import { product } from '../src/data/product'
 
 describe('Nav', () => {
@@ -37,5 +38,16 @@ describe('FactsStrip', () => {
   it('renders every platform fact', () => {
     render(<FactsStrip />)
     for (const fact of product.facts) expect(screen.getByText(fact)).toBeInTheDocument()
+  })
+})
+
+describe('FeatureBlock', () => {
+  it('renders eyebrow, title, bullets and every screenshot', () => {
+    const feature = product.features[2]
+    render(<FeatureBlock feature={feature} index={2} />)
+    expect(screen.getByRole('heading', { level: 3, name: feature.title })).toBeInTheDocument()
+    expect(screen.getByText(feature.eyebrow)).toBeInTheDocument()
+    for (const bullet of feature.bullets) expect(screen.getByText(bullet)).toBeInTheDocument()
+    for (const s of feature.screenshots) expect(screen.getByAltText(s.alt)).toBeInTheDocument()
   })
 })
