@@ -116,7 +116,6 @@ export default function Stage({ beat, reduced }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const size = useSize(ref)
   const { shot, direction } = beat
-  const fit = direction.fit ?? 'contain'
   const frame = frameFor(shot, direction, size)
   const ready = size.w > 0 && size.h > 0
 
@@ -149,10 +148,8 @@ export default function Stage({ beat, reduced }: Props) {
               alt={shot.alt}
               draggable={false}
               className={
-                fit === 'contain'
-                  ? direction.align === 'right'
-                    ? 'h-full w-full rounded-[18px] object-cover ring-1 ring-white/10'
-                    : 'h-full w-full object-cover [mask-image:linear-gradient(to_bottom,transparent_0%,black_3%,black_97%,transparent_100%)]'
+                direction.align === 'right'
+                  ? 'h-full w-full rounded-[18px] object-cover ring-1 ring-white/10'
                   : 'h-full w-full object-cover'
               }
             />
@@ -162,15 +159,6 @@ export default function Stage({ beat, reduced }: Props) {
           ))}
         </motion.div>
       </AnimatePresence>
-
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            'linear-gradient(to right, rgba(16,21,24,0.8), transparent 9%), linear-gradient(to top, rgba(16,21,24,0.8), transparent 22%), radial-gradient(130% 110% at 50% 42%, transparent 58%, rgba(16,21,24,0.72) 100%)',
-        }}
-      />
     </div>
   )
 }
