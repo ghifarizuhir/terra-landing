@@ -31,7 +31,7 @@ export default function Footer({ variant = 'default' }: Props) {
 
   return (
     <footer className="bg-neutral-950 text-white">
-      <div className="mx-auto grid max-w-[1136px] gap-10 px-5 py-12 sm:px-8 md:grid-cols-[1.3fr_0.7fr_0.7fr] md:py-[72px]">
+      <div className="mx-auto grid w-full gap-10 px-5 py-12 sm:px-8 md:grid-cols-[1.3fr_0.7fr_0.7fr] md:py-[72px] lg:px-16">
         <div>
           <a href="/" className="inline-flex items-center gap-2.5 text-white">
             <Mark className="h-[16px] w-auto text-white" />
@@ -54,7 +54,7 @@ export default function Footer({ variant = 'default' }: Props) {
         </nav>
       </div>
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-[1136px] flex-col gap-2 px-5 py-5 font-mono text-[10px] text-neutral-500 sm:px-8 md:flex-row md:items-center md:justify-between">
+        <div className="mx-auto flex w-full flex-col gap-2 px-5 py-5 font-mono text-[10px] text-neutral-500 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-16">
           <span>© 2026 Terraline, Inc</span>
           <span>Open-source IT service management</span>
         </div>

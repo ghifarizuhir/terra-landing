@@ -33,7 +33,7 @@ const capabilities: readonly Capability[] = [
     eyebrow: 'Service catalog',
     title: 'See the services behind every decision.',
     body: 'Understand ownership, criticality and dependencies before a change—or while investigating an incident.',
-    screenshot: feature('services').screenshots[1],
+    screenshot: feature('services').screenshots[0],
     features: [feature('services')],
   },
   {
@@ -78,25 +78,10 @@ const questions = [
   },
 ]
 
-const strongDots = new Set([
-  '2,1', '3,1', '6,1', '7,1',
-  '2,4', '4,4', '7,4',
-  '5,5',
-  '2,8', '3,8', '6,8', '7,8',
-])
-const midDots = new Set([
-  '2,2', '3,2', '4,2', '6,2', '7,2',
-  '2,3', '5,3', '7,3',
-  '2,4', '7,4',
-  '2,5', '7,5',
-  '2,6', '4,6', '5,6', '6,6', '7,6',
-  '2,7', '3,7', '5,7', '6,7', '7,7',
-])
-
 function SiteNav() {
   return (
     <header className="site-nav sticky top-0 z-50 border-b border-neutral-100 bg-white">
-      <div className="mx-auto max-w-[1136px] px-5 sm:px-8">
+      <div className="mx-auto w-full px-5 sm:px-8 lg:px-16">
         <div className="flex h-16 items-center justify-between gap-5">
           <a href="#top" aria-label="Terraline home" className="flex shrink-0 items-center gap-2.5 text-black">
             <Mark className="h-[17px] w-auto text-black" />
@@ -130,26 +115,19 @@ function SiteNav() {
   )
 }
 
-function DotField() {
+function ServiceGraphPreview() {
+  const screenshot = feature('services').screenshots[1]
+
   return (
-    <svg aria-hidden="true" viewBox="0 0 420 420" className="dot-field h-full w-full max-w-[430px]">
-      {Array.from({ length: 10 }, (_, row) =>
-        Array.from({ length: 10 }, (_, col) => {
-          const key = `${col},${row}`
-          const dark = strongDots.has(key)
-          const mid = midDots.has(key)
-          return (
-            <circle
-              key={key}
-              cx={22 + col * 42}
-              cy={22 + row * 42}
-              r={dark ? 8.5 : mid ? 7.5 : 6}
-              fill={dark ? '#0a0a0a' : mid ? '#525252' : '#e5e5e5'}
-            />
-          )
-        }),
-      )}
-    </svg>
+    <figure className="overflow-hidden rounded-[12px] border border-neutral-200 bg-neutral-50">
+      <figcaption className="flex items-center justify-between gap-3 border-b border-neutral-200 bg-white px-3 py-2.5">
+        <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-neutral-700">Service relationships</span>
+        <span className="text-[11px] text-neutral-500">Dependency graph</span>
+      </figcaption>
+      <div className="p-2.5 sm:p-3.5">
+        <ProductShot screenshot={screenshot} className="aspect-[16/10] object-cover object-top" />
+      </div>
+    </figure>
   )
 }
 
@@ -171,8 +149,8 @@ function ProductShot({ screenshot, className = '', priority = false }: { screens
 function Hero() {
   return (
     <section id="top" className="bg-white">
-      <div className="mx-auto max-w-[1136px] px-5 pb-16 pt-16 sm:px-8 md:pb-20 md:pt-[88px]">
-        <div className="grid items-center gap-10 md:grid-cols-[1fr_0.9fr] md:gap-16">
+      <div className="mx-auto w-full px-5 pt-16 sm:px-8 md:pt-[88px] lg:px-16">
+        <div className="grid items-center gap-10 pb-14 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:gap-12 md:pb-16 lg:gap-16">
           <div className="max-w-[460px]">
             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-500">{product.hero.eyebrow}</p>
             <h1 className="mt-5 font-display text-[clamp(38px,4vw,48px)] font-medium leading-[1.16] tracking-[-0.8px] text-black">
@@ -200,14 +178,14 @@ function Hero() {
             </div>
           </div>
 
-          <div className="mx-auto w-full max-w-[430px] md:justify-self-end">
-            <DotField />
+          <div className="mx-auto w-full md:justify-self-end">
+            <ServiceGraphPreview />
           </div>
         </div>
+      </div>
 
-        <div className="preview-panel mt-14 overflow-hidden rounded-[20px] bg-neutral-50 p-2.5 sm:mt-[76px] sm:p-3.5">
-          <ProductShot screenshot={product.hero.screenshot} priority className="aspect-[16/9] object-cover object-top" />
-        </div>
+      <div className="preview-panel mt-2 w-full overflow-hidden bg-neutral-50 p-2.5 sm:p-4 lg:p-6">
+        <ProductShot screenshot={product.hero.screenshot} priority className="aspect-[16/9] rounded-[4px] border-0 object-cover object-top" />
       </div>
     </section>
   )
@@ -216,7 +194,7 @@ function Hero() {
 function FactStrip() {
   return (
     <section aria-label="Platform foundations" className="border-y border-neutral-200 bg-white">
-      <div className="mx-auto max-w-[1136px] px-5 py-8 sm:px-8">
+      <div className="mx-auto w-full px-5 py-8 sm:px-8 lg:px-16">
         <p className="text-center text-sm text-neutral-600">Open-source foundation, built for real service operations</p>
         <ul className="mt-6 grid grid-cols-2 gap-x-5 gap-y-4 text-center sm:grid-cols-3 lg:grid-cols-5">
           {product.facts.map((fact) => (
@@ -266,7 +244,7 @@ function CapabilitySection({ item, index }: { item: Capability; index: number })
 function ProductSection() {
   return (
     <section id="product" className="scroll-mt-[112px] bg-white md:scroll-mt-16">
-      <div className="mx-auto max-w-[1136px] px-5 pb-16 pt-20 sm:px-8 md:pb-24 md:pt-[104px]">
+      <div className="mx-auto w-full px-5 pb-16 pt-20 sm:px-8 md:pb-24 md:pt-[104px] lg:px-16">
         <div className="mb-10 grid gap-5 md:mb-14 md:grid-cols-[1fr_0.75fr] md:items-end">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-500">The product</p>
@@ -287,7 +265,7 @@ function ProductSection() {
 function PlatformSection() {
   return (
     <section id="platform" className="scroll-mt-[112px] bg-white md:scroll-mt-16">
-      <div className="mx-auto max-w-[1136px] px-5 py-20 sm:px-8 md:py-[104px]">
+      <div className="mx-auto w-full px-5 py-20 sm:px-8 md:py-[104px] lg:px-16">
         <div className="mx-auto max-w-[560px] text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-500">Open by design</p>
           <h2 className="mt-4 font-display text-[36px] font-medium leading-[44px] tracking-[-0.55px] text-black">
@@ -346,7 +324,7 @@ function PlatformSection() {
 function RoadmapSection() {
   return (
     <section id="roadmap" className="scroll-mt-[112px] bg-white md:scroll-mt-16">
-      <div className="mx-auto max-w-[1136px] px-5 py-20 sm:px-8 md:py-[100px]">
+      <div className="mx-auto w-full px-5 py-20 sm:px-8 md:py-[100px] lg:px-16">
         <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-500">Product direction</p>
@@ -394,7 +372,7 @@ function RoadmapSection() {
 function FaqSection() {
   return (
     <section id="faq" className="border-t border-neutral-200 bg-white">
-      <div className="mx-auto grid max-w-[1136px] gap-8 px-5 py-20 sm:px-8 md:grid-cols-[0.78fr_1fr] md:gap-12 md:py-[96px]">
+      <div className="mx-auto grid w-full gap-8 px-5 py-20 sm:px-8 md:grid-cols-[0.78fr_1fr] md:gap-12 md:py-[96px] lg:px-16">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-500">FAQ</p>
           <h2 className="mt-4 max-w-[12ch] font-display text-[36px] font-medium leading-[44px] tracking-[-0.55px] text-black">
@@ -423,7 +401,7 @@ function FaqSection() {
 function CallToAction() {
   return (
     <section className="bg-neutral-50">
-      <div className="mx-auto flex max-w-[1136px] flex-col gap-5 px-5 py-9 sm:px-8 md:flex-row md:items-center md:justify-between">
+      <div className="mx-auto flex w-full flex-col gap-5 px-5 py-9 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-16">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-500">See Terraline in context</p>
           <h2 className="mt-2 font-display text-[30px] font-medium leading-tight tracking-[-0.4px] text-black sm:text-[36px]">
