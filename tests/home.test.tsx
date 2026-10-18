@@ -1,92 +1,58 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from '../src/App'
 import { product } from '../src/data/product'
-import { chapters, totalChapters } from '../src/data/tour'
 
-const status = (index: number) => `Chapter ${index + 1} of ${totalChapters}: ${chapters[index].title}`
-
-const controls = () => screen.getByRole('button', { name: 'Next chapter' }).closest('footer') as HTMLElement
-
-describe('homepage tour', () => {
-  it('opens on the cover with the headline, CTA and platform facts', () => {
+describe('homepage landing page', () => {
+  it('shows the product promise, access CTA and platform facts', () => {
     render(<App />)
-    expect(screen.getByRole('heading', { level: 1, name: product.hero.title })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: product.hero.primaryCta.label })).toHaveAttribute(
-      'href',
-      product.hero.primaryCta.href,
-    )
-    for (const fact of product.facts) expect(screen.getByText(fact)).toBeInTheDocument()
-    expect(within(controls()).getByText('00')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Previous chapter' })).toBeDisabled()
-    expect(screen.getByRole('button', { name: 'Next chapter' })).toBeEnabled()
+
+    expect(screen.getByRole('heading', { level: 1, name: /Run services and delivery work in one system/ })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Request a demo/ })).toHaveAttribute('href', product.hero.primaryCta.href)
+    const foundation = screen.getByRole('region', { name: 'Platform foundations' })
+    for (const fact of product.facts) expect(within(foundation).getByText(fact)).toBeInTheDocument()
+    const accessLinks = screen.getAllByRole('link', { name: /Request access/ })
+    expect(accessLinks.length).toBeGreaterThan(0)
+    for (const link of accessLinks) expect(link).toHaveAttribute('href', product.cta.href)
   })
 
-  it('walks chapters with the arrow keys and reports position for screen readers', async () => {
+  it('presents the product capabilities with real product screenshots', () => {
     render(<App />)
-    fireEvent.keyDown(window, { key: 'ArrowRight' })
-    expect(screen.getByText(status(1))).toBeInTheDocument()
-    expect(await screen.findByRole('heading', { level: 1, name: chapters[1].title })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Previous chapter' })).toBeEnabled()
-  })
 
-  it('steps through screenshots before leaving a chapter', async () => {
-    render(<App />)
-    fireEvent.keyDown(window, { key: 'ArrowRight' })
-    await screen.findByRole('heading', { level: 1, name: chapters[1].title })
-
-    const beats = chapters[1].beats.length
-    const ticks = screen.getByRole('group', { name: 'Screenshots in this chapter' })
-    expect(within(ticks).getAllByRole('button')).toHaveLength(beats)
-    expect(within(ticks).getByRole('button', { name: `Screenshot 1 of ${beats}` })).toHaveAttribute(
-      'aria-current',
-      'true',
-    )
-
-    fireEvent.keyDown(window, { key: 'ArrowRight' })
-    expect(screen.getByText(status(1))).toBeInTheDocument()
-    expect(within(ticks).getByRole('button', { name: `Screenshot 2 of ${beats}` })).toHaveAttribute(
-      'aria-current',
-      'true',
-    )
-  })
-
-  it('jumps straight to a chapter from the top bar', async () => {
-    render(<App />)
-    const last = totalChapters - 1
-    fireEvent.click(screen.getByRole('button', { name: `Chapter ${last + 1} of ${totalChapters}: ${chapters[last].title}` }))
-    expect(screen.getByText(status(last))).toBeInTheDocument()
-    expect(await screen.findByRole('heading', { level: 2, name: chapters[last].title })).toBeInTheDocument()
-    const ctas = screen.getAllByRole('link', { name: product.cta.label })
-    expect(ctas.length).toBeGreaterThan(0)
-    for (const cta of ctas) expect(cta).toHaveAttribute('href', product.cta.href)
-    expect(within(controls()).getByText('11')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Next chapter' })).toBeDisabled()
-  })
-
-  it('renders the why chapter with comparisons and stack facts', async () => {
-    render(<App />)
-    fireEvent.keyDown(window, { key: 'Home' })
-    fireEvent.click(screen.getByRole('button', { name: `Chapter 11 of ${totalChapters}: ${chapters[10].title}` }))
-    expect(await screen.findByRole('heading', { level: 2, name: chapters[10].title })).toBeInTheDocument()
-    for (const card of product.comparisons) {
-      expect(screen.getByRole('heading', { level: 3, name: card.title })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'A better way to run service work.' })).toBeInTheDocument()
+    for (const label of ['Work management', 'Service catalog', 'Knowledge & AI', 'Delivery & mobile']) {
+      expect(screen.getAllByText(label).length).toBeGreaterThan(0)
     }
-    for (const fact of product.architecture.facts) expect(screen.getByText(fact)).toBeInTheDocument()
+    expect(screen.getAllByRole('img', { name: product.hero.screenshot.alt })).toHaveLength(2)
+    expect(screen.getByRole('img', { name: product.features.find((item) => item.id === 'services')!.screenshots[1].alt })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: product.features.find((item) => item.id === 'mobile')!.screenshots[0].alt })).toBeInTheDocument()
   })
 
-  it('returns to the cover from the End key with Home', async () => {
+  it('includes the platform foundation, honest roadmap and FAQ', () => {
     render(<App />)
-    fireEvent.keyDown(window, { key: 'End' })
-    expect(screen.getByText(status(totalChapters - 1))).toBeInTheDocument()
-    fireEvent.keyDown(window, { key: 'Home' })
-    await waitFor(() => expect(screen.getByText(status(0))).toBeInTheDocument())
-    expect(await screen.findByRole('heading', { level: 1, name: product.hero.title })).toBeInTheDocument()
+
+    for (const comparison of product.comparisons) {
+      expect(screen.getByRole('heading', { level: 3, name: comparison.title })).toBeInTheDocument()
+    }
+    for (const item of product.roadmap.shipped) expect(screen.getByText(item)).toBeInTheDocument()
+    for (const item of product.roadmap.next) expect(screen.getByText(item)).toBeInTheDocument()
+    expect(screen.getByText('Can I run Terraline on my own infrastructure?')).toBeInTheDocument()
+    expect(screen.getByText(/AI features send prompts to the configured LLM endpoint/)).toBeInTheDocument()
   })
 
-  it('links to /learn and request access', () => {
+  it('keeps anchor navigation and the Learn page reachable', () => {
     render(<App />)
-    expect(screen.getByRole('link', { name: 'Learn' })).toHaveAttribute('href', '/learn')
-    expect(screen.getByRole('link', { name: 'Request access' })).toHaveAttribute('href', product.cta.href)
+
+    const navigation = screen.getByRole('navigation', { name: 'Main navigation' })
+    expect(within(navigation).getByRole('link', { name: 'Product' })).toHaveAttribute('href', '#product')
+    expect(within(navigation).getByRole('link', { name: 'Platform' })).toHaveAttribute('href', '#platform')
+    expect(within(navigation).getByRole('link', { name: 'Roadmap' })).toHaveAttribute('href', '#roadmap')
+    expect(within(navigation).getByRole('link', { name: 'Learn' })).toHaveAttribute('href', '/learn')
+
+    const mobileNavigation = screen.getByRole('navigation', { name: 'Mobile navigation' })
+    expect(within(mobileNavigation).getByRole('link', { name: 'Product' })).toHaveAttribute('href', '#product')
+    expect(within(mobileNavigation).getByRole('link', { name: 'Platform' })).toHaveAttribute('href', '#platform')
+    expect(within(mobileNavigation).getByRole('link', { name: 'Roadmap' })).toHaveAttribute('href', '#roadmap')
+    expect(within(mobileNavigation).getByRole('link', { name: 'Learn' })).toHaveAttribute('href', '/learn')
   })
 })
