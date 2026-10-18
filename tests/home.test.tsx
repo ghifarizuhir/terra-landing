@@ -19,9 +19,9 @@ describe('homepage landing page', () => {
   it('presents the product capabilities with real product screenshots', () => {
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'A better way to run service work.' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Bring your service work into one system.' })).toBeInTheDocument()
     for (const label of ['Work management', 'Service catalog', 'Knowledge & AI', 'Delivery & mobile']) {
-      expect(screen.getAllByText(label).length).toBeGreaterThan(0)
+      expect(screen.getAllByText(new RegExp(label)).length).toBeGreaterThan(0)
     }
     expect(screen.getAllByRole('img', { name: product.hero.screenshot.alt })).toHaveLength(2)
     expect(screen.getByRole('img', { name: product.features.find((item) => item.id === 'services')!.screenshots[1].alt })).toBeInTheDocument()

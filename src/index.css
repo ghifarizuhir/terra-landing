@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -15,24 +15,27 @@
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 
-/* Terraline's product landing uses a bright canvas and precise cobalt accents. */
+/* The learn page keeps its own neutral system; the product landing uses Netra's monochrome treatment. */
 .tour {
   --color-bg: #ffffff;
-  --color-ink: #111923;
-  --color-muted: #657080;
-  --color-border: #e4e8ee;
-  --color-subtle: #f7f9fc;
+  --color-ink: #0a0a0a;
+  --color-muted: #737373;
+  --color-border: #e5e5e5;
+  --color-subtle: #fafafa;
   --color-panel: #ffffff;
-  --color-brand: #3f76ff;
-  --color-brand-strong: #2a5ce0;
-  --font-display: "Sora", system-ui, sans-serif;
-  --font-body: "Geist", system-ui, sans-serif;
-  font-family: var(--font-body);
-  background: var(--color-bg);
-  color: var(--color-ink);
+  --color-brand: #0a0a0a;
+  --color-brand-strong: #0a0a0a;
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
   min-height: 100dvh;
   overflow: clip;
-  overscroll-behavior: auto;
+  isolation: isolate;
+  background: #fff;
+  color: #0a0a0a;
+  font-family: var(--font-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 html { scrollbar-gutter: stable; overflow-x: clip; scroll-behavior: smooth; }
@@ -47,101 +50,43 @@ body {
 }
 ::selection { background: var(--color-brand); color: #ffffff; }
 :focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; }
+.tour ::selection { background: #0a0a0a; color: #fff; }
+.tour :focus-visible { outline-color: #0a0a0a; }
 :where(.font-mono) { font-variant-numeric: tabular-nums; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--color-border); }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-muted); }
 
-.tour { isolation: isolate; }
 .site-nav-link {
-  color: #667180;
-  font-size: 12px;
-  transition: color 160ms ease;
+  color: #171717;
+  font-size: 14px;
+  transition: color 150ms ease;
 }
-.site-nav-link:hover { color: #182230; }
+.site-nav-link:hover { color: #737373; }
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-  border-radius: 999px;
-  font-weight: 550;
-  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  gap: 7px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
 }
-.button:hover { transform: translateY(-1px); }
-.button-primary {
-  background: #315fe8;
-  color: #fff;
-  box-shadow: 0 5px 14px rgba(49, 95, 232, 0.19);
-}
-.button-primary:hover {
-  background: #244fce;
-  box-shadow: 0 8px 20px rgba(49, 95, 232, 0.25);
-}
+.button-primary { background: #0a0a0a; color: #fff; }
+.button-primary:hover { background: #262626; }
 .button-secondary {
-  border: 1px solid #dfe5ee;
-  background: rgba(255, 255, 255, 0.82);
-  color: #273446;
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  color: #0a0a0a;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
-.button-secondary:hover { border-color: #b8c9ee; background: #fff; color: #244fce; }
-.section-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: #65748b;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  line-height: 1.4;
-  text-transform: uppercase;
-}
-.section-eyebrow > span {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #3f76ff;
-  box-shadow: 0 0 0 4px rgba(63, 118, 255, 0.1);
-}
-.section-eyebrow-inverse { color: #9fadc0; }
-.section-eyebrow-inverse > span { background: #82a6ff; box-shadow: 0 0 0 4px rgba(130, 166, 255, 0.13); }
-.hero-wash { background: linear-gradient(112deg, #ffffff 10%, #fbfcff 56%, #f6f9ff 100%); }
-.hero-grid,
-.cta-grid {
-  background-image: linear-gradient(rgba(77, 111, 176, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(77, 111, 176, 0.05) 1px, transparent 1px);
-  background-size: 54px 54px;
-  mask-image: linear-gradient(90deg, transparent 0%, #000 54%, #000 100%);
-}
-.hero-glow {
-  background: radial-gradient(ellipse at center, rgba(107, 151, 255, 0.16), rgba(205, 220, 255, 0.12) 42%, transparent 72%);
-  filter: blur(12px);
-}
-.hero-image-glow { background: radial-gradient(ellipse at 55% 50%, rgba(86, 132, 255, 0.2), rgba(179, 203, 255, 0.1) 45%, transparent 73%); }
-.screenshot-frame { box-shadow: 0 3px 12px rgba(23, 39, 66, 0.045); }
-.screenshot-halo { background: radial-gradient(ellipse at 50% 55%, rgba(130, 164, 238, 0.12), transparent 70%); }
-.platform-grid {
-  background-image: linear-gradient(rgba(189, 207, 236, 0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(189, 207, 236, 0.055) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: linear-gradient(90deg, #000, transparent 88%);
-}
-.platform-glow { background: radial-gradient(ellipse at center, rgba(48, 91, 169, 0.26), rgba(34, 57, 97, 0.12) 43%, transparent 72%); }
-.platform-card { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035); }
-.cta-band { background: linear-gradient(112deg, #eaf0ff 0%, #f2f6ff 58%, #e4edff 100%); }
-.cta-grid { mask-image: linear-gradient(90deg, transparent, #000 80%); }
-.cta-glow { background: radial-gradient(ellipse at center, rgba(112, 152, 255, 0.25), rgba(184, 205, 255, 0.12) 45%, transparent 72%); }
+.button-secondary:hover { background: #fafafa; border-color: #d4d4d4; }
 .faq-item summary::-webkit-details-marker { display: none; }
 .faq-chevron { transition: transform 180ms ease; }
 .faq-item[open] .faq-chevron { transform: rotate(180deg); }
 
-@keyframes landing-rise {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-rise { animation: landing-rise 650ms cubic-bezier(0.22, 1, 0.36, 1) both; }
-.animate-rise-delayed { animation: landing-rise 800ms 120ms cubic-bezier(0.22, 1, 0.36, 1) both; }
-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
 }
