@@ -1,7 +1,9 @@
 import { ArrowRight, ArrowUpRight, Check, ChevronDown } from 'lucide-react'
-import { product, type Feature, type Screenshot } from '../data/product'
+import { product, type Feature } from '../data/product'
+import type { ShowcaseChapterId } from '../data/product-demo'
 import Footer from './Footer'
 import Mark from './Mark'
+import ProductShowcase from './product-showcase/ProductShowcase'
 
 const feature = (id: string): Feature => {
   const found = product.features.find((item) => item.id === id)
@@ -11,46 +13,36 @@ const feature = (id: string): Feature => {
 
 type Capability = {
   number: string
+  chapter: ShowcaseChapterId
   eyebrow: string
   title: string
   body: string
-  screenshot: Screenshot
-  secondaryScreenshot?: Screenshot
   features: readonly Feature[]
 }
 
 const capabilities: readonly Capability[] = [
   {
-    number: '01',
-    eyebrow: 'Work management',
+    number: '01', chapter: 'work', eyebrow: 'Work management',
     title: 'Move service work forward with a clear process.',
     body: 'Bring requests, incidents and change tasks into one queue, then give each kind of work the states and rules it needs.',
-    screenshot: product.hero.screenshot,
     features: [feature('work-items'), feature('types'), feature('intake')],
   },
   {
-    number: '02',
-    eyebrow: 'Service catalog',
+    number: '02', chapter: 'services', eyebrow: 'Service catalog',
     title: 'See the services behind every decision.',
     body: 'Understand ownership, criticality and dependencies before a change—or while investigating an incident.',
-    screenshot: feature('services').screenshots[0],
     features: [feature('services')],
   },
   {
-    number: '03',
-    eyebrow: 'Knowledge & AI',
+    number: '03', chapter: 'galileo', eyebrow: 'Knowledge & AI',
     title: 'Keep context close to the work.',
     body: 'Runbooks, postmortems and an assistant grounded in the record help teams work from shared context.',
-    screenshot: feature('ai').screenshots[0],
     features: [feature('pages'), feature('ai'), feature('scheduler')],
   },
   {
-    number: '04',
-    eyebrow: 'Delivery & mobile',
+    number: '04', chapter: 'delivery', eyebrow: 'Delivery & mobile',
     title: 'Plan the work, then keep it moving.',
     body: 'Timebox service work, track progress and handle the important updates from your phone.',
-    screenshot: feature('delivery').screenshots[0],
-    secondaryScreenshot: feature('mobile').screenshots[0],
     features: [feature('delivery'), feature('mobile')],
   },
 ]
@@ -115,77 +107,30 @@ function SiteNav() {
   )
 }
 
-function ServiceGraphPreview() {
-  const screenshot = feature('services').screenshots[1]
-
-  return (
-    <figure className="overflow-hidden rounded-[12px] border border-neutral-200 bg-neutral-50">
-      <figcaption className="flex items-center justify-between gap-3 border-b border-neutral-200 bg-white px-3 py-2.5">
-        <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-neutral-700">Service relationships</span>
-        <span className="text-[11px] text-neutral-500">Dependency graph</span>
-      </figcaption>
-      <div className="p-2.5 sm:p-3.5">
-        <ProductShot screenshot={screenshot} className="aspect-[16/10] object-cover object-top" />
-      </div>
-    </figure>
-  )
-}
-
-function ProductShot({ screenshot, className = '', priority = false }: { screenshot: Screenshot; className?: string; priority?: boolean }) {
-  return (
-    <img
-      src={screenshot.src}
-      alt={screenshot.alt}
-      width={screenshot.width}
-      height={screenshot.height}
-      loading={priority ? 'eager' : 'lazy'}
-      fetchPriority={priority ? 'high' : 'auto'}
-      draggable={false}
-      className={`block h-auto w-full rounded-[8px] border border-neutral-200 bg-white ${className}`}
-    />
-  )
-}
-
 function Hero() {
   return (
-    <section id="top" className="bg-white">
+    <section id="top" data-showcase-chapter="work" className="bg-white">
       <div className="mx-auto w-full px-5 pt-16 sm:px-8 md:pt-[88px] lg:px-16">
-        <div className="grid items-center gap-10 pb-14 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:gap-12 md:pb-16 lg:gap-16">
-          <div className="max-w-[460px]">
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-500">{product.hero.eyebrow}</p>
-            <h1 className="mt-5 font-display text-[clamp(38px,4vw,48px)] font-medium leading-[1.16] tracking-[-0.8px] text-black">
-              {product.hero.title}
-            </h1>
-            <p className="mt-5 max-w-[45ch] text-[16px] leading-6 text-neutral-500">{product.hero.body}</p>
-            <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
-              <a href={product.hero.primaryCta.href} className="button button-primary h-9 px-[14px] text-sm">
-                {product.hero.primaryCta.label}
-              </a>
-              <a href="#product" className="inline-flex h-9 items-center gap-1.5 px-1 text-sm font-medium text-black hover:underline underline-offset-4">
-                See the product <ArrowRight className="h-4 w-4" />
-              </a>
-            </div>
-            <div className="mt-8 flex items-center gap-7">
-              <div>
-                <p className="font-mono text-[21px] leading-7 text-black">AGPL-3.0</p>
-                <p className="mt-1 text-[13px] text-neutral-500">Open-source license</p>
-              </div>
-              <span aria-hidden="true" className="h-12 w-px bg-neutral-200" />
-              <div>
-                <p className="font-mono text-[19px] leading-7 text-black">Docker</p>
-                <p className="mt-1 text-[13px] text-neutral-500">Self-host your stack</p>
-              </div>
-            </div>
+        <div className="max-w-[460px]">
+          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-500">{product.hero.eyebrow}</p>
+          <h1 className="mt-5 font-display text-[clamp(38px,4vw,48px)] font-medium leading-[1.16] tracking-[-0.8px] text-black">
+            {product.hero.title}
+          </h1>
+          <p className="mt-5 max-w-[45ch] text-[16px] leading-6 text-neutral-500">{product.hero.body}</p>
+          <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
+            <a href={product.hero.primaryCta.href} className="button button-primary h-9 px-[14px] text-sm">
+              {product.hero.primaryCta.label}
+            </a>
+            <a href={product.hero.secondaryCta.href} className="inline-flex h-9 items-center px-1 text-sm font-medium text-black">
+              {product.hero.secondaryCta.label}
+            </a>
           </div>
-
-          <div className="mx-auto w-full md:justify-self-end">
-            <ServiceGraphPreview />
+          <div className="mt-8 flex items-center gap-7">
+            <div><p className="font-mono text-[21px]">AGPL-3.0</p><p className="mt-1 text-[13px] text-neutral-500">Open-source license</p></div>
+            <span aria-hidden="true" className="h-12 w-px bg-neutral-200" />
+            <div><p className="font-mono text-[19px]">Docker</p><p className="mt-1 text-[13px] text-neutral-500">Self-host your stack</p></div>
           </div>
         </div>
-      </div>
-
-      <div className="preview-panel mt-2 w-full overflow-hidden bg-neutral-50 p-2.5 sm:p-4 lg:p-6">
-        <ProductShot screenshot={product.hero.screenshot} priority className="aspect-[16/9] rounded-[4px] border-0 object-cover object-top" />
       </div>
     </section>
   )
@@ -208,35 +153,19 @@ function FactStrip() {
   )
 }
 
-function CapabilitySection({ item, index }: { item: Capability; index: number }) {
-  const reverse = index % 2 === 1
+function CapabilitySection({ item }: { item: Capability }) {
+  const id = item.chapter === 'work' ? undefined : `showcase-${item.chapter}`
   return (
-    <article className="grid items-center gap-9 border-t border-neutral-200 py-14 md:grid-cols-2 md:gap-12 md:py-[76px]">
-      <div className={reverse ? 'md:order-2' : ''}>
-        <p className="font-mono text-[10px] uppercase tracking-[0.13em] text-neutral-500">{item.number} / {item.eyebrow}</p>
-        <h3 className="mt-4 max-w-[14ch] font-display text-[32px] font-medium leading-[1.22] tracking-[-0.45px] text-black sm:text-[36px] sm:leading-[44px]">
-          {item.title}
-        </h3>
-        <p className="mt-4 max-w-[48ch] text-sm leading-[1.65] text-neutral-500">{item.body}</p>
-        <div className="mt-7 space-y-4 border-l border-neutral-200 pl-5">
-          {item.features.map((current) => (
-            <div key={current.id}>
-              <h4 className="text-sm font-medium text-black">{current.title}</h4>
-              <p className="mt-1 max-w-[50ch] text-[13px] leading-[1.55] text-neutral-500">{current.body}</p>
-            </div>
-          ))}
+    <article id={id} data-showcase-chapter={item.chapter}>
+      <p>{item.number} / {item.eyebrow}</p>
+      <h3>{item.title}</h3>
+      <p>{item.body}</p>
+      {item.features.map((current) => (
+        <div key={current.id}>
+          <h4>{current.title}</h4>
+          <p>{current.body}</p>
         </div>
-      </div>
-      <div className={`rounded-[20px] bg-neutral-50 p-2.5 sm:p-3.5 ${reverse ? 'md:order-1' : ''}`}>
-        {item.secondaryScreenshot ? (
-          <div className="grid grid-cols-[minmax(0,1fr)_minmax(64px,0.27fr)] items-center gap-2.5 sm:gap-3">
-            <ProductShot screenshot={item.screenshot} />
-            <ProductShot screenshot={item.secondaryScreenshot} className="h-[160px] object-cover object-top sm:h-[220px]" />
-          </div>
-        ) : (
-          <ProductShot screenshot={item.screenshot} />
-        )}
-      </div>
+      ))}
     </article>
   )
 }
@@ -244,19 +173,19 @@ function CapabilitySection({ item, index }: { item: Capability; index: number })
 function ProductSection() {
   return (
     <section id="product" className="scroll-mt-[112px] bg-white md:scroll-mt-16">
-      <div className="mx-auto w-full px-5 pb-16 pt-20 sm:px-8 md:pb-24 md:pt-[104px] lg:px-16">
-        <div className="mb-10 grid gap-5 md:mb-14 md:grid-cols-[1fr_0.75fr] md:items-end">
+      <div>
+        <div>
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-500">The product</p>
-            <h2 className="mt-4 max-w-[14ch] font-display text-[36px] font-medium leading-[44px] tracking-[-0.55px] text-black">
+            <p>The product</p>
+            <h2>
               Bring your service work into one system.
             </h2>
           </div>
-          <p className="max-w-[49ch] pb-1 text-sm leading-[1.65] text-neutral-500 md:justify-self-end">
+          <p>
             From intake and triage to service health and delivery, keep the operational picture connected in one place.
           </p>
         </div>
-        {capabilities.map((item, index) => <CapabilitySection key={item.number} item={item} index={index} />)}
+        {capabilities.map((item) => <CapabilitySection key={item.number} item={item} />)}
       </div>
     </section>
   )
@@ -425,9 +354,11 @@ export default function Tour() {
     <div className="tour min-h-screen bg-white text-black">
       <SiteNav />
       <main>
-        <Hero />
+        <ProductShowcase>
+          <Hero />
+          <ProductSection />
+        </ProductShowcase>
         <FactStrip />
-        <ProductSection />
         <PlatformSection />
         <RoadmapSection />
         <FaqSection />

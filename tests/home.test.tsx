@@ -16,16 +16,17 @@ describe('homepage landing page', () => {
     for (const link of accessLinks) expect(link).toHaveAttribute('href', product.cta.href)
   })
 
-  it('presents the product capabilities with real product screenshots', () => {
-    render(<App />)
+  it('shows one animated product window instead of product screenshots', () => {
+    const { container } = render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'Bring your service work into one system.' })).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: /terraline demo workspace/i })).toBeInTheDocument()
+    expect(screen.getByText('Demo workspace · Sample data')).toBeInTheDocument()
     for (const label of ['Work management', 'Service catalog', 'Knowledge & AI', 'Delivery & mobile']) {
       expect(screen.getAllByText(new RegExp(label)).length).toBeGreaterThan(0)
+      expect(screen.getByRole('button', { name: label })).toBeInTheDocument()
     }
-    expect(screen.getAllByRole('img', { name: product.hero.screenshot.alt })).toHaveLength(2)
-    expect(screen.getByRole('img', { name: product.features.find((item) => item.id === 'services')!.screenshots[1].alt })).toBeInTheDocument()
-    expect(screen.getByRole('img', { name: product.features.find((item) => item.id === 'mobile')!.screenshots[0].alt })).toBeInTheDocument()
+    expect(container.querySelector('.tour img[src^="/screenshots/"]')).toBeNull()
+    expect(screen.getByRole('region', { name: 'Platform foundations' })).toBeInTheDocument()
   })
 
   it('includes the platform foundation, honest roadmap and FAQ', () => {
