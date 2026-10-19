@@ -15,18 +15,22 @@ const items = [
 
 export default function Traceability() {
   return (
-    <section id="traceability" className="max-w-[1100px] mx-auto w-full px-6 py-10">
-      <div className="rounded-lg border border-[#eaeaea] overflow-hidden">
-        <div className="px-6 py-5 border-b border-dashed border-[#1a1d23]/12 bg-[#fafafa]">
-          <div className="font-mono text-[11px] tracking-[0.14em] uppercase text-[#999]">Traceability</div>
-          <h2 className="font-display font-semibold text-[20px] tracking-[-0.01em] mt-1">Why records stay trustworthy</h2>
+    <section id="traceability" className="mx-auto w-full px-5 py-12 sm:px-8 md:py-16 lg:px-16">
+      <div className="overflow-hidden rounded-[20px] border border-neutral-200 bg-white">
+        <div className="flex flex-col gap-3 border-b border-neutral-200 bg-neutral-50 px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-7">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-500">Traceability</p>
+            <h2 className="mt-2 font-display text-[24px] font-medium tracking-[-0.025em] text-black">Why records stay trustworthy</h2>
+          </div>
+          <p className="max-w-[40ch] text-[13px] leading-[1.6] text-neutral-500">A usable record carries context forward instead of losing it between teams.</p>
         </div>
-        <div className="grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-dashed divide-[#1a1d23]/12 sm:divide-[#eaeaea]">
-          {items.map((item) => (
-            <div key={item.title} className="p-6">
-              <h3 className="font-semibold text-[14px] tracking-[-0.01em]">{item.title}</h3>
-              <p className="text-[13px] leading-[1.6] text-[#666] mt-2">{item.body}</p>
-            </div>
+        <div className="grid divide-y divide-neutral-200 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          {items.map((item, index) => (
+            <article key={item.title} className="p-5 sm:p-6">
+              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-400">0{index + 1}</span>
+              <h3 className="mt-2 text-[14px] font-semibold tracking-[-0.01em] text-neutral-950">{item.title}</h3>
+              <p className="mt-2 text-[13px] leading-[1.65] text-neutral-600">{item.body}</p>
+            </article>
           ))}
         </div>
       </div>

@@ -3,43 +3,46 @@ import { Sparkles, Plus } from 'lucide-react'
 
 export default function SkillsSection() {
   return (
-    <section id="skills" className="max-w-[1280px] mx-auto px-6 lg:px-8 py-12">
-      <div className="flex items-start justify-between gap-6 mb-6">
+    <section id="skills" className="mx-auto w-full px-5 py-12 sm:px-8 md:py-16 lg:px-16">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="font-display text-[26px] font-bold tracking-tight uppercase leading-none text-[#1a1d23]">
-            AI Skills per Management
+          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-500">Augmentation layer</p>
+          <h2 className="mt-2 font-display text-[28px] font-medium leading-tight tracking-[-0.03em] text-black sm:text-[32px]">
+            AI skills per management
           </h2>
-          <p className="mt-2 text-[13px] leading-[1.6] text-[#3a3f4a] max-w-[64ch]">
-            Each management has one AI skill that makes it better an Andon call bound to its station. Knowledge first, then augmentation.
+          <p className="mt-2 max-w-[64ch] text-[13px] leading-[1.65] text-neutral-600">
+            Each management can be supported by a focused skill, attached to a specific stage. Knowledge first, then augmentation.
           </p>
         </div>
-        <span className="hidden lg:inline-flex font-mono text-[10px] tracking-widest uppercase bg-[#facc15] text-[#1a1d23] px-2 py-1 font-bold shrink-0">AI-augmented</span>
+        <span className="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.1em] text-neutral-600">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> AI-assisted
+        </span>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-px bg-[#1a1d23] p-px">
+      <div className="grid gap-3 md:grid-cols-3">
         {defaultSkills.map((s) => (
-          <div key={s.name} className="bg-[#fafaf7] p-5">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="h-6 w-6 bg-[#1a1d23] text-[#facc15] grid place-items-center">
-                <Sparkles className="h-3.5 w-3.5" />
+          <article key={s.name} className="rounded-[16px] border border-neutral-200 bg-white p-5 transition-colors hover:border-neutral-300 hover:bg-neutral-50/60">
+            <div className="mb-3 flex items-center gap-2.5">
+              <span className="grid h-8 w-8 place-items-center rounded-lg bg-neutral-950 text-white">
+                <Sparkles className="h-3.5 w-3.5 text-emerald-300" aria-hidden="true" />
               </span>
-              <span className="font-display text-[13px] font-semibold tracking-widest uppercase text-[#1a1d23]">{s.name}</span>
+              <span className="font-mono text-[11px] font-medium uppercase tracking-[0.1em] text-neutral-900">{s.name}</span>
             </div>
-            <div className="font-mono text-[11px] tracking-widest uppercase text-[#8a8f98]">{s.entityType} · {s.reviewType}</div>
-            <div className="mt-3 font-mono text-[11px] leading-[1.5] text-[#3a3f4a] border-t border-[#e8e9eb] pt-3">
-              When to pull this skill for its station + what good looks like.
+            <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-neutral-400">{s.entityType} · {s.reviewType}</div>
+            <div className="mt-3 border-t border-neutral-100 pt-3 text-[12px] leading-[1.6] text-neutral-600">
+              When to use this skill and what good looks like at this stage.
             </div>
-          </div>
+          </article>
         ))}
-        <div className="bg-[#fafaf7] border-2 border-dashed border-[#1a1d23] p-5 flex flex-col justify-center">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="h-6 w-6 border border-[#1a1d23] grid place-items-center">
-              <Plus className="h-3.5 w-3.5" />
+        <article className="flex flex-col justify-center rounded-[16px] border border-dashed border-neutral-300 bg-neutral-50/60 p-5">
+          <div className="mb-2 flex items-center gap-2.5">
+            <span className="grid h-8 w-8 place-items-center rounded-lg border border-neutral-200 bg-white text-neutral-700">
+              <Plus className="h-3.5 w-3.5" aria-hidden="true" />
             </span>
-            <span className="font-display text-[13px] font-semibold tracking-widest uppercase">Create custom skill</span>
+            <span className="font-mono text-[11px] font-medium uppercase tracking-[0.1em] text-neutral-800">Create a custom skill</span>
           </div>
-           <div className="font-mono text-[11px] leading-[1.5] text-[#8a8f98]">Add your own define when it triggers and what it checks. The line learns your standard work.</div>
-        </div>
+          <p className="text-[12px] leading-[1.6] text-neutral-500">Define when it triggers and what it checks. A skill can reflect the standard work your team follows.</p>
+        </article>
       </div>
     </section>
   )

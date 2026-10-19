@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { managements } from '../data/managements'
-import HazardTape, { DottedDivider } from './HazardTape'
 
 type Props = {
   q?: string
@@ -148,17 +147,15 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
 
   return (
     <>
-      {/* Leaderboard skills.sh style — B: dotted dividers + yellow hover */}
-      <div className="rounded-lg border border-[#eaeaea] overflow-hidden bg-white">
-        {/* table header like skills.sh with dotted bottom */}
-        <div className="hidden sm:grid grid-cols-[44px_1fr_140px_90px] gap-0 border-b border-dashed border-[#1a1d23]/12 bg-[#fafafa] px-4 py-2 font-mono text-[11px] tracking-wide uppercase text-[#999]">
+      <div className="overflow-hidden rounded-[18px] border border-neutral-200 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+        <div className="hidden grid-cols-[44px_1fr_140px_90px] gap-0 border-b border-neutral-200 bg-neutral-50 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-400 sm:grid">
           <span>#</span>
           <span>Practice</span>
           <span className="text-right">AI skills</span>
           <span className="text-right">Type</span>
         </div>
 
-        <div className="divide-y divide-dashed divide-[#1a1d23]/10">
+        <div className="divide-y divide-neutral-100">
           {filtered.map((m, idx) => {
             const isOpen = m.id === open
             if (isOpen) {
@@ -169,58 +166,59 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
               <button
                 key={m.id}
                 onClick={() => setOpen(m.id)}
-                className="group w-full text-left grid grid-cols-1 sm:grid-cols-[44px_1fr_140px_90px] gap-1 sm:gap-0 items-center px-4 py-4 hover:bg-[#FAFF00]/[0.06] hover:border-l-[3px] hover:border-l-[#FAFF00] hover:pl-[13px] transition-all focus:outline-none focus-visible:bg-[#FAFF00]/[0.06] border-l-[3px] border-l-transparent"
+                className="group w-full border-l-2 border-l-transparent px-4 py-4 text-left transition-all hover:border-l-neutral-900 hover:bg-neutral-50 focus:outline-none focus-visible:bg-neutral-50 sm:grid sm:grid-cols-[44px_1fr_140px_90px] sm:items-center"
               >
-                {/* rank + prefix — B: yellow dot on hover */}
-                <span className="hidden sm:block font-mono text-[13px] tabular-nums flex items-center gap-1.5">
-                  <span className="text-[#999] group-hover:text-black">#{rank}</span>
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#FAFF00] border border-black/10 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden />
+                {/* Rank marker */}
+                <span className="hidden items-center gap-1.5 font-mono text-[12px] tabular-nums sm:flex">
+                  <span className="text-neutral-400 group-hover:text-black">#{rank}</span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 opacity-0 transition-opacity group-hover:opacity-100" aria-hidden />
                 </span>
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-[11px] tracking-wide uppercase border border-[#eaeaea] bg-white px-1.5 py-0.5 text-[#666]">{m.prefix}</span>
-                    <span className="sm:hidden font-mono text-[11px] text-[#999]">#{rank}</span>
-                    <span className="hidden sm:inline h-3 w-px bg-[#eaeaea]" />
-                    <span className="font-mono text-[11px] tracking-wide uppercase text-[#999] hidden sm:inline">{m.lane === 'foundation' ? 'Foundation' : 'Lifecycle'}</span>
+                    <span className="rounded border border-neutral-200 bg-white px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-neutral-500">{m.prefix}</span>
+                    <span className="font-mono text-[10px] text-neutral-400 sm:hidden">#{rank}</span>
+                    <span className="hidden h-3 w-px bg-neutral-200 sm:inline" />
+                    <span className="hidden font-mono text-[10px] uppercase tracking-wide text-neutral-400 sm:inline">{m.lane === 'foundation' ? 'Foundation' : 'Lifecycle'}</span>
                   </div>
-                  <h3 className="font-medium text-[15px] tracking-[-0.01em] leading-tight mt-1">{m.title}</h3>
-                  <p className="text-[13px] leading-[1.4] text-[#666] mt-0.5 line-clamp-2 sm:line-clamp-1">{m.oneLiner}</p>
+                  <h3 className="mt-1 font-display text-[16px] font-medium leading-tight tracking-[-0.015em] text-neutral-950">{m.title}</h3>
+                  <p className="mt-1 line-clamp-2 text-[13px] leading-[1.5] text-neutral-500 sm:line-clamp-1">{m.oneLiner}</p>
                   {/* mobile skills */}
                   <div className="mt-2 flex flex-wrap gap-1.5 sm:hidden">
                     {m.skills.slice(0, 2).map((s) => (
-                      <span key={s.name} className="font-mono text-[11px] bg-black text-white px-2 py-1 rounded-full">{s.name}</span>
+                      <span key={s.name} className="rounded-md bg-neutral-950 px-2 py-1 font-mono text-[10px] text-white">{s.name}</span>
                     ))}
-                    {m.skills.length > 2 && <span className="font-mono text-[11px] border border-[#eaeaea] bg-white px-2 py-1 rounded-full">+{m.skills.length - 2}</span>}
+                    {m.skills.length > 2 && <span className="rounded-md border border-neutral-200 bg-white px-2 py-1 font-mono text-[10px] text-neutral-500">+{m.skills.length - 2}</span>}
                   </div>
                 </div>
 
-                {/* skills desktop — B: hover yellow tint */}
+                {/* Desktop skill previews */}
                 <div className="hidden sm:flex flex-wrap justify-end gap-1.5">
-                  {m.skills.slice(0, 2).map((s) => (
-                    <span key={s.name} className="font-mono text-[11px] bg-black group-hover:bg-[#1a1a1a] text-white px-2 py-1 rounded-full max-w-[120px] truncate border border-transparent group-hover:border-[#FAFF00]/30 transition-colors">{s.name}</span>
+                  {m.skills.slice(0, 1).map((s) => (
+                    <span key={s.name} className="max-w-[98px] truncate rounded-md border border-transparent bg-neutral-950 px-2 py-1 font-mono text-[10px] text-white transition-colors group-hover:border-neutral-700 group-hover:bg-neutral-800">{s.name}</span>
                   ))}
-                  {m.skills.length > 2 && <span className="font-mono text-[11px] border border-[#eaeaea] group-hover:border-[#FAFF00]/30 bg-white px-2 py-1 rounded-full text-[#666]">+{m.skills.length - 2}</span>}
+                  {m.skills.length > 1 && <span className="rounded-md border border-neutral-200 bg-white px-2 py-1 font-mono text-[10px] text-neutral-500">+{m.skills.length - 1}</span>}
                 </div>
 
                 <div className="hidden sm:flex items-center justify-end gap-2">
-                  <span className="font-mono text-[11px] text-[#999] border border-[#eaeaea] group-hover:border-black/15 rounded-full px-2 py-1 bg-white group-hover:bg-[#FAFF00] group-hover:text-black transition-colors">{m.skills.length} stages</span>
-                  <span className="text-[#999] group-hover:text-black transition-colors">›</span>
+                  <span className="rounded-full border border-neutral-200 bg-white px-2.5 py-1 font-mono text-[10px] text-neutral-500 transition-colors group-hover:border-neutral-400 group-hover:text-neutral-900">{m.skills.length} stages</span>
+                  <span className="text-neutral-300 transition-colors group-hover:text-neutral-900">→</span>
                 </div>
-                <span className="sm:hidden font-mono text-[11px] text-[#999] mt-1">{m.skills.length} AI skills · {m.lane === 'foundation' ? 'Foundation' : 'Lifecycle'} →</span>
+                <span className="mt-1 font-mono text-[10px] text-neutral-400 sm:hidden">{m.skills.length} AI skills · {m.lane === 'foundation' ? 'Foundation' : 'Lifecycle'} →</span>
               </button>
             )
           })}
           {filtered.length === 0 && (
-            <div className="px-4 py-12 text-center font-mono text-[13px] text-[#999]">No matches for “{q}”</div>
+            <div className="px-4 py-12 text-center font-mono text-[12px] text-neutral-400">No matches for “{q}”</div>
           )}
         </div>
       </div>
 
-      <DottedDivider className="pt-3">
-        8 practices · {managements.reduce((n, m) => n + m.skills.length, 0)} AI skills · Assets &amp; configuration as the foundation
-      </DottedDivider>
+      <div className="flex flex-wrap items-center justify-between gap-2 px-1 pt-3 font-mono text-[10px] uppercase tracking-[0.08em] text-neutral-400">
+        <span>8 practices · {managements.reduce((n, m) => n + m.skills.length, 0)} AI skills</span>
+        <span className="text-neutral-500">Assets &amp; configuration as the foundation</span>
+      </div>
 
-      {/* Detail Rail + Reader clean */}
+      {/* Practice detail reader */}
       <AnimatePresence>
         {active && (
           <motion.div
@@ -233,74 +231,72 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="fixed inset-0 z-50 bg-white/95 backdrop-blur-sm flex flex-col overflow-hidden"
+            className="fixed inset-0 z-50 flex flex-col overflow-hidden bg-neutral-950/45 backdrop-blur-sm"
           >
-            <div className="shrink-0 bg-white">
-              <HazardTape variant="thin" />
-              <div className="border-b border-[#eaeaea] max-w-[1100px] mx-auto px-4 sm:px-6 min-h-[49px] py-2 flex items-center gap-3">
-                <button autoFocus onClick={() => setOpen(null)} className="h-9 px-4 border border-black bg-black text-white font-mono text-[12px] flex items-center gap-2 rounded-full hover:bg-[#111] shrink-0 focus-visible:ring-2 focus-visible:ring-[#FAFF00] focus-visible:ring-offset-2">
-                  ← All practices
+            <div className="shrink-0 border-b border-neutral-200 bg-white/95">
+              <div className="mx-auto flex min-h-[68px] max-w-[1280px] items-center gap-3 px-4 py-2 sm:px-6">
+                <button autoFocus aria-label="← All practices" onClick={() => setOpen(null)} className="button button-secondary h-9 shrink-0 rounded-lg px-3 text-xs">
+                  ← <span className="hidden sm:inline">All practices</span><span className="sm:hidden">Back</span>
                 </button>
-                <span className="h-6 w-px bg-[#eaeaea] hidden sm:block" />
-                <span className="font-mono text-[11px] tracking-wide uppercase bg-black text-white px-2 py-1 rounded-full hidden sm:inline">{active.prefix}</span>
-                <span className="text-[13px] font-medium tracking-tight hidden sm:inline">{active.title}</span>
-              <span className="ml-auto font-mono text-[11px] text-[#999] flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#FAFF00] border border-black/10" aria-hidden />
-                {active.skills.length} stages
-              </span>
+                <span className="hidden h-6 w-px bg-neutral-200 sm:block" />
+                <span className="hidden rounded-md bg-neutral-950 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-white sm:inline">{active.prefix}</span>
+                <span className="hidden text-[13px] font-medium tracking-tight text-neutral-800 sm:inline">{active.title}</span>
+                <span className="ml-auto inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-1 font-mono text-[10px] text-neutral-500">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
+                  {active.skills.length} stages
+                </span>
               </div>
             </div>
 
-            <div className="flex-1 overflow-auto">
-              <div className="max-w-[1100px] mx-auto w-full px-6 py-6">
-                <div className="flex items-center gap-2 font-mono text-[11px] tracking-wide uppercase text-[#999]">
-                  <span className="h-px w-6 bg-black" />
+            <div className="flex-1 overflow-auto bg-neutral-50">
+              <div className="mx-auto w-full max-w-[1280px] px-4 py-6 sm:px-6 sm:py-8">
+                <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-500">
+                  <span className="h-px w-6 bg-neutral-400" />
                   {active.lane === 'foundation' ? 'Foundation' : 'Lifecycle'} · {active.skills.length} stages
                 </div>
-                <h2 id="detail-title" className="font-display font-semibold text-[28px] lg:text-[34px] leading-[1.05] tracking-[-0.02em] mt-2">{active.title}</h2>
-                <p className="text-[14px] leading-[1.6] mt-2 text-[#666] max-w-[720px]">{active.oneLiner}</p>
+                <h2 id="detail-title" className="mt-2 font-display text-[30px] font-medium leading-[1.08] tracking-[-0.03em] text-black lg:text-[38px]">{active.title}</h2>
+                <p className="mt-2 max-w-[720px] text-[14px] leading-[1.65] text-neutral-600">{active.oneLiner}</p>
 
-                <div className="mt-5 grid sm:grid-cols-3 gap-3">
+                <div className="mt-5 grid gap-3 sm:grid-cols-3">
                   {active.bullets.map((b, i) => (
-                    <div key={b} className="rounded-lg border border-dashed border-[#1a1d23]/12 bg-[#fafafa] p-3 relative overflow-hidden">
-                      <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#FAFF00]/0 group-hover:bg-[#FAFF00]" aria-hidden />
-                      <div className="font-mono text-[11px] tracking-wide uppercase text-[#999] flex items-center gap-1.5">
-                        <span className="h-1 w-1 rounded-full bg-[#1a1d23]/20" aria-hidden />
+                    <div key={b} className="relative overflow-hidden rounded-[14px] border border-neutral-200 bg-white p-4">
+                      <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.1em] text-neutral-400">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
                         0{i + 1} What it does
                       </div>
-                      <p className="text-[13px] leading-[1.5] mt-1">{b}</p>
+                      <p className="mt-2 text-[13px] leading-[1.6] text-neutral-700">{b}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-6 flex flex-wrap items-center gap-2 sm:gap-3">
-                  <h3 className="font-semibold text-[16px] tracking-tight">AI skills for this practice</h3>
-                  <span className="font-mono text-[11px] bg-black text-white px-2 py-1 rounded-full shrink-0">{active.skills.length} skills</span>
+                <div className="mt-7 flex flex-wrap items-center gap-2 sm:gap-3">
+                  <h3 className="font-display text-[18px] font-medium tracking-tight text-neutral-950">AI skills for this practice</h3>
+                  <span className="shrink-0 rounded-md bg-neutral-950 px-2 py-1 font-mono text-[10px] text-white">{active.skills.length} skills</span>
                   {allStaged && (
-                    <span className="font-mono text-[11px] border border-[#eaeaea] bg-white px-2 py-1 rounded-full text-[#666] shrink-0">
+                    <span className="shrink-0 rounded-md border border-neutral-200 bg-white px-2 py-1 font-mono text-[10px] text-neutral-500">
                       {active.skills.length}/{active.skills.length} stages
                     </span>
                   )}
-                  <span className="h-px flex-1 bg-[#eaeaea] hidden sm:block min-w-[40px]" />
+                  <span className="hidden h-px min-w-[40px] flex-1 bg-neutral-200 sm:block" />
                 </div>
                 {allStaged && (
-                  <p className="font-mono text-[11px] text-[#999] mt-2">
+                  <p className="mt-2 font-mono text-[10px] text-neutral-400">
                     {active.lane === 'foundation' ? 'Always-on foundation one skill per stage' : 'Full lifecycle coverage one skill per stage'}
                   </p>
                 )}
 
                 {/* Rail + Reader mobile: sticky horizontal pills, desktop: vertical rail */}
-                <div className="mt-4 grid lg:grid-cols-[240px_1fr] gap-0 rounded-xl border border-[#eaeaea] overflow-hidden bg-white shadow-sm">
+                <div className="mt-4 grid overflow-hidden rounded-[18px] border border-neutral-200 bg-white shadow-[0_8px_30px_-20px_rgba(0,0,0,0.2)] lg:grid-cols-[240px_1fr]">
                   {/* Rail sticky on both */}
-                  <nav className="sticky top-0 z-10 lg:static border-b lg:border-b-0 lg:border-r border-[#eaeaea] bg-white flex flex-col max-lg:overflow-hidden" aria-label="Stage rail">
-                    <div className="px-3 py-3 border-b border-dashed border-[#1a1d23]/10 bg-[#FAFF00]/[0.06]">
-                      <p className="font-mono text-[11px] tracking-wide uppercase text-[#999] flex items-center gap-1.5">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#FAFF00] border border-black/10" aria-hidden />
+                  <nav className="sticky top-0 z-10 flex flex-col overflow-hidden border-b border-neutral-200 bg-white lg:static lg:border-b-0 lg:border-r" aria-label="Stage rail">
+                    <div className="border-b border-neutral-200 bg-neutral-50 px-3 py-3">
+                      <p className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-500">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
                         Stages
                       </p>
-                      <p className="font-mono text-[11px] text-[#111] mt-0.5">{sortedSkills.findIndex((s) => s.name === selectedSkill?.name) + 1} / {active.skills.length} · {active.skills.length} stages</p>
+                      <p className="mt-1 font-mono text-[10px] text-neutral-700">{sortedSkills.findIndex((s) => s.name === selectedSkill?.name) + 1} / {active.skills.length} · {active.skills.length} stages</p>
                     </div>
-                    <div className="p-2 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible snap-x snap-mandatory scrollbar-thin">
+                    <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto p-2 lg:flex-col lg:overflow-visible">
                       {sortedSkills.map((s) => {
                         const isActive = s.name === selectedSkill?.name
                         const idx = sortedSkills.indexOf(s) + 1
@@ -310,24 +306,24 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                             data-rail={s.name}
                             onClick={() => setSelected(s.name)}
                             aria-selected={isActive}
-                            className={`text-left snap-start rounded-xl border p-3 shrink-0 lg:shrink min-w-[176px] lg:min-w-0 flex lg:block items-center lg:items-start gap-3 transition-all ${isActive ? 'bg-black text-white border-black shadow-sm ring-1 ring-[#FAFF00]/40' : 'bg-white border-[#eaeaea] hover:border-[#FAFF00]/40 hover:bg-[#FAFF00]/[0.06] active:bg-[#f5f5f5]'}`}
+                            className={`flex min-w-[176px] shrink-0 snap-start items-center gap-3 rounded-xl border p-3 text-left transition-all lg:block lg:min-w-0 lg:shrink lg:items-start ${isActive ? 'border-neutral-950 bg-neutral-950 text-white shadow-sm' : 'border-neutral-200 bg-white hover:border-neutral-400 hover:bg-neutral-50'}`}
                           >
-                            <span className={`hidden lg:block font-mono text-[10px] tracking-wide uppercase ${isActive ? 'text-white/60' : 'text-[#999]'}`}>{s.stage}</span>
-                            <span className={`lg:hidden font-mono text-[10px] leading-none px-1.5 py-1 rounded-full border ${isActive ? 'bg-white/15 border-white/20 text-white' : 'bg-[#fafafa] border-[#eaeaea] text-[#999]'}`}>{String(idx).padStart(2, '0')}</span>
-                            <span className={`text-[13px] leading-[1.35] font-medium line-clamp-2 ${isActive ? 'text-white' : 'text-[#111]'}`}>{s.name}</span>
-                            {isActive && <span className="ml-auto lg:hidden h-2 w-2 rounded-full bg-white shrink-0" aria-hidden />}
+                            <span className={`hidden font-mono text-[9px] uppercase tracking-wide lg:block ${isActive ? 'text-white/50' : 'text-neutral-400'}`}>{s.stage}</span>
+                            <span className={`rounded-md border px-1.5 py-1 font-mono text-[10px] leading-none lg:hidden ${isActive ? 'border-white/20 bg-white/10 text-white' : 'border-neutral-200 bg-neutral-50 text-neutral-400'}`}>{String(idx).padStart(2, '0')}</span>
+                            <span className={`line-clamp-2 text-[12px] font-medium leading-[1.4] ${isActive ? 'text-white' : 'text-neutral-800'}`}>{s.name}</span>
+                            {isActive && <span className="ml-auto h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400 lg:hidden" aria-hidden />}
                           </button>
                         )
                       })}
                     </div>
-                    <div className="hidden lg:block mt-auto border-t border-[#eaeaea] p-3 bg-[#fafafa]">
-                      <p className="font-mono text-[11px] tracking-wide uppercase text-[#999]">In practice</p>
-                      <p className="text-[12px] leading-[1.5] text-[#666] mt-1">{active ? tipById[active.id] ?? tipById.incident : ''}</p>
+                    <div className="mt-auto hidden border-t border-neutral-200 bg-neutral-50 p-3 lg:block">
+                      <p className="font-mono text-[10px] uppercase tracking-wide text-neutral-400">In practice</p>
+                      <p className="mt-1 text-[12px] leading-[1.55] text-neutral-600">{active ? tipById[active.id] ?? tipById.incident : ''}</p>
                     </div>
                   </nav>
 
                   {/* Reader roomy, high readability */}
-                  <div className="min-h-[420px] bg-white flex justify-center">
+                  <div className="flex min-h-[420px] justify-center bg-white">
                     <AnimatePresence mode="wait">
                       {selectedSkill && (
                         <motion.div
@@ -336,87 +332,87 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -6 }}
                           transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] as const }}
-                          className="bg-white max-w-[720px] w-full"
+                          className="w-full max-w-[800px] bg-white"
                         >
-                          {/* skill header larger, clearer */}
-                          <div className="px-4 sm:px-6 py-5 border-b border-[#eaeaea] bg-[#fafafa]/60">
+                          {/* Selected skill header */}
+                          <div className="border-b border-neutral-200 bg-neutral-50/70 px-4 py-5 sm:px-6">
                             <div className="flex items-start gap-3">
                               <div className="flex-1 min-w-0">
                                 <div className="flex flex-wrap items-center gap-2">
-                                  <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-wide uppercase bg-black text-white px-2.5 py-1 rounded-full">{selectedSkill.stage?.split('·')[0]?.trim() ?? 'STAGE'}</span>
-                                  <span className="font-mono text-[11px] text-[#999]">{selectedSkill.stage}</span>
+                                  <span className="inline-flex items-center gap-2 rounded-md bg-neutral-950 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wide text-white">{selectedSkill.stage?.split('·')[0]?.trim() ?? 'STAGE'}</span>
+                                  <span className="font-mono text-[10px] text-neutral-400">{selectedSkill.stage}</span>
                                 </div>
-                                <h3 className="font-semibold text-[20px] sm:text-[22px] leading-[1.25] tracking-[-0.02em] mt-2">{selectedSkill.name}</h3>
+                                <h3 className="mt-2 font-display text-[21px] font-medium leading-[1.25] tracking-[-0.025em] text-neutral-950 sm:text-[24px]">{selectedSkill.name}</h3>
                               </div>
                               <div className="flex items-center gap-1.5 shrink-0">
-                                <button onClick={() => copy(skillToMarkdown(active!, selectedSkill), `md-${selectedSkill.name}`)} className="h-8 px-3 rounded-full border border-[#eaeaea] bg-white font-mono text-[11px] hover:border-black hover:bg-white transition">
+                                <button onClick={() => copy(skillToMarkdown(active!, selectedSkill), `md-${selectedSkill.name}`)} className="button-secondary h-8 rounded-lg px-3 font-mono text-[10px] transition-colors hover:border-neutral-500">
                                   {copied === `md-${selectedSkill.name}` ? 'Copied!' : 'Copy MD'}
                                 </button>
-                                <button onClick={() => copy(window.location.href, `link-${selectedSkill.name}`)} className="h-8 px-3 rounded-full border border-[#eaeaea] bg-white font-mono text-[11px] hover:border-black transition hidden sm:inline-flex items-center">
+                                <button onClick={() => copy(window.location.href, `link-${selectedSkill.name}`)} className="button-secondary hidden h-8 items-center rounded-lg px-3 font-mono text-[10px] transition-colors hover:border-neutral-500 sm:inline-flex">
                                   {copied === `link-${selectedSkill.name}` ? 'Link copied' : 'Copy link'}
                                 </button>
                               </div>
                             </div>
                             {selectedSkill.description && (
-                              <p className="text-[13px] sm:text-[14px] leading-[1.6] mt-3 text-[#444] bg-white border border-[#eaeaea] rounded-xl p-3.5">{selectedSkill.description}</p>
+                              <p className="mt-3 rounded-xl border border-neutral-200 bg-white p-3.5 text-[13px] leading-[1.65] text-neutral-600 sm:text-[14px]">{selectedSkill.description}</p>
                             )}
                           </div>
-                          <div className="px-4 sm:px-6 py-6 space-y-7">
+                          <div className="space-y-7 px-4 py-6 sm:px-6">
                             <section>
-                              <h4 className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#999] flex items-center gap-2"><span className="h-px w-4 bg-[#eaeaea]" /> Overview</h4>
-                              <p className="text-[14px] sm:text-[15px] leading-[1.7] mt-3 text-[#111]">{selectedSkill.overview}</p>
+                              <h4 className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-400"><span className="h-px w-4 bg-neutral-300" /> Overview</h4>
+                              <p className="mt-3 text-[14px] leading-[1.75] text-neutral-800 sm:text-[15px]">{selectedSkill.overview}</p>
                             </section>
                             <section>
-                              <h4 className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#999] flex items-center gap-2"><span className="h-px w-4 bg-[#eaeaea]" /> When to use</h4>
+                              <h4 className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-400"><span className="h-px w-4 bg-neutral-300" /> When to use</h4>
                               {Array.isArray(selectedSkill.whenToUse) ? (
                                 <ul className="mt-3 space-y-2">
                                   {selectedSkill.whenToUse.map((w) => (
-                                    <li key={w} className="flex gap-3 text-[13px] sm:text-[14px] leading-[1.6] text-[#333]"><span className="mt-[7px] h-1.5 w-1.5 rounded-full bg-black shrink-0" /><span>{w}</span></li>
+                                    <li key={w} className="flex gap-3 text-[13px] leading-[1.65] text-neutral-700 sm:text-[14px]"><span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-neutral-400" /><span>{w}</span></li>
                                   ))}
                                 </ul>
                               ) : (
-                                <p className="text-[14px] leading-[1.7] text-[#333] mt-3">{selectedSkill.whenToUse}</p>
+                                <p className="mt-3 text-[14px] leading-[1.7] text-neutral-700">{selectedSkill.whenToUse}</p>
                               )}
                             </section>
                             {selectedSkill.corePattern && (
                               <section>
-                                <h4 className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#999] flex items-center gap-2"><span className="h-px w-4 bg-[#eaeaea]" /> Core Pattern</h4>
+                                <h4 className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-400"><span className="h-px w-4 bg-neutral-300" /> Core pattern</h4>
                                 <div className="mt-3 grid gap-3">
-                                  <div className="rounded-xl overflow-hidden border border-[#222] bg-[#0a0a0a]">
+                                  <div className="overflow-hidden rounded-xl border border-neutral-800 bg-[#0b0d11]">
                                     <div className="flex items-center justify-between px-3 py-2 border-b border-white/10 bg-white/[0.03]">
-                                      <span className="font-mono text-[10px] tracking-wide uppercase text-white/60">Before</span>
-                                      <button onClick={() => copy(selectedSkill.corePattern!.before, `before-${selectedSkill.name}`)} className="font-mono text-[10px] px-2 py-1 rounded-full border border-white/20 text-white/70 hover:text-white hover:border-white/40 bg-white/5">{copied === `before-${selectedSkill.name}` ? 'Copied' : 'Copy'}</button>
+                                      <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/50">Before</span>
+                                      <button onClick={() => copy(selectedSkill.corePattern!.before, `before-${selectedSkill.name}`)} className="rounded-md border border-white/15 bg-white/[0.05] px-2 py-1 font-mono text-[9px] text-white/70 hover:border-white/30 hover:text-white">{copied === `before-${selectedSkill.name}` ? 'Copied' : 'Copy'}</button>
                                     </div>
-                                    <pre className="text-[#fafafa] p-3 sm:p-4 text-[12px] sm:text-[12.5px] leading-[1.55] overflow-x-auto whitespace-pre">{selectedSkill.corePattern.before}</pre>
+                                    <pre className="overflow-x-auto whitespace-pre p-3 text-[12px] leading-[1.6] text-neutral-100 sm:p-4">{selectedSkill.corePattern.before}</pre>
                                   </div>
-                                  <div className="rounded-xl overflow-hidden border border-[#eaeaea] bg-white">
-                                    <div className="flex items-center justify-between px-3 py-2 border-b border-[#eaeaea] bg-[#fafafa]">
-                                      <span className="font-mono text-[10px] tracking-wide uppercase text-[#999]">After</span>
-                                      <button onClick={() => copy(selectedSkill.corePattern!.after, `after-${selectedSkill.name}`)} className="font-mono text-[10px] px-2 py-1 rounded-full border border-[#eaeaea] bg-white text-[#666] hover:border-black hover:text-black">{copied === `after-${selectedSkill.name}` ? 'Copied' : 'Copy'}</button>
+                                  <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white">
+                                    <div className="flex items-center justify-between border-b border-neutral-200 bg-neutral-50 px-3 py-2">
+                                      <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-neutral-400">After</span>
+                                      <button onClick={() => copy(selectedSkill.corePattern!.after, `after-${selectedSkill.name}`)} className="rounded-md border border-neutral-200 bg-white px-2 py-1 font-mono text-[9px] text-neutral-600 hover:border-neutral-500 hover:text-black">{copied === `after-${selectedSkill.name}` ? 'Copied' : 'Copy'}</button>
                                     </div>
-                                    <pre className="p-3 sm:p-4 text-[12px] sm:text-[12.5px] leading-[1.55] overflow-x-auto whitespace-pre text-[#111]">{selectedSkill.corePattern.after}</pre>
+                                    <pre className="overflow-x-auto whitespace-pre p-3 text-[12px] leading-[1.6] text-neutral-900 sm:p-4">{selectedSkill.corePattern.after}</pre>
                                   </div>
                                 </div>
                               </section>
                             )}
                             {selectedSkill.quickReference && (
                               <section>
-                                <h4 className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#999] flex items-center gap-2"><span className="h-px w-4 bg-[#eaeaea]" /> Quick Reference</h4>
+                                <h4 className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-400"><span className="h-px w-4 bg-neutral-300" /> Quick reference</h4>
                                 {/* desktop table */}
-                                <div className="mt-3 hidden sm:block rounded-xl border border-[#eaeaea] overflow-hidden overflow-x-auto">
+                                <div className="mt-3 hidden overflow-hidden overflow-x-auto rounded-xl border border-neutral-200 sm:block">
                                   <table className="w-full text-[13px]">
                                     <thead>
-                                      <tr className="bg-black text-white">
+                                      <tr className="bg-neutral-950 text-white">
                                         {selectedSkill.quickReference.headers.map((h) => (
                                           <th key={h} className="text-left px-3.5 py-2.5 font-mono text-[11px] tracking-wide uppercase font-medium whitespace-nowrap">{h}</th>
                                         ))}
                                       </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-[#eaeaea]">
+                                    <tbody className="divide-y divide-neutral-200">
                                       {selectedSkill.quickReference.rows.map((row, i) => (
-                                        <tr key={i} className="bg-white even:bg-[#fafafa]">
+                                        <tr key={i} className="bg-white even:bg-neutral-50">
                                           {row.map((cell) => (
-                                            <td key={cell} className="px-3.5 py-2.5 text-[#222] leading-[1.5]">{cell}</td>
+                                            <td key={cell} className="px-3.5 py-2.5 leading-[1.55] text-neutral-700">{cell}</td>
                                           ))}
                                         </tr>
                                       ))}
@@ -426,10 +422,10 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                                 {/* mobile cards */}
                                 <div className="mt-3 grid gap-2 sm:hidden">
                                   {selectedSkill.quickReference.rows.map((row, i) => (
-                                    <div key={i} className="rounded-xl border border-[#eaeaea] bg-[#fafafa] p-3">
+                                    <div key={i} className="rounded-xl border border-neutral-200 bg-neutral-50 p-3">
                                       <div className="grid gap-1.5">
                                         {row.map((cell, j) => (
-                                          <div key={cell} className="flex gap-2 text-[13px] leading-[1.5]"><span className="font-mono text-[10px] tracking-wide uppercase text-[#999] min-w-[70px] pt-[2px]">{selectedSkill.quickReference!.headers[j]}</span><span className="text-[#111] flex-1">{cell}</span></div>
+                                          <div key={cell} className="flex gap-2 text-[13px] leading-[1.5]"><span className="min-w-[70px] pt-[2px] font-mono text-[9px] uppercase tracking-wide text-neutral-400">{selectedSkill.quickReference!.headers[j]}</span><span className="flex-1 text-neutral-800">{cell}</span></div>
                                         ))}
                                       </div>
                                     </div>
@@ -438,26 +434,26 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                               </section>
                             )}
                             <section>
-                              <h4 className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#999] flex items-center gap-2"><span className="h-px w-4 bg-[#eaeaea]" /> Implementation</h4>
-                              <p className="text-[13px] sm:text-[14px] leading-[1.65] text-[#222] font-mono mt-3 bg-[#fafafa] border border-[#eaeaea] rounded-xl p-4">{selectedSkill.how}</p>
+                              <h4 className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-400"><span className="h-px w-4 bg-neutral-300" /> Implementation</h4>
+                              <p className="mt-3 rounded-xl border border-neutral-200 bg-neutral-50 p-4 font-mono text-[12px] leading-[1.7] text-neutral-700 sm:text-[13px]">{selectedSkill.how}</p>
                             </section>
                             {selectedSkill.commonMistakes && (
                               <section>
-                                <h4 className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#999] flex items-center gap-2"><span className="h-px w-4 bg-[#eaeaea]" /> Common Mistakes</h4>
+                                <h4 className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-400"><span className="h-px w-4 bg-neutral-300" /> Common mistakes</h4>
                                 <ul className="mt-3 rounded-xl border border-amber-200 bg-amber-50/60 p-4 space-y-2.5">
                                   {selectedSkill.commonMistakes.map((mm) => (
-                                    <li key={mm} className="flex gap-3 text-[13px] sm:text-[14px] leading-[1.6] text-[#7c4d00]"><span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0" /><span>{mm}</span></li>
+                                    <li key={mm} className="flex gap-3 text-[13px] leading-[1.6] text-amber-900 sm:text-[14px]"><span className="mt-[6px] h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" /><span>{mm}</span></li>
                                   ))}
                                 </ul>
                               </section>
                             )}
                             {selectedSkill.example && (
                               <div className="rounded-xl bg-black text-white p-4 sm:p-5">
-                                <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-white/50">Example</div>
-                                <p className="font-mono text-[13px] sm:text-[14px] leading-[1.6] mt-2 text-white">{selectedSkill.example}</p>
+                                <div className="font-mono text-[9px] uppercase tracking-[0.14em] text-white/50">Example</div>
+                                <p className="mt-2 font-mono text-[12px] leading-[1.65] text-white sm:text-[13px]">{selectedSkill.example}</p>
                               </div>
                             )}
-                            <div className="flex items-center gap-2 pt-4 border-t border-[#eaeaea]">
+                            <div className="flex items-center gap-2 border-t border-neutral-200 pt-4">
                               {(() => {
                                 const idx = sortedSkills.findIndex((s) => s.name === selectedSkill.name)
                                 const prev = idx > 0 ? sortedSkills[idx - 1] : null
@@ -467,15 +463,15 @@ export default function JourneyLoop({ q = '', filter = 'all' }: Props) {
                                     <button
                                       disabled={!prev}
                                       onClick={() => prev && setSelected(prev.name)}
-                                      className={`h-9 px-4 rounded-full border font-mono text-[12px] ${prev ? 'bg-white border-[#eaeaea] hover:border-black hover:bg-[#fafafa] text-black' : 'bg-[#fafafa] border-[#eaeaea] text-[#999] cursor-not-allowed'}`}
+                                      className={`h-9 rounded-lg border px-3 font-mono text-[10px] transition-colors ${prev ? 'border-neutral-200 bg-white text-neutral-800 hover:border-neutral-500 hover:bg-neutral-50' : 'cursor-not-allowed border-neutral-200 bg-neutral-50 text-neutral-300'}`}
                                     >
                                       ← {prev ? prev.name.slice(0, 18) : 'Prev'}
                                     </button>
-                                    <span className="flex-1 text-center font-mono text-[11px] text-[#999]">{idx + 1} / {sortedSkills.length}</span>
+                                    <span className="flex-1 text-center font-mono text-[10px] text-neutral-400">{idx + 1} / {sortedSkills.length}</span>
                                     <button
                                       disabled={!next}
                                       onClick={() => next && setSelected(next.name)}
-                                      className={`h-9 px-4 rounded-full border font-mono text-[12px] ${next ? 'bg-black border-black text-white hover:bg-[#111]' : 'bg-[#fafafa] border-[#eaeaea] text-[#999] cursor-not-allowed'}`}
+                                      className={`h-9 rounded-lg border px-3 font-mono text-[10px] transition-colors ${next ? 'border-neutral-950 bg-neutral-950 text-white hover:bg-neutral-800' : 'cursor-not-allowed border-neutral-200 bg-neutral-50 text-neutral-300'}`}
                                     >
                                       {next ? next.name.slice(0, 18) : 'Next'} →
                                     </button>
