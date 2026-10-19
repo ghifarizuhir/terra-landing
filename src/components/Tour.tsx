@@ -3,7 +3,7 @@ import { product, type Feature } from '../data/product'
 import type { ShowcaseChapterId } from '../data/product-demo'
 import Footer from './Footer'
 import Mark from './Mark'
-import ProductShowcase from './product-showcase/ProductShowcase'
+import ProductShowcase, { useShowcaseContext } from './product-showcase/ProductShowcase'
 
 const feature = (id: string): Feature => {
   const found = product.features.find((item) => item.id === id)
@@ -109,26 +109,32 @@ function SiteNav() {
 
 function Hero() {
   return (
-    <section id="top" data-showcase-chapter="work" className="bg-white">
-      <div className="mx-auto w-full px-5 pt-16 sm:px-8 md:pt-[88px] lg:px-16">
-        <div className="max-w-[460px]">
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-500">{product.hero.eyebrow}</p>
-          <h1 className="mt-5 font-display text-[clamp(38px,4vw,48px)] font-medium leading-[1.16] tracking-[-0.8px] text-black">
-            {product.hero.title}
-          </h1>
-          <p className="mt-5 max-w-[45ch] text-[16px] leading-6 text-neutral-500">{product.hero.body}</p>
-          <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
-            <a href={product.hero.primaryCta.href} className="button button-primary h-9 px-[14px] text-sm">
-              {product.hero.primaryCta.label}
-            </a>
-            <a href={product.hero.secondaryCta.href} className="inline-flex h-9 items-center px-1 text-sm font-medium text-black">
-              {product.hero.secondaryCta.label}
-            </a>
+    <section id="top" data-showcase-chapter="work" className="pb-14 pt-6 md:pb-20 md:pt-12">
+      <div className="max-w-[540px]">
+        <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-600">{product.hero.eyebrow}</p>
+        </div>
+        <h1 className="mt-6 font-display text-[clamp(38px,4.2vw,52px)] font-medium leading-[1.12] tracking-[-0.025em] text-black">
+          {product.hero.title}
+        </h1>
+        <p className="mt-5 max-w-[46ch] text-[16px] leading-[1.6] text-neutral-600">{product.hero.body}</p>
+        <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+          <a href={product.hero.primaryCta.href} className="button button-primary h-10 px-4 text-sm shadow-sm">
+            {product.hero.primaryCta.label}
+          </a>
+          <a href="#product" className="inline-flex h-10 items-center gap-1.5 px-1 text-sm font-medium text-black transition-colors hover:text-neutral-600">
+            See the product <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+        <div className="mt-10 grid max-w-[360px] grid-cols-2 gap-4 rounded-[14px] border border-neutral-200/90 bg-neutral-50/70 p-4">
+          <div>
+            <p className="font-mono text-[20px] font-medium leading-none tracking-tight text-black">AGPL-3.0</p>
+            <p className="mt-1.5 text-[12px] text-neutral-500">Open-source license</p>
           </div>
-          <div className="mt-8 flex items-center gap-7">
-            <div><p className="font-mono text-[21px]">AGPL-3.0</p><p className="mt-1 text-[13px] text-neutral-500">Open-source license</p></div>
-            <span aria-hidden="true" className="h-12 w-px bg-neutral-200" />
-            <div><p className="font-mono text-[19px]">Docker</p><p className="mt-1 text-[13px] text-neutral-500">Self-host your stack</p></div>
+          <div className="border-l border-neutral-200 pl-4">
+            <p className="font-mono text-[20px] font-medium leading-none tracking-tight text-black">Docker</p>
+            <p className="mt-1.5 text-[12px] text-neutral-500">Self-host your stack</p>
           </div>
         </div>
       </div>
@@ -138,7 +144,7 @@ function Hero() {
 
 function FactStrip() {
   return (
-    <section aria-label="Platform foundations" className="border-y border-neutral-200 bg-white">
+    <section aria-label="Platform foundations" className="border-b border-neutral-200 bg-white">
       <div className="mx-auto w-full px-5 py-8 sm:px-8 lg:px-16">
         <p className="text-center text-sm text-neutral-600">Open-source foundation, built for real service operations</p>
         <ul className="mt-6 grid grid-cols-2 gap-x-5 gap-y-4 text-center sm:grid-cols-3 lg:grid-cols-5">
@@ -153,38 +159,156 @@ function FactStrip() {
   )
 }
 
+const chapterMeta: Record<ShowcaseChapterId, { code: string; surface: string; badge: string }> = {
+  work: { code: 'MOD-01', surface: 'Queue · Typed states · Intake', badge: 'TERRA-42' },
+  services: { code: 'MOD-02', surface: 'Catalog · Dependency graph', badge: '3 SERVICES' },
+  galileo: { code: 'MOD-03', surface: 'Pages · Grounded AI · Schedules', badge: 'GALILEO AI' },
+  delivery: { code: 'MOD-04', surface: 'Cycles · Analytics · Mobile', badge: 'WEEK 2' },
+}
+
 function CapabilitySection({ item }: { item: Capability }) {
+  const { activeChapter, selectChapter } = useShowcaseContext()
+  const isActive = activeChapter === item.chapter
+  const meta = chapterMeta[item.chapter]
   const id = item.chapter === 'work' ? undefined : `showcase-${item.chapter}`
+
   return (
-    <article id={id} data-showcase-chapter={item.chapter}>
-      <p>{item.number} / {item.eyebrow}</p>
-      <h3>{item.title}</h3>
-      <p>{item.body}</p>
-      {item.features.map((current) => (
-        <div key={current.id}>
-          <h4>{current.title}</h4>
-          <p>{current.body}</p>
+    <article
+      id={id}
+      data-showcase-chapter={item.chapter}
+      onClick={() => selectChapter(item.chapter)}
+      className={`group relative cursor-pointer rounded-[20px] border p-6 transition-all duration-300 sm:p-8 ${
+        isActive
+          ? 'border-neutral-900 bg-white shadow-[0_20px_50px_-24px_rgba(0,0,0,0.16)] ring-1 ring-neutral-900/5'
+          : 'border-neutral-200/90 bg-neutral-50/60 hover:border-neutral-300 hover:bg-white'
+      }`}
+    >
+      {/* Top index bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-200/80 pb-4">
+        <div className="flex items-center gap-2.5">
+          <span
+            className={`inline-flex h-6 items-center rounded-md px-2 font-mono text-[11px] font-medium tracking-[0.08em] transition-colors ${
+              isActive ? 'bg-neutral-950 text-white' : 'bg-neutral-200/80 text-neutral-700'
+            }`}
+          >
+            {item.number} / {item.eyebrow}
+          </span>
+          <span className="hidden font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-400 sm:inline">
+            {meta.surface}
+          </span>
         </div>
-      ))}
+
+        <div className="flex items-center gap-2">
+          <span className="rounded border border-neutral-200 bg-neutral-50 px-2 py-0.5 font-mono text-[10px] text-neutral-600">
+            {meta.badge}
+          </span>
+          <span
+            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] ${
+              isActive ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'text-neutral-400'
+            }`}
+          >
+            <span className={`h-1.5 w-1.5 rounded-full ${isActive ? 'bg-emerald-500' : 'bg-neutral-300'}`} />
+            {isActive ? 'Live in window' : 'Inspect'}
+          </span>
+        </div>
+      </div>
+
+      {/* Chapter headline & lead */}
+      <div className="mt-6">
+        <h3 className="max-w-[20ch] font-display text-[26px] font-medium leading-[1.2] tracking-[-0.02em] text-black sm:text-[32px]">
+          {item.title}
+        </h3>
+        <p className="mt-3 max-w-[54ch] text-[15px] leading-[1.6] text-neutral-600">
+          {item.body}
+        </p>
+      </div>
+
+      {/* Feature specification cards */}
+      <div className={`mt-7 grid gap-3 ${item.features.length > 1 ? 'sm:grid-cols-2' : 'sm:grid-cols-1'}`}>
+        {item.features.map((current, idx) => {
+          const spanFull = item.features.length === 3 && idx === 0
+          return (
+            <div
+              key={current.id}
+              className={`rounded-[14px] border p-4 transition-colors ${
+                spanFull ? 'sm:col-span-2' : ''
+              } ${
+                isActive
+                  ? 'border-neutral-200 bg-neutral-50/70'
+                  : 'border-neutral-200/70 bg-white/80'
+              }`}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-400">
+                  {item.number}.{idx + 1} · {current.eyebrow}
+                </span>
+                <span className="h-1.5 w-1.5 rounded-full bg-neutral-300" />
+              </div>
+              <h4 className="mt-2 text-[14px] font-semibold leading-snug text-neutral-950">
+                {current.title}
+              </h4>
+              <p className="mt-1.5 text-[13px] leading-[1.55] text-neutral-600">
+                {current.body}
+              </p>
+            </div>
+          )
+        })}
+      </div>
     </article>
   )
 }
 
 function ProductSection() {
+  const { activeChapter, selectChapter } = useShowcaseContext()
+
   return (
-    <section id="product" className="scroll-mt-[112px] bg-white md:scroll-mt-16">
-      <div>
-        <div>
-          <div>
-            <p>The product</p>
-            <h2>
-              Bring your service work into one system.
-            </h2>
+    <section id="product" className="scroll-mt-[112px] pt-8 md:scroll-mt-20 md:pt-12">
+      {/* Editorial Section Header */}
+      <div className="rounded-[20px] border border-neutral-200 bg-neutral-950 p-6 text-white sm:p-8">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-800 pb-4">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-sky-400" />
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-neutral-400">The product</p>
           </div>
-          <p>
-            From intake and triage to service health and delivery, keep the operational picture connected in one place.
-          </p>
+          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-400">
+            04 connected surfaces · Scroll or select
+          </span>
         </div>
+
+        <h2 className="mt-5 max-w-[18ch] font-display text-[30px] font-medium leading-[1.15] tracking-[-0.02em] text-white sm:text-[36px]">
+          Bring your service work into one system.
+        </h2>
+        <p className="mt-3 max-w-[52ch] text-[14px] leading-[1.65] text-neutral-300">
+          From intake and triage to service health and delivery, keep the operational picture connected in one place.
+        </p>
+
+        {/* Quick chapter rail */}
+        <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {capabilities.map((cap) => {
+            const active = activeChapter === cap.chapter
+            return (
+              <button
+                key={cap.number}
+                type="button"
+                onClick={() => selectChapter(cap.chapter)}
+                className={`flex flex-col items-start rounded-[10px] border px-3 py-2 text-left transition-colors ${
+                  active
+                    ? 'border-white/30 bg-white text-neutral-950'
+                    : 'border-neutral-800 bg-neutral-900/90 text-neutral-300 hover:border-neutral-700 hover:text-white'
+                }`}
+              >
+                <span className={`font-mono text-[10px] ${active ? 'text-neutral-500' : 'text-neutral-500'}`}>
+                  {cap.number}
+                </span>
+                <span className="mt-0.5 truncate text-[12px] font-medium">{cap.eyebrow}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Capabilities stack */}
+      <div className="mt-6 space-y-6">
         {capabilities.map((item) => <CapabilitySection key={item.number} item={item} />)}
       </div>
     </section>
