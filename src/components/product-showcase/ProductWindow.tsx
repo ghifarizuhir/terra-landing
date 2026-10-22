@@ -88,7 +88,7 @@ export default function ProductWindow({
           </nav>
 
           {/* Scene Canvas */}
-          <div className="min-h-[310px] bg-[#0a0d13] p-4 sm:min-h-[350px] sm:p-5">
+          <div className="min-h-[320px] bg-[#0a0d13] p-4 sm:min-h-[360px] sm:p-6 lg:min-h-[390px] lg:p-7">
             <SceneView chapter={chapter} step={step} reducedMotion={reducedMotion} />
           </div>
 

@@ -8,6 +8,8 @@ type ShowcaseStateContextValue = {
   step: number
   phase: ShowcasePhase
   selectChapter: (chapter: ShowcaseChapterId) => void
+  nextChapter: () => void
+  prevChapter: () => void
 }
 
 const ShowcaseStateContext = createContext<ShowcaseStateContextValue>({
@@ -15,26 +17,35 @@ const ShowcaseStateContext = createContext<ShowcaseStateContextValue>({
   step: 0,
   phase: 'playing',
   selectChapter: () => {},
+  nextChapter: () => {},
+  prevChapter: () => {},
 })
 
 export const useShowcaseContext = () => useContext(ShowcaseStateContext)
 
 type Props = {
-  hero?: ReactNode
+  header?: ReactNode
   children: ReactNode
 }
 
-export default function ProductShowcase({ hero, children }: Props) {
+export default function ProductShowcase({ header, children }: Props) {
   const storyRef = useRef<HTMLDivElement>(null)
   const demo = useProductShowcase(storyRef)
 
   const selectChapter = (chapter: ShowcaseChapterId) => {
-    const targetId = showcaseChapters.find((item) => item.id === chapter)!.targetId
-    document.getElementById(targetId)?.scrollIntoView({
-      behavior: demo.reducedMotion ? 'auto' : 'smooth',
-      block: 'center',
-    })
     demo.activateChapter(chapter)
+  }
+
+  const currentIndex = showcaseChapters.findIndex((item) => item.id === demo.activeChapter)
+
+  const nextChapter = () => {
+    const nextIdx = (currentIndex + 1) % showcaseChapters.length
+    demo.activateChapter(showcaseChapters[nextIdx]!.id)
+  }
+
+  const prevChapter = () => {
+    const prevIdx = (currentIndex - 1 + showcaseChapters.length) % showcaseChapters.length
+    demo.activateChapter(showcaseChapters[prevIdx]!.id)
   }
 
   return (
@@ -44,21 +55,20 @@ export default function ProductShowcase({ hero, children }: Props) {
         step: demo.step,
         phase: demo.phase,
         selectChapter,
+        nextChapter,
+        prevChapter,
       }}
     >
-      <div className="relative border-b border-[#dcd8ce]">
+      <div className="relative border-b border-[#dcd8ce] bg-[#efeae0]/55">
         <div
           ref={storyRef}
-          className="relative mx-auto grid w-full max-w-[1440px] items-start gap-8 px-5 pb-16 pt-8 sm:px-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-12 lg:px-14 lg:pb-24 lg:pt-14 xl:gap-16"
+          className="relative mx-auto w-full max-w-[1440px] px-5 py-16 sm:px-8 md:py-24 lg:px-14"
         >
-          {hero && (
-            <div className="min-w-0 lg:col-start-1 lg:row-start-1">
-              {hero}
-            </div>
-          )}
+          {header && <div className="mb-8">{header}</div>}
 
+          {/* Widescreen Cinema Demo Stage */}
           <ProductWindow
-            className="sticky top-[104px] z-30 self-start md:top-[76px] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:top-[92px]"
+            className="w-full"
             chapter={demo.activeChapter}
             step={demo.step}
             phase={demo.phase}
@@ -70,7 +80,8 @@ export default function ProductShowcase({ hero, children }: Props) {
             onToggleCollapsed={demo.toggleCollapsed}
           />
 
-          <div className="min-w-0 lg:col-start-1 lg:row-start-2">
+          {/* Interactive Slide Deck below the stationary demo */}
+          <div className="mt-6 min-w-0">
             {children}
           </div>
         </div>

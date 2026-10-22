@@ -37,79 +37,110 @@ export default function WorkItemsScene({ step, reducedMotion }: TSceneProps) {
         </span>
       </div>
 
-      {/* Kanban Grid */}
-      <div className="grid grid-cols-3 gap-2.5">
-        <LayoutGroup>
-          {columns.map((column) => {
-            const hasPrimary = column.id === itemColumn
-            const extras = backgroundCards[column.id] ?? []
-            const count = extras.length + (hasPrimary ? 1 : 0)
+      {/* Kanban Grid + Widescreen Workflow Inspector */}
+      <div className="grid gap-3 lg:grid-cols-[1fr_240px]">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <LayoutGroup>
+            {columns.map((column) => {
+              const hasPrimary = column.id === itemColumn
+              const extras = backgroundCards[column.id] ?? []
+              const count = extras.length + (hasPrimary ? 1 : 0)
 
-            return (
-              <div
-                key={column.id}
-                className="flex min-h-[224px] flex-col rounded-xl border border-white/[0.08] bg-[#101520] p-2.5"
-              >
-                <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
-                  <div className="flex items-center gap-1.5">
-                    <span className={`h-1.5 w-1.5 rounded-full ${column.dot}`} />
-                    <h3 className="text-[11px] font-semibold text-slate-100">{column.label}</h3>
-                  </div>
-                  <span className="rounded bg-white/[0.08] px-1.5 py-0.5 font-mono text-[9px] text-slate-300">
-                    {count}
-                  </span>
-                </div>
-
-                <div className="mt-2.5 space-y-2">
-                  {hasPrimary && (
-                    <motion.article
-                      layoutId="showcase-incident-card"
-                      transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
-                      className="rounded-lg border border-sky-400/45 bg-[#162032] p-2.5 text-xs text-white shadow-[0_8px_20px_-6px_rgba(2,6,23,0.7)]"
-                    >
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="font-mono text-[10px] font-medium text-sky-300">{item.id}</span>
-                        <span className="rounded border border-rose-400/30 bg-rose-500/20 px-1.5 py-0.5 font-mono text-[9px] text-rose-200">
-                          Urgent
-                        </span>
-                      </div>
-                      <p className="mt-1.5 font-semibold leading-snug text-white">{item.title}</p>
-                      <div className="mt-2.5 flex flex-wrap items-center justify-between gap-1 border-t border-white/10 pt-2">
-                        <span className="inline-block rounded bg-sky-500/20 px-1.5 py-0.5 font-mono text-[9px] text-sky-200">
-                          {item.type}
-                        </span>
-                        <span className="truncate font-mono text-[9px] text-slate-300">API Gateway</span>
-                      </div>
-                    </motion.article>
-                  )}
-
-                  {column.id === 'triage' && step === 1 && (
-                    <p
-                      role="status"
-                      className="rounded-md border border-amber-400/35 bg-amber-500/15 px-2 py-1 font-mono text-[10px] text-amber-200"
-                    >
-                      Reviewing impact…
-                    </p>
-                  )}
-
-                  {extras.map((card) => (
-                    <div
-                      key={card.id}
-                      aria-hidden="true"
-                      className="rounded-lg border border-white/[0.07] bg-[#0b0e15] p-2 text-[11px] text-slate-300"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-[9px] text-slate-300">{card.id}</span>
-                        <span className="font-mono text-[9px] text-slate-300">{card.badge}</span>
-                      </div>
-                      <p className="mt-1 line-clamp-2 text-[10px] leading-snug text-slate-200">{card.title}</p>
+              return (
+                <div
+                  key={column.id}
+                  className="flex min-h-[240px] flex-col rounded-xl border border-white/[0.08] bg-[#101520] p-3"
+                >
+                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className={`h-2 w-2 rounded-full ${column.dot}`} />
+                      <h3 className="text-xs font-semibold text-slate-100">{column.label}</h3>
                     </div>
-                  ))}
+                    <span className="rounded bg-white/[0.08] px-1.5 py-0.5 font-mono text-[10px] text-slate-300">
+                      {count}
+                    </span>
+                  </div>
+
+                  <div className="mt-3 space-y-2.5">
+                    {hasPrimary && (
+                      <motion.article
+                        layoutId="showcase-incident-card"
+                        transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+                        className="rounded-lg border border-sky-400/45 bg-[#162032] p-3 text-xs text-white shadow-[0_8px_20px_-6px_rgba(2,6,23,0.7)]"
+                      >
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="font-mono text-[10px] font-medium text-sky-300">{item.id}</span>
+                          <span className="rounded border border-rose-400/30 bg-rose-500/20 px-1.5 py-0.5 font-mono text-[9px] text-rose-200">
+                            Urgent
+                          </span>
+                        </div>
+                        <p className="mt-2 text-[13px] font-semibold leading-snug text-white">{item.title}</p>
+                        <div className="mt-3 flex flex-wrap items-center justify-between gap-1 border-t border-white/10 pt-2">
+                          <span className="inline-block rounded bg-sky-500/20 px-1.5 py-0.5 font-mono text-[9px] text-sky-200">
+                            {item.type}
+                          </span>
+                          <span className="truncate font-mono text-[10px] text-slate-300">API Gateway</span>
+                        </div>
+                      </motion.article>
+                    )}
+
+                    {column.id === 'triage' && step === 1 && (
+                      <p
+                        role="status"
+                        className="rounded-md border border-amber-400/35 bg-amber-500/15 px-2.5 py-1.5 font-mono text-[10px] text-amber-200"
+                      >
+                        Reviewing impact…
+                      </p>
+                    )}
+
+                    {extras.map((card) => (
+                      <div
+                        key={card.id}
+                        aria-hidden="true"
+                        className="rounded-lg border border-white/[0.07] bg-[#0b0e15] p-2.5 text-[11px] text-slate-300"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono text-[10px] text-slate-300">{card.id}</span>
+                          <span className="rounded bg-white/[0.05] px-1.5 py-0.5 font-mono text-[9px] text-slate-300">{card.badge}</span>
+                        </div>
+                        <p className="mt-1.5 line-clamp-2 text-[11px] leading-snug text-slate-200">{card.title}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+              )
+            })}
+          </LayoutGroup>
+        </div>
+
+        {/* Widescreen Right Sidebar: Typed Workflow State Inspector */}
+        <aside aria-hidden="true" className="hidden flex-col justify-between rounded-xl border border-white/[0.08] bg-[#101520] p-3.5 text-xs lg:flex">
+          <div>
+            <div className="flex items-center justify-between border-b border-white/[0.08] pb-2.5">
+              <span className="font-semibold text-white">Typed workflow</span>
+              <span className="rounded bg-sky-500/20 px-1.5 py-0.5 font-mono text-[9px] text-sky-200">Incident</span>
+            </div>
+            <div className="mt-3 space-y-2 font-mono text-[10px]">
+              <div className="flex items-center justify-between rounded border border-white/[0.06] bg-[#0b0e15] px-2.5 py-1.5 text-slate-300">
+                <span>1. Intake</span>
+                <span className="text-emerald-300">Accepted</span>
               </div>
-            )
-          })}
-        </LayoutGroup>
+              <div className="flex items-center justify-between rounded border border-white/[0.06] bg-[#0b0e15] px-2.5 py-1.5 text-slate-300">
+                <span>2. Triage</span>
+                <span className={step === 1 ? 'text-amber-300' : 'text-emerald-300'}>
+                  {step === 0 ? 'Active' : step === 1 ? 'Checking' : 'Verified'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between rounded border border-sky-400/30 bg-[#162032] px-2.5 py-1.5 text-white">
+                <span>3. In progress</span>
+                <span className="text-sky-300">{step >= 2 ? 'Current' : 'Next'}</span>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-white/[0.08] pt-2.5 font-mono text-[10px] text-slate-300">
+            Transition rules enforced
+          </div>
+        </aside>
       </div>
     </section>
   )

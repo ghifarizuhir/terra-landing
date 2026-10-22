@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from '../src/App'
 import { product } from '../src/data/product'
@@ -8,12 +8,23 @@ describe('homepage landing page', () => {
     render(<App />)
 
     expect(screen.getByRole('heading', { level: 1, name: /Run services and delivery work in one system/ })).toBeInTheDocument()
+    expect(screen.getByRole('complementary', { name: /Terraline operational architecture schematic/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Request a demo/ })).toHaveAttribute('href', product.hero.primaryCta.href)
     const foundation = screen.getByRole('region', { name: 'Platform foundations' })
     for (const fact of product.facts) expect(within(foundation).getByText(fact)).toBeInTheDocument()
     const accessLinks = screen.getAllByRole('link', { name: /Request access/ })
     expect(accessLinks.length).toBeGreaterThan(0)
     for (const link of accessLinks) expect(link).toHaveAttribute('href', product.cta.href)
+  })
+
+  it('cycles product chapters via slide controls while keeping the demo window stationary', () => {
+    render(<App />)
+
+    expect(screen.getByRole('button', { name: 'Work management' })).toHaveAttribute('aria-current', 'step')
+    fireEvent.click(screen.getByRole('button', { name: 'Next chapter slide' }))
+    expect(screen.getByRole('button', { name: 'Service catalog' })).toHaveAttribute('aria-current', 'step')
+    fireEvent.click(screen.getByRole('button', { name: 'Previous chapter slide' }))
+    expect(screen.getByRole('button', { name: 'Work management' })).toHaveAttribute('aria-current', 'step')
   })
 
   it('shows one animated product window instead of product screenshots', () => {

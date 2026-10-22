@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight, Check, ChevronDown } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, ChevronDown } from 'lucide-react'
 import { product, type Feature } from '../data/product'
 import type { ShowcaseChapterId } from '../data/product-demo'
 import Footer from './Footer'
@@ -117,53 +117,148 @@ function SiteNav() {
   )
 }
 
+function HeroBlueprintVisual() {
+  return (
+    <aside
+      aria-label="Terraline operational architecture schematic"
+      className="rounded-[24px] border border-[#dcd8ce] bg-[#fbfaf7] p-4 shadow-[0_24px_60px_-24px_rgba(12,14,18,0.14)] sm:p-6"
+    >
+      {/* Top schematic bar */}
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#dcd8ce] pb-3.5">
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-emerald-600" aria-hidden="true" />
+          <span className="font-mono text-[11px] font-semibold text-[#0c0e12]">SYSTEM BLUEPRINT · ONE DATA MODEL</span>
+        </div>
+        <span className="rounded border border-[#d0cbc0] bg-[#efeae0] px-2 py-0.5 font-mono text-[10px] font-medium text-[#2d333f]">
+          Self-hosted · Real-time
+        </span>
+      </div>
+
+      {/* Connected 4-stage operational flow */}
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-2xl border border-[#dcd8ce] bg-[#f6f4ef] p-4">
+          <div className="flex items-center justify-between gap-2">
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#4b5260]">
+              Stage 1 · Intake & Queue
+            </span>
+            <span className="rounded bg-[#0c0e12] px-2 py-0.5 font-mono text-[10px] text-white">Typed states</span>
+          </div>
+          <p className="mt-2.5 text-[14px] font-semibold text-[#0c0e12]">Requests, incidents & changes</p>
+          <p className="mt-1 text-[12.5px] leading-relaxed text-[#3a404d]">
+            Incoming noise enters a dedicated triage buffer before becoming structured work with enforced state transitions.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#dcd8ce] bg-[#f6f4ef] p-4">
+          <div className="flex items-center justify-between gap-2">
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#4b5260]">
+              Stage 2 · Service Graph
+            </span>
+            <span className="rounded border border-emerald-700/30 bg-emerald-950 px-2 py-0.5 font-mono text-[10px] text-emerald-200">
+              Topology live
+            </span>
+          </div>
+          <p className="mt-2.5 text-[14px] font-semibold text-[#0c0e12]">Ownership & blast radius</p>
+          <p className="mt-1 text-[12.5px] leading-relaxed text-[#3a404d]">
+            Every ticket links directly to upstream and downstream services, criticality tiers, and active health signals.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#1e2430] bg-[#0c0e12] p-4 text-white sm:col-span-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+            <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-slate-300">
+              Live Signal Trace · Incident → Service → Runbook → Cycle
+            </span>
+            <span className="font-mono text-[10px] text-sky-300">Yjs + Redis Stream</span>
+          </div>
+
+          <div className="mt-3.5 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+            <div className="rounded-xl border border-white/10 bg-[#141923] p-2.5">
+              <span className="font-mono text-[9px] text-sky-300">WORK ITEM</span>
+              <p className="mt-1 text-xs font-semibold text-white">Typed workflow</p>
+              <p className="mt-0.5 font-mono text-[10px] text-slate-300">Triage → Active</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-[#141923] p-2.5">
+              <span className="font-mono text-[9px] text-emerald-300">CATALOG</span>
+              <p className="mt-1 text-xs font-semibold text-white">Dependency map</p>
+              <p className="mt-0.5 font-mono text-[10px] text-slate-300">Tier-1 linked</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-[#141923] p-2.5">
+              <span className="font-mono text-[9px] text-amber-300">GALILEO AI</span>
+              <p className="mt-1 text-xs font-semibold text-white">Grounded SOPs</p>
+              <p className="mt-0.5 font-mono text-[10px] text-slate-300">Human-confirmed</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-[#141923] p-2.5">
+              <span className="font-mono text-[9px] text-slate-300">DELIVERY</span>
+              <p className="mt-1 text-xs font-semibold text-white">Cycles & mobile</p>
+              <p className="mt-0.5 font-mono text-[10px] text-slate-300">On-call ready</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom runtime bar */}
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 pt-1 font-mono text-[11px] text-[#4b5260]">
+        <span>Rust Axum · Postgres · Redis Stream</span>
+        <a href="#product" className="font-semibold text-[#0c0e12] underline underline-offset-4 hover:text-[#3a404d]">
+          Launch interactive workspace ↓
+        </a>
+      </div>
+    </aside>
+  )
+}
+
 function Hero() {
   return (
-    <section id="top" data-showcase-chapter="work" className="pb-10 pt-2 md:pb-14 md:pt-4">
-      <div className="max-w-[580px]">
-        <h1 className="text-balance font-display text-[clamp(40px,4.6vw,58px)] font-semibold leading-[1.06] tracking-[-0.035em] text-[#0c0e12]">
-          {product.hero.title}
-        </h1>
-        <p className="mt-5 max-w-[52ch] text-[16.5px] leading-[1.65] text-[#3a404d]">
-          {product.hero.body}
-        </p>
-
-        <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
-          <a href={product.hero.primaryCta.href} className="button button-primary h-11 px-5 text-sm">
-            {product.hero.primaryCta.label}
-            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-          </a>
-          <a
-            href="#product"
-            className="inline-flex h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-[#0c0e12] transition-colors hover:text-[#3a404d]"
-          >
-            See the product <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </a>
-        </div>
-
-        <div className="mt-10 border-y border-[#dcd8ce] py-4">
-          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#3a404d]">
-            {product.hero.eyebrow}
+    <section id="top" className="border-b border-[#dcd8ce] bg-[#f6f4ef]">
+      <div className="mx-auto grid w-full max-w-[1440px] items-center gap-10 px-5 py-12 sm:px-8 md:py-16 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14 lg:px-14 lg:py-20">
+        <div className="max-w-[580px]">
+          <h1 className="text-balance font-display text-[clamp(40px,4.6vw,58px)] font-semibold leading-[1.06] tracking-[-0.035em] text-[#0c0e12]">
+            {product.hero.title}
+          </h1>
+          <p className="mt-5 max-w-[52ch] text-[16.5px] leading-[1.65] text-[#3a404d]">
+            {product.hero.body}
           </p>
-          <dl className="mt-3 grid grid-cols-2 gap-4 border-t border-[#e5e1d8] pt-3 sm:grid-cols-3">
-            <div>
-              <dt className="text-[12px] text-[#4b5260]">License</dt>
-              <dd className="mt-0.5 font-mono text-[13px] font-semibold text-[#0c0e12]">AGPL-3.0</dd>
-            </div>
-            <div className="border-l border-[#dcd8ce] pl-4">
-              <dt className="text-[12px] text-[#4b5260]">Deployment</dt>
-              <dd className="mt-0.5 font-mono text-[13px] font-semibold text-[#0c0e12]">Docker Compose</dd>
-            </div>
-            <div className="col-span-2 border-t border-[#e5e1d8] pt-2 sm:col-span-1 sm:border-l sm:border-t-0 sm:border-[#dcd8ce] sm:pl-4 sm:pt-0">
-              <dt className="text-[12px] text-[#4b5260]">Knowledge base</dt>
-              <dd className="mt-0.5 font-mono text-[13px] font-semibold text-[#0c0e12]">
-                <a href="/learn" className="underline decoration-[#9ca3af] underline-offset-4 hover:decoration-[#0c0e12]">
-                  8 ITSM practices →
-                </a>
-              </dd>
-            </div>
-          </dl>
+
+          <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+            <a href={product.hero.primaryCta.href} className="button button-primary h-11 px-5 text-sm">
+              {product.hero.primaryCta.label}
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+            <a
+              href="#product"
+              className="inline-flex h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-[#0c0e12] transition-colors hover:text-[#3a404d]"
+            >
+              See the product <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </div>
+
+          <div className="mt-10 border-y border-[#dcd8ce] py-4">
+            <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#3a404d]">
+              {product.hero.eyebrow}
+            </p>
+            <dl className="mt-3 grid grid-cols-2 gap-4 border-t border-[#e5e1d8] pt-3 sm:grid-cols-3">
+              <div>
+                <dt className="text-[12px] text-[#4b5260]">License</dt>
+                <dd className="mt-0.5 font-mono text-[13px] font-semibold text-[#0c0e12]">AGPL-3.0</dd>
+              </div>
+              <div className="border-l border-[#dcd8ce] pl-4">
+                <dt className="text-[12px] text-[#4b5260]">Deployment</dt>
+                <dd className="mt-0.5 font-mono text-[13px] font-semibold text-[#0c0e12]">Docker Compose</dd>
+              </div>
+              <div className="col-span-2 border-t border-[#e5e1d8] pt-2 sm:col-span-1 sm:border-l sm:border-t-0 sm:border-[#dcd8ce] sm:pl-4 sm:pt-0">
+                <dt className="text-[12px] text-[#4b5260]">Knowledge base</dt>
+                <dd className="mt-0.5 font-mono text-[13px] font-semibold text-[#0c0e12]">
+                  <a href="/learn" className="underline decoration-[#9ca3af] underline-offset-4 hover:decoration-[#0c0e12]">
+                    8 ITSM practices →
+                  </a>
+                </dd>
+              </div>
+            </dl>
+          </div>
         </div>
+
+        <HeroBlueprintVisual />
       </div>
     </section>
   )
@@ -199,116 +294,188 @@ const chapterMeta: Record<ShowcaseChapterId, { surface: string; badge: string }>
   delivery: { surface: 'Cycles · Analytics · Mobile', badge: 'WEEK 2' },
 }
 
-function CapabilitySection({ item }: { item: Capability }) {
-  const { activeChapter, selectChapter } = useShowcaseContext()
-  const isActive = activeChapter === item.chapter
-  const meta = chapterMeta[item.chapter]
-  const id = item.chapter === 'work' ? undefined : `showcase-${item.chapter}`
+function ProductHeader() {
+  const { activeChapter, prevChapter, nextChapter } = useShowcaseContext()
+  const activeIndex = capabilities.findIndex((item) => item.chapter === activeChapter)
+  const current = capabilities[activeIndex] ?? capabilities[0]!
 
   return (
-    <article
-      id={id}
-      data-showcase-chapter={item.chapter}
-      onClick={() => selectChapter(item.chapter)}
-      className={`group relative cursor-pointer border-t border-[#dcd8ce] px-5 py-8 transition-colors duration-200 sm:px-7 sm:py-10 ${
-        isActive
-          ? 'bg-[#fbfaf7] shadow-[0_18px_40px_-24px_rgba(12,14,18,0.12)]'
-          : 'bg-transparent hover:bg-[#fbfaf7]/60'
-      }`}
-    >
-      {/* Chapter headline & interactive status bar */}
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="max-w-[46ch]">
-          <h3 className="text-balance font-display text-[26px] font-semibold leading-[1.16] tracking-[-0.025em] text-[#0c0e12] sm:text-[31px]">
-            {item.title}
-          </h3>
-          <p className="mt-3 text-[15px] leading-[1.65] text-[#3a404d]">
-            {item.body}
-          </p>
-        </div>
+    <div id="product" className="scroll-mt-24 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+      <div>
+        <h2 className="max-w-[22ch] text-balance font-display text-[clamp(32px,3.6vw,46px)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#0c0e12]">
+          Bring your service work into one system.
+        </h2>
+        <p className="mt-2.5 max-w-[58ch] text-[15px] leading-[1.65] text-[#3a404d]">
+          Switch chapters below or step through the slides—the live demo workspace stays front and center.
+        </p>
+      </div>
 
-        <div className="flex shrink-0 items-center gap-2">
-          <span className="rounded border border-[#d0cbc0] bg-[#efeae0] px-2.5 py-1 font-mono text-[10px] font-medium text-[#2d333f]">
-            {meta.badge}
-          </span>
-          <span
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-[0.08em] ${
-              isActive
-                ? 'border border-emerald-700/25 bg-emerald-950/90 text-emerald-200'
-                : 'border border-[#d0cbc0] bg-[#fbfaf7] text-[#4b5260]'
-            }`}
+      {/* Chapter Slide Controls */}
+      <div className="flex shrink-0 items-center gap-3 self-start md:self-auto">
+        <div className="rounded-xl border border-[#d0cbc0] bg-[#fbfaf7] px-3.5 py-2 font-mono text-xs text-[#0c0e12]">
+          <span className="font-semibold">0{activeIndex + 1}</span>
+          <span className="text-[#4b5260]"> / 0{capabilities.length} · </span>
+          <span className="font-medium">{current.eyebrow}</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={prevChapter}
+            aria-label="Previous chapter slide"
+            className="button button-secondary h-9 w-9 p-0"
           >
-            <span className={`h-1.5 w-1.5 rounded-full ${isActive ? 'bg-emerald-400' : 'bg-[#8c867a]'}`} />
-            {isActive ? 'Live in window' : 'Inspect'}
-          </span>
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={nextChapter}
+            aria-label="Next chapter slide"
+            className="button button-primary h-9 w-9 p-0"
+          >
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </button>
         </div>
       </div>
-
-      {/* Chapter metadata rail below heading */}
-      <div className="mt-4 flex flex-wrap items-center gap-3 font-mono text-[11px] text-[#4b5260]">
-        <span className="font-semibold text-[#0c0e12]">{item.eyebrow}</span>
-        <span aria-hidden="true">·</span>
-        <span>{meta.surface}</span>
-      </div>
-
-      {/* Feature specification rows (no nested cards) */}
-      <div className="mt-7 divide-y divide-[#dcd8ce] border-y border-[#dcd8ce]">
-        {item.features.map((current) => (
-          <div key={current.id} className="py-5 first:pt-4 last:pb-4">
-            <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-baseline">
-              <h4 className="text-[15px] font-semibold leading-snug text-[#0c0e12]">
-                {current.title}
-              </h4>
-              <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.1em] text-[#4b5260]">
-                {current.eyebrow}
-              </span>
-            </div>
-            <p className="mt-1.5 max-w-[60ch] text-[13.5px] leading-[1.6] text-[#3a404d]">
-              {current.body}
-            </p>
-            <ul className="mt-3 flex flex-wrap gap-2">
-              {current.bullets.map((bullet) => (
-                <li
-                  key={bullet}
-                  className="inline-flex items-center gap-1.5 rounded-md border border-[#dcd8ce] bg-[#f6f4ef] px-2.5 py-1 text-[11.5px] text-[#2d333f]"
-                >
-                  <span className="h-1 w-1 rounded-full bg-[#0c0e12]" aria-hidden="true" />
-                  {bullet}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </article>
+    </div>
   )
 }
 
-function ProductSection() {
+function CapabilitySlideDeck() {
+  const { activeChapter, selectChapter, prevChapter, nextChapter } = useShowcaseContext()
+  const activeIndex = capabilities.findIndex((item) => item.chapter === activeChapter)
+
   return (
-    <section id="product" className="scroll-mt-[112px] pt-4 md:scroll-mt-20">
-      {/* Editorial Section Header */}
-      <div className="rounded-t-[20px] border border-[#1e2430] bg-[#0c0e12] p-6 text-white sm:p-8">
-        <h2 className="max-w-[20ch] text-balance font-display text-[30px] font-semibold leading-[1.12] tracking-[-0.028em] text-white sm:text-[36px]">
-          Bring your service work into one system.
-        </h2>
-        <p className="mt-3 max-w-[54ch] text-[14.5px] leading-[1.65] text-slate-300">
-          From intake and triage to service health and delivery, keep the operational picture connected in one place.
-        </p>
-        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-4 font-mono text-[11px] text-slate-300">
-          <span>4 connected operational surfaces</span>
+    <div className="overflow-hidden rounded-[22px] border border-[#dcd8ce] bg-[#fbfaf7] shadow-[0_18px_45px_-28px_rgba(12,14,18,0.16)]">
+      {/* Slide Deck Top Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#dcd8ce] bg-[#f6f4ef] px-5 py-3.5 sm:px-7">
+        <div className="flex items-center gap-2">
+          {capabilities.map((cap, idx) => {
+            const isCurrent = cap.chapter === activeChapter
+            return (
+              <button
+                key={cap.chapter}
+                type="button"
+                onClick={() => selectChapter(cap.chapter)}
+                aria-label={`Slide ${idx + 1}: ${cap.title}`}
+                className={`inline-flex items-center gap-2 rounded-lg px-3 py-1.5 font-mono text-[11px] transition-colors ${
+                  isCurrent
+                    ? 'bg-[#0c0e12] font-semibold text-white'
+                    : 'text-[#4b5260] hover:bg-[#efeae0] hover:text-[#0c0e12]'
+                }`}
+              >
+                <span>0{idx + 1}</span>
+                <span className="hidden sm:inline">{cap.title.split(' ')[0]}</span>
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="flex items-center gap-2 font-mono text-[11px] text-[#4b5260]">
+          <span>Slide {activeIndex + 1} of {capabilities.length}</span>
           <span aria-hidden="true">·</span>
-          <span>Scroll or click any chapter to inspect live</span>
+          <button
+            type="button"
+            onClick={prevChapter}
+            className="font-semibold text-[#0c0e12] underline underline-offset-4 hover:text-[#3a404d]"
+          >
+            Prev
+          </button>
+          <span aria-hidden="true">/</span>
+          <button
+            type="button"
+            onClick={nextChapter}
+            className="font-semibold text-[#0c0e12] underline underline-offset-4 hover:text-[#3a404d]"
+          >
+            Next
+          </button>
         </div>
       </div>
 
-      {/* Capabilities ledger stack */}
-      <div className="overflow-hidden rounded-b-[20px] border-x border-b border-[#dcd8ce] bg-[#f6f4ef]/80">
-        {capabilities.map((item) => (
-          <CapabilitySection key={item.chapter} item={item} />
-        ))}
+      {/* Single Active Chapter Slide (no vertical chapter scrolling) */}
+      <div>
+        {capabilities.map((item) => {
+          const isActive = activeChapter === item.chapter
+          const meta = chapterMeta[item.chapter]
+          const id = item.chapter === 'work' ? undefined : `showcase-${item.chapter}`
+
+          return (
+            <article
+              key={item.chapter}
+              id={id}
+              data-showcase-chapter={item.chapter}
+              className={isActive ? 'block p-6 sm:p-8 lg:p-9' : 'sr-only'}
+            >
+              <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+                {/* Left Column: Active Chapter Overview */}
+                <div>
+                  <h3 className="text-balance font-display text-[26px] font-semibold leading-[1.15] tracking-[-0.025em] text-[#0c0e12] sm:text-[32px]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 max-w-[48ch] text-[15px] leading-[1.65] text-[#3a404d]">
+                    {item.body}
+                  </p>
+
+                  <div className="mt-5 flex flex-wrap items-center gap-2.5 pt-1">
+                    <span className="rounded border border-[#d0cbc0] bg-[#efeae0] px-2.5 py-1 font-mono text-[10px] font-semibold text-[#0c0e12]">
+                      {item.eyebrow}
+                    </span>
+                    <span className="rounded border border-[#d0cbc0] bg-[#f6f4ef] px-2.5 py-1 font-mono text-[10px] text-[#2d333f]">
+                      {meta.surface}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-700/25 bg-emerald-950 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-emerald-200">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
+                      Active in demo above
+                    </span>
+                  </div>
+                </div>
+
+                {/* Right Column: Feature Specifications in Horizontal Grid */}
+                <div
+                  className={`grid divide-y divide-[#dcd8ce] border-t border-[#dcd8ce] pt-5 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0 ${
+                    item.features.length > 1 ? 'sm:grid-cols-2 sm:divide-x sm:divide-y-0' : ' grid-cols-1'
+                  }`}
+                >
+                  {item.features.map((current, idx) => {
+                    const spanFull = item.features.length === 3 && idx === 2
+                    return (
+                      <div
+                        key={current.id}
+                        className={`py-4 first:pt-0 last:pb-0 sm:px-4 sm:py-0 sm:first:pl-0 sm:last:pr-0 ${
+                          spanFull ? 'sm:col-span-2 sm:mt-5 sm:border-t sm:border-l-0 sm:border-[#dcd8ce] sm:px-0 sm:pt-5' : ''
+                        }`}
+                      >
+                        <div className="flex items-baseline justify-between gap-2">
+                          <h4 className="text-[15px] font-semibold leading-snug text-[#0c0e12]">
+                            {current.title}
+                          </h4>
+                          <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-[#4b5260]">
+                            {current.eyebrow}
+                          </span>
+                        </div>
+                        <p className="mt-1.5 text-[13px] leading-[1.6] text-[#3a404d]">
+                          {current.body}
+                        </p>
+                        <ul className="mt-3 flex flex-wrap gap-1.5">
+                          {current.bullets.map((bullet) => (
+                            <li
+                              key={bullet}
+                              className="inline-flex items-center gap-1.5 rounded border border-[#dcd8ce] bg-[#f6f4ef] px-2 py-0.5 text-[11px] text-[#2d333f]"
+                            >
+                              <span className="h-1 w-1 rounded-full bg-[#0c0e12]" aria-hidden="true" />
+                              {bullet}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </article>
+          )
+        })}
       </div>
-    </section>
+    </div>
   )
 }
 
@@ -516,8 +683,9 @@ export default function Tour() {
     <div className="tour min-h-screen text-[#0c0e12]">
       <SiteNav />
       <main>
-        <ProductShowcase hero={<Hero />}>
-          <ProductSection />
+        <Hero />
+        <ProductShowcase header={<ProductHeader />}>
+          <CapabilitySlideDeck />
         </ProductShowcase>
         <FactStrip />
         <PlatformSection />
