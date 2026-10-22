@@ -19,9 +19,12 @@ const ShowcaseStateContext = createContext<ShowcaseStateContextValue>({
 
 export const useShowcaseContext = () => useContext(ShowcaseStateContext)
 
-type Props = { children: ReactNode }
+type Props = {
+  hero?: ReactNode
+  children: ReactNode
+}
 
-export default function ProductShowcase({ children }: Props) {
+export default function ProductShowcase({ hero, children }: Props) {
   const storyRef = useRef<HTMLDivElement>(null)
   const demo = useProductShowcase(storyRef)
 
@@ -43,11 +46,19 @@ export default function ProductShowcase({ children }: Props) {
         selectChapter,
       }}
     >
-      <div className="relative border-b border-neutral-200 bg-[radial-gradient(#e5e5e5_1px,transparent_1px)] [background-size:20px_20px]">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white via-white/95 to-white" />
-        <div className="relative mx-auto grid w-full items-start gap-8 px-5 pb-16 pt-6 sm:px-8 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-14 lg:px-16 lg:pb-24 lg:pt-12">
+      <div className="relative border-b border-[#dcd8ce]">
+        <div
+          ref={storyRef}
+          className="relative mx-auto grid w-full max-w-[1440px] items-start gap-8 px-5 pb-16 pt-8 sm:px-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-12 lg:px-14 lg:pb-24 lg:pt-14 xl:gap-16"
+        >
+          {hero && (
+            <div className="min-w-0 lg:col-start-1 lg:row-start-1">
+              {hero}
+            </div>
+          )}
+
           <ProductWindow
-            className="sticky top-[108px] z-30 order-first self-start md:top-[76px] lg:order-none lg:col-start-2 lg:row-start-1 lg:top-[92px]"
+            className="sticky top-[104px] z-30 self-start md:top-[76px] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:top-[92px]"
             chapter={demo.activeChapter}
             step={demo.step}
             phase={demo.phase}
@@ -58,7 +69,8 @@ export default function ProductShowcase({ children }: Props) {
             onReplay={demo.replay}
             onToggleCollapsed={demo.toggleCollapsed}
           />
-          <div ref={storyRef} className="min-w-0 lg:col-start-1 lg:row-start-1">
+
+          <div className="min-w-0 lg:col-start-1 lg:row-start-2">
             {children}
           </div>
         </div>
