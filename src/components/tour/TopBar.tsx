@@ -55,6 +55,14 @@ export default function TopBar({ active, onJump }: Props) {
           Learn
         </a>
         <a
+          href={product.footer.repoUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="hidden font-mono text-[11px] uppercase tracking-[0.14em] text-muted transition-colors hover:text-ink sm:block"
+        >
+          GitHub
+        </a>
+        <a
           href={product.cta.href}
           className="flex h-8 items-center gap-1.5 rounded-full bg-brand-strong px-3.5 text-[13px] font-medium text-white transition-colors hover:bg-brand lg:h-9 lg:px-4"
         >

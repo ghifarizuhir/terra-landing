@@ -37,24 +37,6 @@ const dir: Record<string, ShotDirection> = {
       { x: 0.2, y: 0.6, w: 0.46, h: 0.18, label: 'Activity & comments' },
     ],
   },
-  'work-item-types': {
-    focus: { x: 0.44, y: 0.36, scale: 1.3 },
-    hotspots: [{ x: 0.275, y: 0.22, w: 0.33, h: 0.275, label: 'Incident, request, change' }],
-  },
-  'workflow-editor': {
-    focus: { x: 0.6, y: 0.32, scale: 1.2 },
-    hotspots: [
-      { x: 0.3, y: 0.17, w: 0.33, h: 0.29, label: 'Typed states' },
-      { x: 0.72, y: 0.17, w: 0.23, h: 0.25, label: 'Allowed transitions', labelAlign: 'right', side: 'top' },
-    ],
-  },
-  'services-board': {
-    focus: { x: 0.44, y: 0.32, scale: 1.24 },
-    hotspots: [
-      { x: 0.175, y: 0.088, w: 0.21, h: 0.037, label: '1 down · 2 degraded · 6 healthy' },
-      { x: 0.665, y: 0.185, w: 0.05, h: 0.3, label: 'Health' },
-    ],
-  },
   'services-graph': {
     focus: { x: 0.62, y: 0.34, scale: 1.2 },
     hotspots: [

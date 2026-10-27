@@ -6,7 +6,7 @@ const backgroundCards: Record<string, { id: string; title: string; badge: string
   triage: [{ id: 'TERRA-39', title: 'VPN profile certificate renewal', badge: 'Request' }],
   backlog: [
     { id: 'TERRA-38', title: 'Rotate Redis stream consumer keys', badge: 'Change' },
-    { id: 'TERRA-35', title: 'Postgres replica lag runbook review', badge: 'Task' },
+    { id: 'TERRA-35', title: 'Postgres replica lag runbook review', badge: 'Improvement' },
   ],
   'in-progress': [{ id: 'TERRA-41', title: 'Upgrade ingress TLS policy', badge: 'Change' }],
 }
@@ -29,7 +29,7 @@ export default function WorkItemsScene({ step, reducedMotion }: TSceneProps) {
           <span className="font-mono text-[10px] uppercase tracking-wider text-slate-300">Queue</span>
           <span className="rounded bg-white/[0.08] px-2 py-0.5 font-mono text-[10px] text-white">Core Platform</span>
           <span className="hidden rounded border border-white/15 px-2 py-0.5 text-[10px] text-slate-300 sm:inline">
-            Typed states enabled
+            Type: Incident
           </span>
         </div>
         <span className="font-mono text-[10px] text-slate-300">
@@ -37,7 +37,7 @@ export default function WorkItemsScene({ step, reducedMotion }: TSceneProps) {
         </span>
       </div>
 
-      {/* Kanban Grid + Widescreen Workflow Inspector */}
+      {/* Kanban Grid + Widescreen State Inspector */}
       <div className="grid gap-3 lg:grid-cols-[1fr_240px]">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <LayoutGroup>
@@ -113,20 +113,20 @@ export default function WorkItemsScene({ step, reducedMotion }: TSceneProps) {
           </LayoutGroup>
         </div>
 
-        {/* Widescreen Right Sidebar: Typed Workflow State Inspector */}
+        {/* Widescreen Right Sidebar: Work Item State Inspector */}
         <aside aria-hidden="true" className="hidden flex-col justify-between rounded-xl border border-white/[0.08] bg-[#101520] p-3.5 text-xs lg:flex">
           <div>
             <div className="flex items-center justify-between border-b border-white/[0.08] pb-2.5">
-              <span className="font-semibold text-white">Typed workflow</span>
+              <span className="font-semibold text-white">Work item timeline</span>
               <span className="rounded bg-sky-500/20 px-1.5 py-0.5 font-mono text-[9px] text-sky-200">Incident</span>
             </div>
             <div className="mt-3 space-y-2 font-mono text-[10px]">
               <div className="flex items-center justify-between rounded border border-white/[0.06] bg-[#0b0e15] px-2.5 py-1.5 text-slate-300">
-                <span>1. Intake</span>
-                <span className="text-emerald-300">Accepted</span>
+                <span>1. Intake accepted</span>
+                <span className="text-emerald-300">Logged</span>
               </div>
               <div className="flex items-center justify-between rounded border border-white/[0.06] bg-[#0b0e15] px-2.5 py-1.5 text-slate-300">
-                <span>2. Triage</span>
+                <span>2. Triage review</span>
                 <span className={step === 1 ? 'text-amber-300' : 'text-emerald-300'}>
                   {step === 0 ? 'Active' : step === 1 ? 'Checking' : 'Verified'}
                 </span>
@@ -138,7 +138,7 @@ export default function WorkItemsScene({ step, reducedMotion }: TSceneProps) {
             </div>
           </div>
           <div className="border-t border-white/[0.08] pt-2.5 font-mono text-[10px] text-slate-300">
-            Transition rules enforced
+            State history recorded
           </div>
         </aside>
       </div>

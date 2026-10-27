@@ -1643,7 +1643,7 @@ export const managements: Management[] = [
     color: 'bg-blue-500', icon: 'Package', order: 6, lane: 'foundation'
   },
   {
-    id: 'service-map', prefix: 'CI-', title: 'Service Configuration (Service Map)', oneLiner: 'Maps services as a live graph to see dependencies and predict impact',
+    id: 'service-map', prefix: 'CI-', title: 'Service Configuration (Service Map)', oneLiner: 'Maps services as a maintained graph to see dependencies and predict impact',
     bullets: [
       'Records CIs (server/service) and directed dependencies not a stale diagram',
       'Answers impact: if this component fails, what else is affected?',

@@ -18,10 +18,10 @@ export default function NextChapter({ reduced }: Props) {
         <div className="flex items-center gap-3">
           <span className="font-mono text-[11px] tracking-[0.18em] text-brand">11</span>
           <span className="h-px w-6 bg-brand/50" />
-          <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted">Roadmap</span>
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted">Boundaries</span>
         </div>
         <h2 className="mt-4 font-display text-[clamp(32px,3.4vw,54px)] leading-[1.0] tracking-[-0.012em] text-ink">
-          Shipped today, next in line
+          Shipped today, deliberately bounded
         </h2>
       </motion.header>
 
@@ -54,7 +54,7 @@ export default function NextChapter({ reduced }: Props) {
         >
           <div className="flex items-center gap-2.5">
             <span className="h-1.5 w-1.5 rounded-full bg-muted" />
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink">Next</h3>
+            <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink">Not in v1</h3>
           </div>
           <ul className="mt-5 space-y-3">
             {product.roadmap.next.map((item) => (
@@ -94,6 +94,9 @@ export default function NextChapter({ reduced }: Props) {
         <span>AGPL-3.0</span>
         <a href={product.footer.planeUrl} className="transition-colors hover:text-ink">
           Built on Plane
+        </a>
+        <a href={product.footer.repoUrl} target="_blank" rel="noreferrer" className="transition-colors hover:text-ink">
+          GitHub
         </a>
         <a href="/learn" className="transition-colors hover:text-ink">
           Learn

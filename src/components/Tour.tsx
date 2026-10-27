@@ -24,7 +24,7 @@ const capabilities: readonly Capability[] = [
     chapter: 'work',
     eyebrow: 'Work management',
     title: 'Move service work forward with a clear process.',
-    body: 'Bring requests, incidents and change tasks into one queue, then give each kind of work the states and rules it needs.',
+    body: 'Bring requests, incidents and change tasks into one queue, then give each kind of work its own fields and vocabulary.',
     features: [feature('work-items'), feature('types'), feature('intake')],
   },
   {
@@ -54,7 +54,12 @@ const questions = [
   {
     question: 'What is Terraline?',
     answer:
-      'Terraline is open-source IT service management built on Plane. It brings work items, a service catalog, typed workflows and AI-assisted operations into one system.',
+      'Terraline is open-source IT service management built on Plane. It brings work items, a service catalog, shared states and AI-assisted operations into one system.',
+  },
+  {
+    question: 'Where is the source code?',
+    answer:
+      'Terraline is AGPL-3.0 and lives on GitHub at github.com/ghifarizuhir/plane-for-itsm. Self-host it with Docker Compose or request a guided demo workspace.',
   },
   {
     question: 'Can I run Terraline on my own infrastructure?',
@@ -69,7 +74,7 @@ const questions = [
   {
     question: 'How can I see the product?',
     answer:
-      'Request access and we will arrange a guided demo workspace so you can explore Terraline against your own service workflows.',
+      'Request access and we will arrange a guided demo workspace so you can explore Terraline against your own service processes.',
   },
 ]
 
@@ -83,19 +88,20 @@ function SiteNav() {
               <Mark className="h-[18px] w-auto text-[#0c0e12]" />
               <span className="font-display text-[19px] font-semibold tracking-[-0.03em]">Terraline</span>
             </a>
-            <span aria-hidden="true" className="hidden h-3.5 w-px bg-[#c8c3b8] sm:inline-block" />
-            <span className="hidden font-mono text-[11px] text-[#4b5260] sm:inline-block">AGPL-3.0 · Self-hosted</span>
+            <span aria-hidden="true" className="hidden h-3.5 w-px bg-[#c8c3b8] lg:inline-block" />
+            <span className="hidden font-mono text-[11px] text-[#4b5260] lg:inline-block">AGPL-3.0 · Self-hosted</span>
           </div>
 
-          <nav aria-label="Main navigation" className="hidden items-center gap-8 md:flex">
+          <nav aria-label="Main navigation" className="hidden items-center gap-6 md:flex lg:gap-8">
             <a href="#product" className="site-nav-link">Product</a>
             <a href="#platform" className="site-nav-link">Platform</a>
             <a href="#roadmap" className="site-nav-link">Roadmap</a>
             <a href="/learn" className="site-nav-link">Learn</a>
+            <a href={product.footer.repoUrl} target="_blank" rel="noreferrer" className="site-nav-link">GitHub</a>
           </nav>
 
           <div className="flex shrink-0 items-center gap-2.5">
-            <a href={product.footer.contact} className="button button-secondary hidden h-9 px-3.5 text-xs sm:inline-flex">
+            <a href={product.footer.contact} className="button button-secondary hidden h-9 px-3.5 text-xs lg:inline-flex">
               Contact
             </a>
             <a href={product.cta.href} className="button button-primary h-9 px-3.5 text-xs">
@@ -111,6 +117,7 @@ function SiteNav() {
           <a href="#platform" className="site-nav-link shrink-0">Platform</a>
           <a href="#roadmap" className="site-nav-link shrink-0">Roadmap</a>
           <a href="/learn" className="site-nav-link shrink-0">Learn</a>
+          <a href={product.footer.repoUrl} target="_blank" rel="noreferrer" className="site-nav-link shrink-0">GitHub</a>
         </nav>
       </div>
     </header>
@@ -141,11 +148,11 @@ function HeroBlueprintVisual() {
             <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#4b5260]">
               Stage 1 · Intake & Queue
             </span>
-            <span className="rounded bg-[#0c0e12] px-2 py-0.5 font-mono text-[10px] text-white">Typed states</span>
+            <span className="shrink-0 whitespace-nowrap rounded bg-[#0c0e12] px-2 py-0.5 font-mono text-[10px] text-white">ITSM types</span>
           </div>
           <p className="mt-2.5 text-[14px] font-semibold text-[#0c0e12]">Requests, incidents & changes</p>
           <p className="mt-1 text-[12.5px] leading-relaxed text-[#3a404d]">
-            Incoming noise enters a dedicated triage buffer before becoming structured work with enforced state transitions.
+            Incoming noise enters a dedicated triage buffer before becoming typed work with a service link and a shared state set.
           </p>
         </div>
 
@@ -154,20 +161,20 @@ function HeroBlueprintVisual() {
             <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#4b5260]">
               Stage 2 · Service Graph
             </span>
-            <span className="rounded border border-emerald-700/30 bg-emerald-950 px-2 py-0.5 font-mono text-[10px] text-emerald-200">
-              Topology live
+            <span className="shrink-0 whitespace-nowrap rounded border border-emerald-700/30 bg-emerald-950 px-2 py-0.5 font-mono text-[10px] text-emerald-200">
+              Graph
             </span>
           </div>
           <p className="mt-2.5 text-[14px] font-semibold text-[#0c0e12]">Ownership & blast radius</p>
           <p className="mt-1 text-[12.5px] leading-relaxed text-[#3a404d]">
-            Every ticket links directly to upstream and downstream services, criticality tiers, and active health signals.
+            Work items link to the services they affect, with criticality tiers and incident-derived health.
           </p>
         </div>
 
         <div className="rounded-2xl border border-[#1e2430] bg-[#0c0e12] p-4 text-white sm:col-span-2">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
             <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-slate-300">
-              Live Signal Trace · Incident → Service → Runbook → Cycle
+              Signal Trace · Incident → Service → Runbook → Cycle
             </span>
             <span className="font-mono text-[10px] text-sky-300">Yjs + Redis Stream</span>
           </div>
@@ -175,8 +182,8 @@ function HeroBlueprintVisual() {
           <div className="mt-3.5 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
             <div className="rounded-xl border border-white/10 bg-[#141923] p-2.5">
               <span className="font-mono text-[9px] text-sky-300">WORK ITEM</span>
-              <p className="mt-1 text-xs font-semibold text-white">Typed workflow</p>
-              <p className="mt-0.5 font-mono text-[10px] text-slate-300">Triage → Active</p>
+              <p className="mt-1 text-xs font-semibold text-white">Incident type</p>
+              <p className="mt-0.5 font-mono text-[10px] text-slate-300">Backlog → In progress</p>
             </div>
             <div className="rounded-xl border border-white/10 bg-[#141923] p-2.5">
               <span className="font-mono text-[9px] text-emerald-300">CATALOG</span>
@@ -230,6 +237,14 @@ function Hero() {
               className="inline-flex h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-[#0c0e12] transition-colors hover:text-[#3a404d]"
             >
               See the product <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+            <a
+              href={product.footer.repoUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-[#0c0e12] transition-colors hover:text-[#3a404d]"
+            >
+              View source <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </a>
           </div>
 
@@ -288,7 +303,7 @@ function FactStrip() {
 }
 
 const chapterMeta: Record<ShowcaseChapterId, { surface: string; badge: string }> = {
-  work: { surface: 'Queue · Typed states · Intake', badge: 'TERRA-42' },
+  work: { surface: 'Queue · Work item types · Intake', badge: 'TERRA-42' },
   services: { surface: 'Catalog · Dependency graph', badge: '3 SERVICES' },
   galileo: { surface: 'Pages · Grounded AI · Schedules', badge: 'GALILEO AI' },
   delivery: { surface: 'Cycles · Analytics · Mobile', badge: 'WEEK 2' },
@@ -562,10 +577,10 @@ function RoadmapSection() {
       <div className="mx-auto w-full max-w-[1440px] px-5 py-20 sm:px-8 md:py-28 lg:px-14">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <h2 className="text-balance font-display text-[clamp(34px,3.8vw,48px)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#0c0e12]">
-            Shipped today. Building next.
+            Shipped today. Bounded by design.
           </h2>
           <p className="max-w-[44ch] text-[15px] leading-[1.65] text-[#3a404d]">
-            What is in the product now and where the platform is heading—without dates or promises.
+            What is in the product now, and what we deliberately leave out of this release—without dates or promises.
           </p>
         </div>
 
@@ -593,10 +608,10 @@ function RoadmapSection() {
           <article className="rounded-[20px] border border-[#dcd8ce] bg-[#efeae0]/70 p-7 sm:p-9">
             <div className="flex items-center justify-between border-b border-[#dcd8ce] pb-4">
               <h3 className="font-display text-[22px] font-semibold tracking-[-0.02em] text-[#0c0e12]">
-                Next in line
+                Not in v1
               </h3>
               <span className="rounded-full border border-[#c8c3b8] bg-[#fbfaf7] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[#3a404d]">
-                In active design
+                Deliberate boundary
               </span>
             </div>
             <ul className="mt-6 space-y-3.5">
@@ -671,6 +686,14 @@ function CallToAction() {
             className="button h-11 border border-white/20 bg-white/[0.06] px-5 text-sm font-semibold text-white transition-colors hover:bg-white/12"
           >
             Contact us
+          </a>
+          <a
+            href={product.footer.repoUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="button h-11 border border-white/20 bg-white/[0.06] px-5 text-sm font-semibold text-white transition-colors hover:bg-white/12"
+          >
+            View source
           </a>
         </div>
       </div>

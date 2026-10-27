@@ -4,11 +4,12 @@ import SceneView from '../src/components/product-showcase/SceneView'
 import { showcaseChapters } from '../src/data/product-demo'
 
 describe('product showcase scenes', () => {
-  it('shows the sample work item in the workflow board', () => {
+  it('shows the sample work item in the work board', () => {
     render(<SceneView chapter="work" step={2} reducedMotion={false} />)
     expect(screen.getByText('TERRA-42')).toBeInTheDocument()
     expect(screen.getByText('API latency spike')).toBeInTheDocument()
     expect(screen.getByText('In progress')).toBeInTheDocument()
+    expect(screen.queryByText(/typed workflow/i)).not.toBeInTheDocument()
   })
 
   it('shows service names and a labeled dependency graph', () => {

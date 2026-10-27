@@ -75,6 +75,9 @@ export default function LearnApp() {
               <p className="mt-5 max-w-[59ch] text-[15px] leading-[1.7] text-neutral-600 sm:text-base">
                 Explore the practices your team lives every day—from restoring incidents and fulfilling requests to shipping changes and keeping knowledge current. Each stage pairs a repeatable pattern with an AI skill that helps humans decide faster.
               </p>
+              <p className="mt-3 max-w-[59ch] text-[12px] leading-[1.6] text-neutral-500">
+                A practice reference, not a feature list: Terraline ships the six practices in its ITIL4 map; Asset Management and Service Configuration appear here as broader ITSM knowledge.
+              </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <a href="#practices" className="button button-primary h-10 px-4 text-sm shadow-sm">

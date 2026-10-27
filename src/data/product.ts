@@ -35,12 +35,12 @@ export const product = {
   meta: {
     title: 'Terraline — Open-source IT service management platform',
     description:
-      'Terraline is open-source IT service management built on Plane: work items, a service catalog, typed workflows and AI in the loop — self-hosted, traceable, real-time.',
+      'Terraline is open-source IT service management built on Plane: work items, a service catalog, shared states and AI in the loop — self-hosted, traceable, real-time.',
   },
   hero: {
     eyebrow: 'Open-source IT service management · built on Plane',
     title: 'Run services and delivery work in one system',
-    body: 'Work items, a service catalog, typed workflows and AI in the loop — self-hosted, traceable, real-time.',
+    body: 'Work items, a service catalog, shared states and AI in the loop — self-hosted, traceable, real-time.',
     primaryCta: { label: 'Request a demo', href: DEMO_MAILTO },
     secondaryCta: { label: 'See the product', href: '#product' },
     screenshot: shot('work-items-board', 'Terraline work items board showing service work in progress'),
@@ -70,17 +70,17 @@ export const product = {
     },
     {
       id: 'types',
-      eyebrow: 'Typed workflows',
-      title: 'Give each process its own states and rules',
-      body: 'Incident, request and change are work item types with their own state machines — the process each team follows is explicit and auditable.',
+      eyebrow: 'Work item types',
+      title: 'Model each kind of service work explicitly',
+      body: 'Incident, problem, change and improvement are built-in work item types; request is opt-in with an optional service gate. Each type carries its own fields and vocabulary while sharing one state set.',
       bullets: [
-        'Per-type states with allowed transitions',
-        'Workflow editor lives in workspace settings',
+        'Four built-in types, plus an opt-in Request type',
+        'Optional required-service gate on intake acceptance',
         'Type-aware boards, filters and create forms',
       ],
       screenshots: [
-        shot('work-item-types', 'Work item types settings page'),
-        shot('workflow-editor', 'Workflow editor with typed states and transitions'),
+        shot('work-items-list', 'Work items list with type and service properties'),
+        shot('work-item-detail', 'Work item detail with type, service and activity'),
       ],
     },
     {
@@ -94,7 +94,6 @@ export const product = {
         'Service detail ties related work items together',
       ],
       screenshots: [
-        shot('services-board', 'Services board sorted by health and criticality'),
         shot('services-graph', 'Service dependency graph view'),
         shot('service-detail', 'Service detail with dependencies and linked work items'),
       ],
@@ -177,10 +176,10 @@ export const product = {
       title: 'Beyond Plane upstream',
       body: 'Terraline keeps Plane’s delivery core and adds the service layer IT teams need.',
       points: [
-        'Service catalog with dependencies and health',
-        'Work item types with enforced workflows',
-        'Operations vocabulary and seeded demo data',
-        'Galileo AI assistant and scheduler',
+        'Service catalog with dependencies and incident-derived health',
+        'Built-in Incident, Problem, Change and Improvement types',
+        'Operations vocabulary and type-aware intake',
+        'Galileo AI assistant and Scheduler',
       ],
     },
     {
@@ -205,16 +204,17 @@ export const product = {
   },
   roadmap: {
     shipped: [
-      'Work items with types and workflows',
+      'Work items with built-in ITSM types and shared states',
       'Service catalog with dependency graph',
       'Intake triage and saved views',
       'Real-time pages, analytics and mobile mode',
-      'Galileo AI assistant, AI scheduler and MCP API (v1 core)',
+      'Galileo AI assistant, Scheduler and public API v1 (MCP/SDK-compatible)',
     ],
     next: [
-      'Asset lifecycle records',
-      'CMDB dependency map across services',
-      'Incident and postmortem records as first-class types',
+      'No SLA engine or CAB approval board',
+      'No live monitoring or APM feed',
+      'No separate asset or CMDB module',
+      'No native mobile app',
     ],
   },
   cta: {
@@ -227,5 +227,6 @@ export const product = {
     tagline: 'Open-source IT service management',
     contact: DEMO_MAILTO,
     planeUrl: 'https://plane.so',
+    repoUrl: 'https://github.com/ghifarizuhir/plane-for-itsm',
   },
 } as const

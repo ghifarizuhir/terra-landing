@@ -7,6 +7,7 @@ describe('learn page', () => {
     render(<LearnApp />)
     expect(screen.getByText('Incident Management')).toBeInTheDocument()
     expect(screen.getByText(/Assets & configuration as the foundation/i)).toBeInTheDocument()
+    expect(screen.getByText(/A practice reference, not a feature list/i)).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /why records stay trustworthy/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /← product/i })).toHaveAttribute('href', '/')
   })

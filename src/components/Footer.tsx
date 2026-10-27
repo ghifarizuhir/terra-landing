@@ -28,6 +28,7 @@ export default function Footer({ variant = 'default' }: Props) {
             <span className="mb-1 font-mono text-[10px] uppercase tracking-[0.12em] text-slate-400">Learn</span>
             <a href="/learn#practices" className="transition-colors hover:text-white">Practice index</a>
             <a href="/learn#principles" className="transition-colors hover:text-white">Principles</a>
+            <a href={product.footer.repoUrl} target="_blank" rel="noreferrer" className="transition-colors hover:text-white">GitHub</a>
             <a href={product.footer.contact} className="transition-colors hover:text-white">Contact</a>
           </nav>
         </div>
@@ -53,6 +54,7 @@ export default function Footer({ variant = 'default' }: Props) {
           <nav className="flex flex-wrap items-center gap-4 text-[12px] text-muted" aria-label="Footer">
             <a href="/" className="hover:text-ink">Product</a>
             <a href="/learn" className="hover:text-ink">Learn</a>
+            <a href={product.footer.repoUrl} target="_blank" rel="noreferrer" className="hover:text-ink">GitHub</a>
             <a href={product.footer.contact} className="hover:text-ink">Contact</a>
             <a
               href={product.footer.planeUrl}
@@ -86,6 +88,7 @@ export default function Footer({ variant = 'default' }: Props) {
         <nav className="flex flex-col items-start gap-2.5 text-[13.5px] text-slate-200" aria-label="Resources and contact">
           <span className="mb-1 font-mono text-[10px] uppercase tracking-[0.12em] text-slate-400">Resources</span>
           <a href="/learn" className="transition-colors hover:text-white">Learn</a>
+          <a href={product.footer.repoUrl} target="_blank" rel="noreferrer" className="transition-colors hover:text-white">GitHub</a>
           <a href={product.footer.contact} className="transition-colors hover:text-white">Contact</a>
           <a href={product.footer.planeUrl} className="transition-colors hover:text-white">Plane</a>
         </nav>

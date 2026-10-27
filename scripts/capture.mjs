@@ -233,22 +233,7 @@ async function main() {
     await shoot(page, 'galileo')
   }
 
-  await goto(`/${demo.slug}/settings/work-item-types`)
-  await shoot(page, 'work-item-types')
-
-  await goto(`/${demo.slug}/settings/workflows`, async (p) => {
-    const row = p.getByRole('link', { name: /Incident Workflow/i }).first()
-    if (await row.count()) {
-      await row.click().catch(() => {})
-      await settle(p, 1200)
-    }
-  })
-  await shoot(page, 'workflow-editor')
-
-  await goto(`/${svc.slug}/projects/${svc.projectId}/services/`)
-  await shoot(page, 'services-board')
-
-  await goto(`/${svc.slug}/projects/${svc.projectId}/services/`, async (p) => {
+  await goto(`/${svc.slug}/services/`, async (p) => {
     const graph = p.locator('div.bg-layer-3.rounded-sm button').nth(1)
     try {
       await graph.waitFor({ timeout: 15000 })
@@ -261,7 +246,7 @@ async function main() {
   await shoot(page, 'services-graph')
 
   if (svc.serviceId) {
-    await goto(`/${svc.slug}/projects/${svc.projectId}/services/${svc.serviceId}`)
+    await goto(`/${svc.slug}/services/${svc.serviceId}`)
     await shoot(page, 'service-detail')
   }
 

@@ -67,4 +67,11 @@ describe('homepage landing page', () => {
     expect(within(mobileNavigation).getByRole('link', { name: 'Roadmap' })).toHaveAttribute('href', '#roadmap')
     expect(within(mobileNavigation).getByRole('link', { name: 'Learn' })).toHaveAttribute('href', '/learn')
   })
+
+  it('links to the source repository', () => {
+    render(<App />)
+
+    const repoLinks = screen.getAllByRole('link', { name: /GitHub/ })
+    expect(repoLinks.some((link) => link.getAttribute('href') === product.footer.repoUrl)).toBe(true)
+  })
 })

@@ -27,6 +27,22 @@ describe('product data', () => {
       }
     }
   })
+
+  it('does not claim per-type workflows', () => {
+    const copy = JSON.stringify({
+      meta: product.meta,
+      hero: product.hero,
+      features: product.features,
+      comparisons: product.comparisons,
+      roadmap: product.roadmap,
+    }).toLowerCase()
+
+    expect(copy).not.toContain('workflow')
+  })
+
+  it('links to the public source repository', () => {
+    expect(product.footer.repoUrl).toBe('https://github.com/ghifarizuhir/plane-for-itsm')
+  })
 })
 
 describe('screenshot files', () => {
