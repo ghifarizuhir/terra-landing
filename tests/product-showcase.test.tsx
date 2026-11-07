@@ -83,7 +83,7 @@ describe('useProductShowcase', () => {
   it('selects the scene for the intersecting story chapter', () => {
     const { container } = render(<Harness />)
     enter(container, 'services')
-    expect(screen.getByRole('button', { name: 'Service catalog' })).toHaveAttribute('aria-current', 'step')
+    expect(screen.getByRole('button', { name: 'Service context' })).toHaveAttribute('aria-current', 'step')
     expect(screen.getByText('API Gateway')).toBeInTheDocument()
   })
 

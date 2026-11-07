@@ -1,5 +1,11 @@
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, ChevronDown } from 'lucide-react'
 import { product, type Feature } from '../data/product'
+import {
+  landingPractices,
+  productPractices,
+  referencePractices,
+  type LandingPractice,
+} from '../data/practices'
 import type { ShowcaseChapterId } from '../data/product-demo'
 import Footer from './Footer'
 import Mark from './Mark'
@@ -13,6 +19,7 @@ const feature = (id: string): Feature => {
 
 type Capability = {
   chapter: ShowcaseChapterId
+  short: string
   eyebrow: string
   title: string
   body: string
@@ -22,39 +29,81 @@ type Capability = {
 const capabilities: readonly Capability[] = [
   {
     chapter: 'work',
-    eyebrow: 'Work management',
-    title: 'Move service work forward with a clear process.',
-    body: 'Bring requests, incidents and change tasks into one queue, then give each kind of work its own fields and vocabulary.',
+    short: 'Intake',
+    eyebrow: 'Intake & triage',
+    title: 'Triage every kind of service work in one queue.',
+    body: 'Incidents, requests and change tasks keep their own fields and vocabulary while sharing states, comments and history.',
     features: [feature('work-items'), feature('types'), feature('intake')],
   },
   {
     chapter: 'services',
-    eyebrow: 'Service catalog',
-    title: 'See the services behind every decision.',
-    body: 'Understand ownership, criticality and dependencies before a change—or while investigating an incident.',
+    short: 'Services',
+    eyebrow: 'Service context',
+    title: 'Know the service before you touch it.',
+    body: 'Ownership, criticality and dependencies sit beside the work item, so impact is visible before a change or during an incident.',
     features: [feature('services')],
   },
   {
     chapter: 'galileo',
+    short: 'Knowledge',
     eyebrow: 'Knowledge & AI',
-    title: 'Keep context close to the work.',
-    body: 'Runbooks, postmortems and an assistant grounded in the record help teams work from shared context.',
+    title: 'Draft from the work item.',
+    body: 'Runbooks and postmortems live next to the work. Galileo drafts summaries and comments from the item on screen; a person reviews every draft before it is used.',
     features: [feature('pages'), feature('ai'), feature('scheduler')],
   },
   {
     chapter: 'delivery',
+    short: 'Delivery',
     eyebrow: 'Delivery & mobile',
-    title: 'Plan the work, then keep it moving.',
-    body: 'Timebox service work, track progress and handle the important updates from your phone.',
+    title: 'Keep the practice moving after triage.',
+    body: 'Cycles, analytics and phone-sized triage cover the work that continues outside the queue.',
     features: [feature('delivery'), feature('mobile')],
+  },
+]
+
+const handoffs = [
+  { id: 'INC-', label: 'Incident', action: 'Restore service' },
+  { id: 'PRB-', label: 'Problem', action: 'Find the cause' },
+  { id: 'CHG-', label: 'Change', action: 'Ship the fix' },
+  { id: 'KB-', label: 'Knowledge', action: 'Make it reusable' },
+  { id: 'IMP-', label: 'Improvement', action: 'Prove it worked' },
+] as const
+
+const principles = [
+  {
+    title: 'Work types, built in.',
+    body: 'Incident, problem, change and improvement are first-class types. Request is opt-in. Each has its own fields and vocabulary, and all share one state set.',
+  },
+  {
+    title: 'Service context beside the work.',
+    body: 'The catalog holds ownership, criticality and dependencies, so triage and change decisions start from the service map instead of a guess.',
+  },
+  {
+    title: 'AI that stays inside the record.',
+    body: 'Galileo drafts summaries, descriptions and comments from the work item on screen. A person reviews every draft before it is used.',
   },
 ]
 
 const questions = [
   {
+    question: 'Is Terraline ITIL certified?',
+    answer:
+      'No. Terraline is built around ITIL practices, and we do not hold ITIL certification or claim it. Six practices ship as work types; the open knowledge base documents all eight.',
+  },
+  {
+    question: 'Which practices ship today?',
+    answer:
+      'Incident, problem, change, service request, knowledge and continual improvement management. Asset management and service configuration are covered in the knowledge base as reference material, not separate product modules.',
+  },
+  {
     question: 'What is Terraline?',
     answer:
-      'Terraline is open-source IT service management built on Plane. It brings work items, a service catalog, shared states and AI-assisted operations into one system.',
+      'Open-source IT service management built on Plane. Work items, a service catalog, shared states and AI-assisted drafting run in one self-hosted system.',
+  },
+  {
+    question: 'Can I run Terraline on my own infrastructure?',
+    answer:
+      'Yes. Self-host Terraline with Docker Compose, with application data on infrastructure you operate. AI features send prompts to the configured LLM endpoint; the default is OpenAI, so configure a provider you control if your data requirements call for it.',
   },
   {
     question: 'Where is the source code?',
@@ -62,19 +111,9 @@ const questions = [
       'Terraline is AGPL-3.0 and lives on GitHub at github.com/ghifarizuhir/plane-for-itsm. Self-host it with Docker Compose or request a guided demo workspace.',
   },
   {
-    question: 'Can I run Terraline on my own infrastructure?',
-    answer:
-      'Yes. You can self-host Terraline with Docker Compose, with application data on infrastructure you operate. AI features send prompts to the configured LLM endpoint; the default is OpenAI, so configure a provider you control if your data requirements call for it.',
-  },
-  {
-    question: 'What is the product built with?',
-    answer:
-      'The stack includes a React application, a Rust API, Postgres, Redis Stream jobs and a live server for collaborative pages.',
-  },
-  {
     question: 'How can I see the product?',
     answer:
-      'Request access and we will arrange a guided demo workspace so you can explore Terraline against your own service processes.',
+      'Request a demo and we will set up a guided workspace so you can walk an incident, request or change through Terraline against your own service processes.',
   },
 ]
 
@@ -92,10 +131,10 @@ function SiteNav() {
             <span className="hidden font-mono text-[11px] text-[#4b5260] lg:inline-block">AGPL-3.0 · Self-hosted</span>
           </div>
 
-          <nav aria-label="Main navigation" className="hidden items-center gap-6 md:flex lg:gap-8">
+          <nav aria-label="Main navigation" className="hidden items-center gap-7 lg:flex">
             <a href="#product" className="site-nav-link">Product</a>
+            <a href="#practices" className="site-nav-link">Practices</a>
             <a href="#platform" className="site-nav-link">Platform</a>
-            <a href="#roadmap" className="site-nav-link">Roadmap</a>
             <a href="/learn" className="site-nav-link">Learn</a>
             <a href={product.footer.repoUrl} target="_blank" rel="noreferrer" className="site-nav-link">GitHub</a>
           </nav>
@@ -105,17 +144,17 @@ function SiteNav() {
               Contact
             </a>
             <a href={product.cta.href} className="button button-primary h-9 px-3.5 text-xs">
-              Request access
+              Request a demo
             </a>
           </div>
         </div>
         <nav
           aria-label="Mobile navigation"
-          className="-mx-5 flex items-center gap-6 overflow-x-auto border-t border-[#dcd8ce] px-5 py-3 sm:-mx-8 sm:px-8 md:hidden"
+          className="-mx-5 flex items-center gap-6 overflow-x-auto border-t border-[#dcd8ce] px-5 py-3 sm:-mx-8 sm:px-8 lg:hidden"
         >
           <a href="#product" className="site-nav-link shrink-0">Product</a>
+          <a href="#practices" className="site-nav-link shrink-0">Practices</a>
           <a href="#platform" className="site-nav-link shrink-0">Platform</a>
-          <a href="#roadmap" className="site-nav-link shrink-0">Roadmap</a>
           <a href="/learn" className="site-nav-link shrink-0">Learn</a>
           <a href={product.footer.repoUrl} target="_blank" rel="noreferrer" className="site-nav-link shrink-0">GitHub</a>
         </nav>
@@ -124,92 +163,84 @@ function SiteNav() {
   )
 }
 
-function HeroBlueprintVisual() {
+function PracticeRack() {
   return (
-    <aside
-      aria-label="Terraline operational architecture schematic"
-      className="rounded-[24px] border border-[#dcd8ce] bg-[#fbfaf7] p-4 shadow-[0_24px_60px_-24px_rgba(12,14,18,0.14)] sm:p-6"
-    >
-      {/* Top schematic bar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#dcd8ce] pb-3.5">
-        <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-emerald-600" aria-hidden="true" />
-          <span className="font-mono text-[11px] font-semibold text-[#0c0e12]">SYSTEM BLUEPRINT · ONE DATA MODEL</span>
-        </div>
-        <span className="rounded border border-[#d0cbc0] bg-[#efeae0] px-2 py-0.5 font-mono text-[10px] font-medium text-[#2d333f]">
-          Self-hosted · Real-time
-        </span>
-      </div>
+    <aside aria-label="Terraline ITIL practice rack" className="relative">
+      <div className="overflow-hidden rounded-[22px] border border-[#1e2430] bg-[#0c0e12] text-white shadow-[0_30px_70px_-28px_rgba(12,14,18,0.55)]">
+        <div className="hazard-tape h-1.5 w-full" aria-hidden="true" />
 
-      {/* Connected 4-stage operational flow */}
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-2xl border border-[#dcd8ce] bg-[#f6f4ef] p-4">
-          <div className="flex items-center justify-between gap-2">
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#4b5260]">
-              Stage 1 · Intake & Queue
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 px-4 py-3 sm:px-5">
+          <div className="flex items-center gap-2.5">
+            <span className="flex items-center gap-1" aria-hidden="true">
+              <i className="h-1.5 w-1.5 rounded-full bg-red-500/70" />
+              <i className="h-1.5 w-1.5 rounded-full bg-amber-400/70" />
+              <i className="h-1.5 w-1.5 rounded-full bg-emerald-400/70" />
             </span>
-            <span className="shrink-0 whitespace-nowrap rounded bg-[#0c0e12] px-2 py-0.5 font-mono text-[10px] text-white">ITSM types</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-slate-300">
+              Service operations · practice rack
+            </span>
           </div>
-          <p className="mt-2.5 text-[14px] font-semibold text-[#0c0e12]">Requests, incidents & changes</p>
-          <p className="mt-1 text-[12.5px] leading-relaxed text-[#3a404d]">
-            Incoming noise enters a dedicated triage buffer before becoming typed work with a service link and a shared state set.
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-emerald-300">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
+            6 in product
+          </span>
+        </div>
+
+        <div className="px-2 py-1">
+          {productPractices.map((practice, index) => (
+            <a
+              key={practice.id}
+              href="/learn#practices"
+              className="group grid grid-cols-[28px_minmax(0,1fr)] items-start gap-3 rounded-xl px-2.5 py-3 transition-colors hover:bg-white/[0.04] sm:grid-cols-[28px_minmax(0,1fr)_auto] sm:items-center sm:gap-4"
+            >
+              <div className="relative flex h-full justify-center pt-1.5">
+                <span aria-hidden="true" className="absolute inset-y-[-14px] w-px bg-white/10" />
+                <span
+                  className="rack-lamp relative z-10 mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full"
+                  style={{
+                    backgroundColor: practice.lamp,
+                    boxShadow: `0 0 0 4px ${practice.lamp}1f, 0 0 16px ${practice.lamp}66`,
+                    animationDelay: `${index * 0.6}s`,
+                  }}
+                  aria-hidden="true"
+                />
+              </div>
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+                  <span className="font-mono text-[10px] tracking-[0.08em] text-slate-400">{practice.prefix}</span>
+                  <span className="text-[13.5px] font-semibold leading-snug text-white">{practice.shortTitle}</span>
+                </div>
+                <p className="mt-0.5 text-[11.5px] leading-snug text-slate-400">{practice.oneLiner}</p>
+              </div>
+              <span className="col-start-2 justify-self-start rounded border border-white/10 bg-white/[0.04] px-2 py-1 font-mono text-[9px] uppercase tracking-[0.08em] text-slate-300 sm:col-start-auto sm:justify-self-end">
+                AI · {practice.aiSkill}
+              </span>
+            </a>
+          ))}
+        </div>
+
+        <div className="border-t border-white/10 px-4 py-3 sm:px-5">
+          <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-slate-400">
+            Also documented in the open knowledge base
           </p>
-        </div>
-
-        <div className="rounded-2xl border border-[#dcd8ce] bg-[#f6f4ef] p-4">
-          <div className="flex items-center justify-between gap-2">
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#4b5260]">
-              Stage 2 · Service Graph
-            </span>
-            <span className="shrink-0 whitespace-nowrap rounded border border-emerald-700/30 bg-emerald-950 px-2 py-0.5 font-mono text-[10px] text-emerald-200">
-              Graph
-            </span>
-          </div>
-          <p className="mt-2.5 text-[14px] font-semibold text-[#0c0e12]">Ownership & blast radius</p>
-          <p className="mt-1 text-[12.5px] leading-relaxed text-[#3a404d]">
-            Work items link to the services they affect, with criticality tiers and incident-derived health.
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-[#1e2430] bg-[#0c0e12] p-4 text-white sm:col-span-2">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
-            <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-slate-300">
-              Signal Trace · Incident → Service → Runbook → Cycle
-            </span>
-            <span className="font-mono text-[10px] text-sky-300">Yjs + Redis Stream</span>
-          </div>
-
-          <div className="mt-3.5 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-            <div className="rounded-xl border border-white/10 bg-[#141923] p-2.5">
-              <span className="font-mono text-[9px] text-sky-300">WORK ITEM</span>
-              <p className="mt-1 text-xs font-semibold text-white">Incident type</p>
-              <p className="mt-0.5 font-mono text-[10px] text-slate-300">Backlog → In progress</p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-[#141923] p-2.5">
-              <span className="font-mono text-[9px] text-emerald-300">CATALOG</span>
-              <p className="mt-1 text-xs font-semibold text-white">Dependency map</p>
-              <p className="mt-0.5 font-mono text-[10px] text-slate-300">Tier-1 linked</p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-[#141923] p-2.5">
-              <span className="font-mono text-[9px] text-amber-300">GALILEO AI</span>
-              <p className="mt-1 text-xs font-semibold text-white">Grounded SOPs</p>
-              <p className="mt-0.5 font-mono text-[10px] text-slate-300">Human-confirmed</p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-[#141923] p-2.5">
-              <span className="font-mono text-[9px] text-slate-300">DELIVERY</span>
-              <p className="mt-1 text-xs font-semibold text-white">Cycles & mobile</p>
-              <p className="mt-0.5 font-mono text-[10px] text-slate-300">On-call ready</p>
-            </div>
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5">
+            {referencePractices.map((practice) => (
+              <a
+                key={practice.id}
+                href="/learn#practices"
+                className="inline-flex items-center gap-2 font-mono text-[10px] text-slate-300 transition-colors hover:text-white"
+              >
+                <span className="h-1.5 w-1.5 rounded-full border border-slate-400/60" aria-hidden="true" />
+                {practice.prefix} {practice.shortTitle}
+              </a>
+            ))}
           </div>
         </div>
-      </div>
 
-      {/* Bottom runtime bar */}
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 pt-1 font-mono text-[11px] text-[#4b5260]">
-        <span>Rust Axum · Postgres · Redis Stream</span>
-        <a href="#product" className="font-semibold text-[#0c0e12] underline underline-offset-4 hover:text-[#3a404d]">
-          Launch interactive workspace ↓
-        </a>
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/10 bg-[#10131a] px-4 py-2.5 font-mono text-[10px] text-slate-400 sm:px-5">
+          <span>One queue · one catalog · one record</span>
+          <span className="text-slate-400">ITIL-aligned · not certified</span>
+        </div>
       </div>
     </aside>
   )
@@ -217,63 +248,38 @@ function HeroBlueprintVisual() {
 
 function Hero() {
   return (
-    <section id="top" className="border-b border-[#dcd8ce] bg-[#f6f4ef]">
-      <div className="mx-auto grid w-full max-w-[1440px] items-center gap-10 px-5 py-12 sm:px-8 md:py-16 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14 lg:px-14 lg:py-20">
-        <div className="max-w-[580px]">
-          <h1 className="text-balance font-display text-[clamp(40px,4.6vw,58px)] font-semibold leading-[1.06] tracking-[-0.035em] text-[#0c0e12]">
+    <section id="top" className="relative overflow-hidden border-b border-[#dcd8ce] bg-[#f6f4ef]">
+      <div aria-hidden="true" className="paper-grid pointer-events-none absolute inset-0 opacity-70" />
+      <div className="relative mx-auto grid w-full max-w-[1440px] items-center gap-12 px-5 py-14 sm:px-8 md:py-20 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16 lg:px-14 lg:py-24">
+        <div className="max-w-[600px]">
+          <h1 className="text-balance font-display text-[clamp(42px,5.2vw,68px)] font-semibold leading-[0.98] tracking-[-0.04em] text-[#0c0e12]">
             {product.hero.title}
           </h1>
-          <p className="mt-5 max-w-[52ch] text-[16.5px] leading-[1.65] text-[#3a404d]">
+          <p className="mt-6 max-w-[54ch] text-[16.5px] leading-[1.65] text-[#3a404d]">
             {product.hero.body}
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+          <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-3">
             <a href={product.hero.primaryCta.href} className="button button-primary h-11 px-5 text-sm">
               {product.hero.primaryCta.label}
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </a>
-            <a
-              href="#product"
-              className="inline-flex h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-[#0c0e12] transition-colors hover:text-[#3a404d]"
-            >
-              See the product <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </a>
-            <a
-              href={product.footer.repoUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-[#0c0e12] transition-colors hover:text-[#3a404d]"
-            >
-              View source <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            <a href={product.hero.secondaryCta.href} className="button button-secondary h-11 px-5 text-sm">
+              {product.hero.secondaryCta.label}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </a>
           </div>
 
-          <div className="mt-10 border-y border-[#dcd8ce] py-4">
-            <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#3a404d]">
-              {product.hero.eyebrow}
-            </p>
-            <dl className="mt-3 grid grid-cols-2 gap-4 border-t border-[#e5e1d8] pt-3 sm:grid-cols-3">
-              <div>
-                <dt className="text-[12px] text-[#4b5260]">License</dt>
-                <dd className="mt-0.5 font-mono text-[13px] font-semibold text-[#0c0e12]">AGPL-3.0</dd>
-              </div>
-              <div className="border-l border-[#dcd8ce] pl-4">
-                <dt className="text-[12px] text-[#4b5260]">Deployment</dt>
-                <dd className="mt-0.5 font-mono text-[13px] font-semibold text-[#0c0e12]">Docker Compose</dd>
-              </div>
-              <div className="col-span-2 border-t border-[#e5e1d8] pt-2 sm:col-span-1 sm:border-l sm:border-t-0 sm:border-[#dcd8ce] sm:pl-4 sm:pt-0">
-                <dt className="text-[12px] text-[#4b5260]">Knowledge base</dt>
-                <dd className="mt-0.5 font-mono text-[13px] font-semibold text-[#0c0e12]">
-                  <a href="/learn" className="underline decoration-[#9ca3af] underline-offset-4 hover:decoration-[#0c0e12]">
-                    8 ITSM practices →
-                  </a>
-                </dd>
-              </div>
-            </dl>
-          </div>
+          <p className="mt-10 max-w-[52ch] border-t border-[#dcd8ce] pt-5 text-[12.5px] leading-relaxed text-[#4b5260]">
+            Six practices ship today. Asset management and service configuration are documented in the{' '}
+            <a href="/learn" className="font-semibold text-[#0c0e12] underline underline-offset-4">
+              open knowledge base
+            </a>
+            , not packaged as modules.
+          </p>
         </div>
 
-        <HeroBlueprintVisual />
+        <PracticeRack />
       </div>
     </section>
   )
@@ -284,7 +290,7 @@ function FactStrip() {
     <section aria-label="Platform foundations" className="border-b border-[#dcd8ce] bg-[#efeae0]">
       <div className="mx-auto flex w-full max-w-[1440px] flex-col justify-between gap-4 px-5 py-6 sm:px-8 lg:flex-row lg:items-center lg:px-14">
         <p className="text-sm font-medium text-[#2d333f]">
-          Open-source foundation, engineered for real service operations
+          Open-source foundation, built for service operations
         </p>
         <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
           {product.facts.map((fact) => (
@@ -302,8 +308,142 @@ function FactStrip() {
   )
 }
 
+function ConnectedPractices() {
+  return (
+    <section aria-label="How the practices connect" className="border-b border-[#dcd8ce] bg-[#efeae0]/45">
+      <div className="mx-auto w-full max-w-[1440px] px-5 py-20 sm:px-8 md:py-28 lg:px-14">
+        <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
+          <h2 className="max-w-[18ch] text-balance font-display text-[clamp(34px,3.8vw,48px)] font-semibold leading-[1.06] tracking-[-0.03em] text-[#0c0e12]">
+            The practices arrive connected.
+          </h2>
+          <p className="max-w-[62ch] text-[15px] leading-[1.65] text-[#3a404d] lg:justify-self-end">
+            An incident that recurs can open a problem. A confirmed problem can publish a known error. The fix runs as a change. Closure captures the evidence and drafts the knowledge or improvement follow-up. One record follows the work.
+          </p>
+        </div>
+
+        <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-[18px] border border-[#dcd8ce] bg-[#dcd8ce] sm:grid-cols-5">
+          {handoffs.map((handoff) => {
+            const practice = landingPractices.find((item) => item.prefix === handoff.id)
+            return (
+              <div key={handoff.id} className="bg-[#fbfaf7] p-4 sm:p-5 last:col-span-2 sm:last:col-span-1">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-[10px] tracking-[0.08em] text-[#4b5260]">{handoff.id}</span>
+                  <span
+                    className="h-2 w-2 rounded-full"
+                    style={{
+                      backgroundColor: practice?.lamp ?? '#64748b',
+                      boxShadow: `0 0 18px ${practice?.lamp ?? '#64748b'}44`,
+                    }}
+                    aria-hidden="true"
+                  />
+                </div>
+                <p className="mt-3 font-display text-[19px] font-semibold tracking-[-0.02em] text-[#0c0e12]">
+                  {handoff.label}
+                </p>
+                <p className="mt-1 text-[12px] leading-snug text-[#4b5260]">{handoff.action}</p>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className="mt-12 grid gap-8 border-t border-[#dcd8ce] pt-8 md:grid-cols-3 md:gap-10">
+          {principles.map((principle) => (
+            <article key={principle.title}>
+              <h3 className="font-display text-[19px] font-semibold tracking-[-0.02em] text-[#0c0e12]">
+                {principle.title}
+              </h3>
+              <p className="mt-2 text-[13.5px] leading-[1.65] text-[#3a404d]">{principle.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function statusClasses(status: LandingPractice['status']) {
+  return status === 'product'
+    ? 'inline-flex w-fit items-center gap-1.5 rounded-full border border-emerald-700/25 bg-emerald-950 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.08em] text-emerald-200'
+    : 'inline-flex w-fit items-center gap-1.5 rounded-full border border-[#c8c3b8] bg-[#f6f4ef] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.08em] text-[#4b5260]'
+}
+
+function PracticesSection() {
+  return (
+    <section id="practices" className="scroll-mt-[112px] border-b border-[#dcd8ce] md:scroll-mt-16">
+      <div className="mx-auto w-full max-w-[1440px] px-5 py-20 sm:px-8 md:py-28 lg:px-14">
+        <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
+          <div>
+            <h2 className="max-w-[20ch] text-balance font-display text-[clamp(34px,3.8vw,48px)] font-semibold leading-[1.06] tracking-[-0.03em] text-[#0c0e12]">
+              Eight practices. Six in the product. All in the open.
+            </h2>
+            <p className="mt-4 max-w-[56ch] text-[15px] leading-[1.65] text-[#3a404d]">
+              Six practices ship as connected work types. Asset management and service configuration live in the open knowledge base, so the full map is readable before you deploy.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 lg:justify-self-end">
+            <span className={statusClasses('product')}>
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
+              6 in product
+            </span>
+            <span className={statusClasses('reference')}>2 reference</span>
+          </div>
+        </div>
+
+        <div className="mt-10 overflow-hidden rounded-[18px] border border-[#dcd8ce] bg-[#fbfaf7]">
+          <div className="hidden grid-cols-[minmax(0,1.15fr)_minmax(0,1.5fr)_minmax(0,0.9fr)_auto_18px] items-center gap-4 border-b border-[#dcd8ce] bg-[#efeae0]/60 px-5 py-2.5 font-mono text-[9px] uppercase tracking-[0.12em] text-[#4b5260] md:grid">
+            <span>Practice</span>
+            <span>What it does</span>
+            <span>AI skill</span>
+            <span>Status</span>
+            <span />
+          </div>
+
+          {landingPractices.map((practice) => (
+            <a
+              key={practice.id}
+              href="/learn#practices"
+              className="group grid gap-2 border-b border-[#e5e1d8] px-5 py-4 transition-colors last:border-b-0 hover:bg-[#f6f4ef] md:grid-cols-[minmax(0,1.15fr)_minmax(0,1.5fr)_minmax(0,0.9fr)_auto_18px] md:items-center md:gap-4"
+            >
+              <div className="flex items-center gap-3">
+                <span
+                  className="h-2 w-2 shrink-0 rounded-full"
+                  style={{
+                    backgroundColor: practice.lamp,
+                    boxShadow: practice.status === 'product' ? `0 0 8px ${practice.lamp}66` : undefined,
+                  }}
+                  aria-hidden="true"
+                />
+                <span className="font-mono text-[10px] text-[#4b5260]">{practice.prefix}</span>
+                <span className="text-[14px] font-semibold text-[#0c0e12]">{practice.shortTitle}</span>
+              </div>
+              <p className="pl-5 text-[13px] leading-snug text-[#3a404d] md:pl-0">{practice.oneLiner}</p>
+              <span className="pl-5 font-mono text-[10px] uppercase tracking-[0.06em] text-[#3a404d] md:pl-0">
+                {practice.aiSkill}
+              </span>
+              <span className={statusClasses(practice.status)}>
+                {practice.status === 'product' ? 'In product' : 'Reference'}
+              </span>
+              <ArrowUpRight
+                className="hidden h-4 w-4 text-[#4b5260] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 md:block"
+                aria-hidden="true"
+              />
+            </a>
+          ))}
+        </div>
+
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 font-mono text-[10px] text-[#4b5260]">
+          <span>Six practices ship today. Two are reference material in the open knowledge base.</span>
+          <a href="/learn" className="font-semibold text-[#0c0e12] underline underline-offset-4">
+            Read all 8 practices →
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 const chapterMeta: Record<ShowcaseChapterId, { surface: string; badge: string }> = {
-  work: { surface: 'Queue · Work item types · Intake', badge: 'TERRA-42' },
+  work: { surface: 'Intake · Queue · Types', badge: 'TERRA-42' },
   services: { surface: 'Catalog · Dependency graph', badge: '3 SERVICES' },
   galileo: { surface: 'Pages · Grounded AI · Schedules', badge: 'GALILEO AI' },
   delivery: { surface: 'Cycles · Analytics · Mobile', badge: 'WEEK 2' },
@@ -315,17 +455,16 @@ function ProductHeader() {
   const current = capabilities[activeIndex] ?? capabilities[0]!
 
   return (
-    <div id="product" className="scroll-mt-24 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+    <div id="product" className="flex scroll-mt-24 flex-col justify-between gap-5 md:flex-row md:items-end">
       <div>
         <h2 className="max-w-[22ch] text-balance font-display text-[clamp(32px,3.6vw,46px)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#0c0e12]">
-          Bring your service work into one system.
+          See the six practices at work.
         </h2>
         <p className="mt-2.5 max-w-[58ch] text-[15px] leading-[1.65] text-[#3a404d]">
-          Switch chapters below or step through the slides—the live demo workspace stays front and center.
+          The demo workspace runs the real flows: intake, triage, service context, knowledge and delivery. Step through the chapters or use the slides.
         </p>
       </div>
 
-      {/* Chapter Slide Controls */}
       <div className="flex shrink-0 items-center gap-3 self-start md:self-auto">
         <div className="rounded-xl border border-[#d0cbc0] bg-[#fbfaf7] px-3.5 py-2 font-mono text-xs text-[#0c0e12]">
           <span className="font-semibold">0{activeIndex + 1}</span>
@@ -361,7 +500,6 @@ function CapabilitySlideDeck() {
 
   return (
     <div className="overflow-hidden rounded-[22px] border border-[#dcd8ce] bg-[#fbfaf7] shadow-[0_18px_45px_-28px_rgba(12,14,18,0.16)]">
-      {/* Slide Deck Top Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#dcd8ce] bg-[#f6f4ef] px-5 py-3.5 sm:px-7">
         <div className="flex items-center gap-2">
           {capabilities.map((cap, idx) => {
@@ -379,7 +517,7 @@ function CapabilitySlideDeck() {
                 }`}
               >
                 <span>0{idx + 1}</span>
-                <span className="hidden sm:inline">{cap.title.split(' ')[0]}</span>
+                <span className="hidden sm:inline">{cap.short}</span>
               </button>
             )
           })}
@@ -406,7 +544,6 @@ function CapabilitySlideDeck() {
         </div>
       </div>
 
-      {/* Single Active Chapter Slide (no vertical chapter scrolling) */}
       <div>
         {capabilities.map((item) => {
           const isActive = activeChapter === item.chapter
@@ -421,7 +558,6 @@ function CapabilitySlideDeck() {
               className={isActive ? 'block p-6 sm:p-8 lg:p-9' : 'sr-only'}
             >
               <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
-                {/* Left Column: Active Chapter Overview */}
                 <div>
                   <h3 className="text-balance font-display text-[26px] font-semibold leading-[1.15] tracking-[-0.025em] text-[#0c0e12] sm:text-[32px]">
                     {item.title}
@@ -444,10 +580,9 @@ function CapabilitySlideDeck() {
                   </div>
                 </div>
 
-                {/* Right Column: Feature Specifications in Horizontal Grid */}
                 <div
                   className={`grid divide-y divide-[#dcd8ce] border-t border-[#dcd8ce] pt-5 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0 ${
-                    item.features.length > 1 ? 'sm:grid-cols-2 sm:divide-x sm:divide-y-0' : ' grid-cols-1'
+                    item.features.length > 1 ? 'sm:grid-cols-2 sm:divide-x sm:divide-y-0' : 'grid-cols-1'
                   }`}
                 >
                   {item.features.map((current, idx) => {
@@ -500,7 +635,7 @@ function PlatformSection() {
       <div className="mx-auto w-full max-w-[1440px] px-5 py-20 sm:px-8 md:py-28 lg:px-14">
         <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
           <h2 className="text-balance font-display text-[clamp(34px,3.8vw,48px)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#0c0e12]">
-            One platform. Your infrastructure.
+            Your infrastructure. Your records.
           </h2>
           <p className="max-w-[60ch] text-[15px] leading-[1.65] text-[#3a404d] lg:justify-self-end">
             {product.architecture.body} AI requests follow the configured LLM endpoint; the default is OpenAI, and the endpoint can be configured for your deployment.
@@ -577,10 +712,10 @@ function RoadmapSection() {
       <div className="mx-auto w-full max-w-[1440px] px-5 py-20 sm:px-8 md:py-28 lg:px-14">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <h2 className="text-balance font-display text-[clamp(34px,3.8vw,48px)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#0c0e12]">
-            Shipped today. Bounded by design.
+            Shipped today. Not claimed.
           </h2>
-          <p className="max-w-[44ch] text-[15px] leading-[1.65] text-[#3a404d]">
-            What is in the product now, and what we deliberately leave out of this release—without dates or promises.
+          <p className="max-w-[46ch] text-[15px] leading-[1.65] text-[#3a404d]">
+            The boundary is part of the product. This is what runs now, and what we do not pretend to have.
           </p>
         </div>
 
@@ -608,7 +743,7 @@ function RoadmapSection() {
           <article className="rounded-[20px] border border-[#dcd8ce] bg-[#efeae0]/70 p-7 sm:p-9">
             <div className="flex items-center justify-between border-b border-[#dcd8ce] pb-4">
               <h3 className="font-display text-[22px] font-semibold tracking-[-0.02em] text-[#0c0e12]">
-                Not in v1
+                Out of scope in v1
               </h3>
               <span className="rounded-full border border-[#c8c3b8] bg-[#fbfaf7] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[#3a404d]">
                 Deliberate boundary
@@ -635,10 +770,10 @@ function FaqSection() {
       <div className="mx-auto grid w-full max-w-[1440px] gap-10 px-5 py-20 sm:px-8 md:grid-cols-[0.82fr_1.18fr] md:gap-14 md:py-28 lg:px-14">
         <div>
           <h2 className="max-w-[14ch] text-balance font-display text-[clamp(34px,3.8vw,46px)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#0c0e12]">
-            You got questions? We got answers.
+            Before you deploy.
           </h2>
           <p className="mt-4 max-w-[38ch] text-[15px] leading-[1.65] text-[#3a404d]">
-            Want to talk through your setup?{' '}
+            The short answers on certification, scope and self-hosting. Need the longer version?{' '}
             <a className="font-semibold text-[#0c0e12] underline underline-offset-4" href={product.footer.contact}>
               Contact us.
             </a>
@@ -665,36 +800,39 @@ function FaqSection() {
 function CallToAction() {
   return (
     <section className="mx-auto w-full max-w-[1440px] px-5 py-16 sm:px-8 md:py-20 lg:px-14">
-      <div className="flex flex-col gap-6 rounded-[24px] border border-[#1e2430] bg-[#0c0e12] p-8 text-white shadow-[0_28px_64px_-24px_rgba(12,14,18,0.45)] sm:p-10 md:flex-row md:items-center md:justify-between lg:p-12">
-        <div>
-          <h2 className="text-balance font-display text-[clamp(30px,3.4vw,42px)] font-semibold leading-[1.1] tracking-[-0.03em] text-white">
-            {product.cta.title}
-          </h2>
-          <p className="mt-3 max-w-[54ch] text-[15px] leading-[1.65] text-slate-300">
-            {product.cta.body}
-          </p>
-        </div>
-        <div className="flex shrink-0 flex-wrap gap-3">
-          <a
-            href={product.cta.href}
-            className="button h-11 bg-white px-5 text-sm font-semibold text-[#0c0e12] transition-colors hover:bg-[#efeae0]"
-          >
-            {product.cta.label} <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-          </a>
-          <a
-            href={product.footer.contact}
-            className="button h-11 border border-white/20 bg-white/[0.06] px-5 text-sm font-semibold text-white transition-colors hover:bg-white/12"
-          >
-            Contact us
-          </a>
-          <a
-            href={product.footer.repoUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="button h-11 border border-white/20 bg-white/[0.06] px-5 text-sm font-semibold text-white transition-colors hover:bg-white/12"
-          >
-            View source
-          </a>
+      <div className="overflow-hidden rounded-[24px] border border-[#1e2430] bg-[#0c0e12] text-white shadow-[0_28px_64px_-24px_rgba(12,14,18,0.45)]">
+        <div className="hazard-tape h-1.5 w-full" aria-hidden="true" />
+        <div className="flex flex-col gap-6 p-8 sm:p-10 md:flex-row md:items-center md:justify-between lg:p-12">
+          <div>
+            <h2 className="text-balance font-display text-[clamp(30px,3.4vw,42px)] font-semibold leading-[1.1] tracking-[-0.03em] text-white">
+              {product.cta.title}
+            </h2>
+            <p className="mt-3 max-w-[56ch] text-[15px] leading-[1.65] text-slate-300">
+              {product.cta.body}
+            </p>
+          </div>
+          <div className="flex shrink-0 flex-wrap gap-3">
+            <a
+              href={product.cta.href}
+              className="button h-11 bg-white px-5 text-sm font-semibold text-[#0c0e12] transition-colors hover:bg-[#efeae0]"
+            >
+              {product.cta.label} <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+            <a
+              href="/learn"
+              className="button h-11 border border-white/20 bg-white/[0.06] px-5 text-sm font-semibold text-white transition-colors hover:bg-white/12"
+            >
+              Read the practice guide
+            </a>
+            <a
+              href={product.footer.repoUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="button h-11 border border-white/20 bg-white/[0.06] px-5 text-sm font-semibold text-white transition-colors hover:bg-white/12"
+            >
+              View source
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -707,10 +845,12 @@ export default function Tour() {
       <SiteNav />
       <main>
         <Hero />
+        <FactStrip />
+        <ConnectedPractices />
+        <PracticesSection />
         <ProductShowcase header={<ProductHeader />}>
           <CapabilitySlideDeck />
         </ProductShowcase>
-        <FactStrip />
         <PlatformSection />
         <RoadmapSection />
         <FaqSection />

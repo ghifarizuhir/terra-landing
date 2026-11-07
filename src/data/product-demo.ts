@@ -1,6 +1,6 @@
 export const showcaseChapters = [
-  { id: 'work', label: 'Work management', targetId: 'top', steps: 3 },
-  { id: 'services', label: 'Service catalog', targetId: 'showcase-services', steps: 3 },
+  { id: 'work', label: 'Intake & triage', targetId: 'top', steps: 3 },
+  { id: 'services', label: 'Service context', targetId: 'showcase-services', steps: 3 },
   { id: 'galileo', label: 'Knowledge & AI', targetId: 'showcase-galileo', steps: 3 },
   { id: 'delivery', label: 'Delivery & mobile', targetId: 'showcase-delivery', steps: 3 },
 ] as const

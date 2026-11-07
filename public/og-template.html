@@ -5,40 +5,84 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <style>
       * { margin: 0; box-sizing: border-box; }
       body {
-        width: 1200px; height: 630px; display: flex; align-items: center; gap: 56px;
-        padding: 64px; font-family: Inter, system-ui, sans-serif; background: #ffffff; color: #0b1220;
-        position: relative;
+        width: 1200px; height: 630px; padding: 56px 62px 50px;
+        font-family: 'IBM Plex Sans', system-ui, sans-serif;
+        background: #f6f4ef; color: #0c0e12; position: relative; overflow: hidden;
+        display: flex; flex-direction: column;
       }
-      .copy { flex: 1; }
-      .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 18px; letter-spacing: 0.14em; text-transform: uppercase; color: #3f76ff; }
-      h1 { font-size: 54px; line-height: 1.05; letter-spacing: -0.03em; margin-top: 18px; }
-      p { font-size: 20px; line-height: 1.5; color: #5b6472; margin-top: 18px; max-width: 30ch; }
-      .shot { width: 520px; border: 1px solid #e2e6ee; border-radius: 12px; overflow: hidden; box-shadow: 0 18px 40px rgba(11,18,32,0.12); }
-      .bar { height: 28px; background: #f7f9fc; border-bottom: 1px solid #e2e6ee; }
-      .shot img { display: block; width: 100%; }
-      .brand { position: absolute; top: 40px; left: 64px; display: flex; align-items: center; gap: 10px; font-weight: 600; }
-      .bars span { display: block; height: 5px; border-radius: 3px; background: #3f76ff; margin-bottom: 3px; }
-      .bars span:nth-child(1) { width: 26px; }
-      .bars span:nth-child(2) { width: 18px; margin-left: 4px; opacity: 0.72; }
-      .bars span:nth-child(3) { width: 10px; margin-left: 8px; opacity: 0.45; }
+      .grid {
+        position: absolute; inset: 0;
+        background-image:
+          linear-gradient(to right, rgba(12, 14, 18, 0.05) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(12, 14, 18, 0.05) 1px, transparent 1px);
+        background-size: 36px 36px;
+        mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.45) 60%, transparent 95%);
+      }
+      .brand { position: relative; display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 20px; letter-spacing: -0.03em; }
+      .bars span { display: block; height: 5px; border-radius: 3px; background: #0c0e12; margin-bottom: 3px; }
+      .bars span:nth-child(1) { width: 24px; }
+      .bars span:nth-child(2) { width: 17px; margin-left: 4px; opacity: 0.72; }
+      .bars span:nth-child(3) { width: 9px; margin-left: 8px; opacity: 0.45; }
+      .brand small { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 400; color: #4b5260; letter-spacing: 0.04em; margin-left: 8px; }
+      .main { position: relative; display: grid; grid-template-columns: 1fr 530px; gap: 56px; align-items: center; flex: 1; }
+      .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #4b5260; }
+      h1 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 62px; line-height: 0.98; letter-spacing: -0.045em; margin-top: 16px; }
+      p { font-size: 18px; line-height: 1.55; color: #3a404d; margin-top: 20px; max-width: 38ch; }
+      .meta { display: flex; gap: 14px; align-items: center; margin-top: 24px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #4b5260; }
+      .rack { border: 1px solid #1e2430; border-radius: 18px; overflow: hidden; background: #0c0e12; color: #fff; box-shadow: 0 26px 60px -24px rgba(12, 14, 18, 0.55); }
+      .tape { height: 6px; background-image: repeating-linear-gradient(45deg, #e7b400 0, #e7b400 9px, #0c0e12 9px, #0c0e12 18px); }
+      .rack-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+      .rack-head span { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: #cbd5e1; }
+      .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border: 1px solid rgba(52,211,153,0.28); border-radius: 999px; background: rgba(16,185,129,0.12); color: #6ee7b7; font-size: 8px; letter-spacing: 0.12em; }
+      .chip i { width: 5px; height: 5px; border-radius: 999px; background: #34d399; }
+      .rows { padding: 4px 8px 7px; }
+      .row { display: flex; align-items: center; gap: 10px; padding: 8px 8px; border-radius: 8px; }
+      .lamp { width: 9px; height: 9px; border-radius: 999px; flex: none; }
+      .id { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: #94a3b8; width: 34px; flex: none; }
+      .name { font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+      .skill { margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 8px; letter-spacing: 0.06em; text-transform: uppercase; color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); border-radius: 4px; padding: 3px 6px; white-space: nowrap; }
+      .rack-foot { display: flex; justify-content: space-between; gap: 10px; padding: 9px 16px; border-top: 1px solid rgba(255,255,255,0.1); background: #10131a; font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; color: #94a3b8; }
+      .rack-foot span:last-child { color: #64748b; }
     </style>
   </head>
   <body>
-    <div class="brand"><div class="bars"><span></span><span></span><span></span></div>Terraline</div>
-    <div class="copy">
-      <div class="eyebrow">Open-source ITSM · built on Plane</div>
-      <h1>Run services and delivery work in one system</h1>
-      <p>Work items, a service catalog, shared states and AI in the loop.</p>
+    <div class="grid"></div>
+    <div class="brand">
+      <div class="bars"><span></span><span></span><span></span></div>
+      Terraline
+      <small>AGPL-3.0 · SELF-HOSTED</small>
     </div>
-    <div class="shot">
-      <div class="bar"></div>
-      <img src="./screenshots/work-items-list.webp" alt="" />
+
+    <div class="main">
+      <div>
+        <div class="eyebrow">Open-source ITSM · ITIL-aligned</div>
+        <h1>ITIL practices,<br />ready to run</h1>
+        <p>Six ITIL practices built into one self-hosted system, with AI drafting from the record.</p>
+        <div class="meta"><span>6 IN PRODUCT</span><span>·</span><span>2 DOCUMENTED</span><span>·</span><span>ONE SERVICE CATALOG</span></div>
+      </div>
+
+      <div class="rack">
+        <div class="tape"></div>
+        <div class="rack-head">
+          <span>Service operations · practice rack</span>
+          <span class="chip"><i></i>6 IN PRODUCT</span>
+        </div>
+        <div class="rows">
+          <div class="row"><i class="lamp" style="background:#ef4444;box-shadow:0 0 10px #ef444466"></i><span class="id">INC-</span><span class="name">Incident</span><span class="skill">Auto-triage</span></div>
+          <div class="row"><i class="lamp" style="background:#a855f7;box-shadow:0 0 10px #a855f766"></i><span class="id">PRB-</span><span class="name">Problem</span><span class="skill">RCA draft</span></div>
+          <div class="row"><i class="lamp" style="background:#f59e0b;box-shadow:0 0 10px #f59e0b66"></i><span class="id">CHG-</span><span class="name">Change</span><span class="skill">Risk scoring</span></div>
+          <div class="row"><i class="lamp" style="background:#0ea5e9;box-shadow:0 0 10px #0ea5e966"></i><span class="id">REQ-</span><span class="name">Request</span><span class="skill">Intent routing</span></div>
+          <div class="row"><i class="lamp" style="background:#6366f1;box-shadow:0 0 10px #6366f166"></i><span class="id">KB-</span><span class="name">Knowledge</span><span class="skill">Article draft</span></div>
+          <div class="row"><i class="lamp" style="background:#10b981;box-shadow:0 0 10px #10b98166"></i><span class="id">IMP-</span><span class="name">Improvement</span><span class="skill">Trend detection</span></div>
+        </div>
+        <div class="rack-foot"><span>One queue · one catalog · one record</span><span>ITIL-aligned · not certified</span></div>
+      </div>
     </div>
   </body>
 </html>

@@ -21,6 +21,7 @@ export default function Footer({ variant = 'default' }: Props) {
           <nav className="flex flex-col items-start gap-2.5 text-[13px] text-slate-200" aria-label="Product links">
             <span className="mb-1 font-mono text-[10px] uppercase tracking-[0.12em] text-slate-400">Product</span>
             <a href="/#product" className="transition-colors hover:text-white">Product tour</a>
+            <a href="/#practices" className="transition-colors hover:text-white">Practices</a>
             <a href="/#platform" className="transition-colors hover:text-white">Platform</a>
             <a href="/#roadmap" className="transition-colors hover:text-white">Roadmap</a>
           </nav>
@@ -82,6 +83,7 @@ export default function Footer({ variant = 'default' }: Props) {
         <nav className="flex flex-col items-start gap-2.5 text-[13.5px] text-slate-200" aria-label="Product links">
           <span className="mb-1 font-mono text-[10px] uppercase tracking-[0.12em] text-slate-400">Product</span>
           <a href="#product" className="transition-colors hover:text-white">Product tour</a>
+          <a href="#practices" className="transition-colors hover:text-white">Practices</a>
           <a href="#platform" className="transition-colors hover:text-white">Platform</a>
           <a href="#roadmap" className="transition-colors hover:text-white">Roadmap</a>
         </nav>
