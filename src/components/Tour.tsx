@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, ArrowUpRight, Check, ChevronDown } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, ChevronDown, Github } from 'lucide-react'
 import { product, type Feature } from '../data/product'
 import {
   landingPractices,
@@ -128,7 +128,7 @@ function SiteNav() {
               <span className="font-display text-[19px] font-semibold tracking-[-0.03em]">Terraline</span>
             </a>
             <span aria-hidden="true" className="hidden h-3.5 w-px bg-[#c8c3b8] lg:inline-block" />
-            <span className="hidden font-mono text-[11px] text-[#4b5260] lg:inline-block">AGPL-3.0 · Self-hosted</span>
+            <span className="hidden font-mono text-[11px] text-[#4b5260] lg:inline-block">Open source · AGPL-3.0</span>
           </div>
 
           <nav aria-label="Main navigation" className="hidden items-center gap-7 lg:flex">
@@ -136,17 +136,18 @@ function SiteNav() {
             <a href="#practices" className="site-nav-link">Practices</a>
             <a href="#platform" className="site-nav-link">Platform</a>
             <a href="/learn" className="site-nav-link">Learn</a>
-            <a href={product.footer.repoUrl} target="_blank" rel="noreferrer" className="site-nav-link">GitHub</a>
           </nav>
 
-          <div className="flex shrink-0 items-center gap-2.5">
-            <a href={product.footer.contact} className="button button-secondary hidden h-9 px-3.5 text-xs lg:inline-flex">
-              Contact
-            </a>
-            <a href={product.cta.href} className="button button-primary h-9 px-3.5 text-xs">
-              Request a demo
-            </a>
-          </div>
+          <a
+            href={product.footer.repoUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="button button-primary h-9 shrink-0 gap-2 px-3.5 text-xs"
+          >
+            <Github className="h-4 w-4" aria-hidden="true" />
+            <span>GitHub</span>
+            <ArrowUpRight className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
+          </a>
         </div>
         <nav
           aria-label="Mobile navigation"
@@ -156,7 +157,6 @@ function SiteNav() {
           <a href="#practices" className="site-nav-link shrink-0">Practices</a>
           <a href="#platform" className="site-nav-link shrink-0">Platform</a>
           <a href="/learn" className="site-nav-link shrink-0">Learn</a>
-          <a href={product.footer.repoUrl} target="_blank" rel="noreferrer" className="site-nav-link shrink-0">GitHub</a>
         </nav>
       </div>
     </header>
