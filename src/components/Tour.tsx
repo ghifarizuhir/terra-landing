@@ -1,11 +1,19 @@
-import { ArrowLeft, ArrowRight, ArrowUpRight, Check, ChevronDown, Github } from 'lucide-react'
-import { product, type Feature } from '../data/product'
 import {
-  landingPractices,
-  productPractices,
-  referencePractices,
-  type LandingPractice,
-} from '../data/practices'
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  BarChart3,
+  BookOpen,
+  Check,
+  ChevronDown,
+  FileText,
+  Github,
+  GitBranch,
+  Inbox,
+  Network,
+  Radio,
+} from 'lucide-react'
+import { product, type Feature } from '../data/product'
 import type { ShowcaseChapterId } from '../data/product-demo'
 import Footer from './Footer'
 import Mark from './Mark'
@@ -31,7 +39,7 @@ const capabilities: readonly Capability[] = [
     chapter: 'work',
     short: 'Intake',
     eyebrow: 'Intake & triage',
-    title: 'Triage every kind of service work in one queue.',
+    title: 'Triage every reportable incident in one queue.',
     body: 'Incidents, requests and change tasks keep their own fields and vocabulary while sharing states, comments and history.',
     features: [feature('work-items'), feature('types'), feature('intake')],
   },
@@ -39,83 +47,127 @@ const capabilities: readonly Capability[] = [
     chapter: 'services',
     short: 'Services',
     eyebrow: 'Service context',
-    title: 'Know the service before you touch it.',
-    body: 'Ownership, criticality and dependencies sit beside the work item, so impact is visible before a change or during an incident.',
+    title: 'Know the service and the blast radius.',
+    body: 'Ownership, criticality and dependencies sit beside the incident, so impact is visible before a change or during a response.',
     features: [feature('services')],
   },
   {
     chapter: 'galileo',
-    short: 'Knowledge',
-    eyebrow: 'Knowledge & AI',
-    title: 'Draft from the work item.',
-    body: 'Runbooks and postmortems live next to the work. Galileo drafts summaries and comments from the item on screen; a person reviews every draft before it is used.',
+    short: 'Evidence',
+    eyebrow: 'Evidence & AI',
+    title: 'Keep the timeline and the decisions.',
+    body: 'Runbooks, postmortems and comments live next to the work. Galileo drafts from the item on screen; a person reviews every draft.',
     features: [feature('pages'), feature('ai'), feature('scheduler')],
   },
   {
     chapter: 'delivery',
-    short: 'Delivery',
-    eyebrow: 'Delivery & mobile',
-    title: 'Keep the practice moving after triage.',
-    body: 'Cycles, analytics and phone-sized triage cover the work that continues outside the queue.',
+    short: 'Reports',
+    eyebrow: 'Reports & delivery',
+    title: 'Turn the record into numbers.',
+    body: 'Cycles, saved views and analytics cover the work that continues after the incident closes.',
     features: [feature('delivery'), feature('mobile')],
   },
 ]
 
-const handoffs = [
-  { id: 'INC-', label: 'Incident', action: 'Restore service' },
-  { id: 'PRB-', label: 'Problem', action: 'Find the cause' },
-  { id: 'CHG-', label: 'Change', action: 'Ship the fix' },
-  { id: 'KB-', label: 'Knowledge', action: 'Make it reusable' },
-  { id: 'IMP-', label: 'Improvement', action: 'Prove it worked' },
-] as const
+const shippedCards = [
+  {
+    icon: Inbox,
+    title: 'Intake that survives an alert storm.',
+    body: 'Webhook sources, series deduplication and AI triage suggestions with human accept or decline.',
+  },
+  {
+    icon: FileText,
+    title: 'One incident record.',
+    body: 'States, priority, owner, comments, activity, versions, attachments and relations on the same ticket.',
+  },
+  {
+    icon: Radio,
+    title: 'A war room with a timeline.',
+    body: 'Realtime chat, runbook, participants and blast radius for major incidents.',
+  },
+  {
+    icon: Network,
+    title: 'Service context.',
+    body: 'Ownership, criticality and dependencies beside the incident, so impact is visible before a change.',
+  },
+  {
+    icon: GitBranch,
+    title: 'Problem, change and knowledge.',
+    body: 'Recurring incidents link to root-cause work, affected services and known errors.',
+  },
+  {
+    icon: BarChart3,
+    title: 'Reports and export.',
+    body: 'Ticket trends, distribution and export for the people who ask for numbers.',
+  },
+]
 
-const principles = [
-  {
-    title: 'Work types, built in.',
-    body: 'Incident, problem, change and improvement are first-class types. Request is opt-in. Each has its own fields and vocabulary, and all share one state set.',
-  },
-  {
-    title: 'Service context beside the work.',
-    body: 'The catalog holds ownership, criticality and dependencies, so triage and change decisions start from the service map instead of a guess.',
-  },
-  {
-    title: 'AI that stays inside the record.',
-    body: 'Galileo drafts summaries, descriptions and comments from the work item on screen. A person reviews every draft before it is used.',
-  },
+const crosswalk = [
+  { regulator: 'RMiT notification', record: 'Timeline → report draft' },
+  { regulator: 'CSA 2024 detail', record: 'Classification → evidence pack' },
+  { regulator: 'Audit trail', record: 'Activity → versions → log' },
+  { regulator: 'Corrective action', record: 'Problem → change record' },
 ]
 
 const questions = [
   {
-    question: 'Is Terraline ITIL certified?',
+    question: 'Is Terraline ITIL-certified?',
     answer:
-      'No. Terraline is built around ITIL practices, and we do not hold ITIL certification or claim it. Six practices ship as work types; the open knowledge base documents all eight.',
+      'No. ITIL is the operating model behind the incident, problem and change practices. We do not claim certification.',
   },
   {
-    question: 'Which practices ship today?',
+    question: 'Which regulator pack comes first?',
     answer:
-      'Incident, problem, change, service request, knowledge and continual improvement management. Asset management and service configuration are covered in the knowledge base as reference material, not separate product modules.',
+      'The first corridor is Malaysia: BNM RMiT and the Cyber Security Act 2024. It is in pilot with design partners. Saudi is the alternative corridor.',
   },
   {
-    question: 'What is Terraline?',
+    question: 'Does Terraline file the report for us?',
     answer:
-      'Open-source IT service management built on Plane. Work items, a service catalog, shared states and AI-assisted drafting run in one self-hosted system.',
+      'Reportability rules and report drafts are in the pilot scope. Today the product keeps the incident record, timeline, decisions and service context the report is built from.',
   },
   {
-    question: 'Can I run Terraline on my own infrastructure?',
+    question: 'Do we have to replace our current service desk?',
     answer:
-      'Yes. Self-host Terraline with Docker Compose, with application data on infrastructure you operate. AI features send prompts to the configured LLM endpoint; the default is OpenAI, so configure a provider you control if your data requirements call for it.',
+      'No. Start with the incident record. Integrations with existing tools are next on the roadmap.',
   },
   {
-    question: 'Where is the source code?',
+    question: 'Can we self-host?',
     answer:
-      'Terraline is AGPL-3.0 and lives on GitHub at github.com/ghifarizuhir/plane-for-itsm. Self-host it with Docker Compose or request a guided demo workspace.',
+      'Yes. AGPL-3.0, Docker Compose, Postgres and Redis. AI requests follow the LLM endpoint you configure.',
   },
   {
-    question: 'How can I see the product?',
+    question: 'Do you guarantee we pass an audit?',
     answer:
-      'Request a demo and we will set up a guided workspace so you can walk an incident, request or change through Terraline against your own service processes.',
+      'No. Terraline gives you a defensible record and evidence. The audit outcome depends on your controls, not a software claim.',
+  },
+  {
+    question: 'What does the pilot cost?',
+    answer:
+      'Pilot pricing is scoped with each design partner. We agree success criteria before kickoff.',
+  },
+  {
+    question: 'How long is the pilot?',
+    answer:
+      '4–6 weeks, with one reportable incident run end to end.',
   },
 ]
+
+const incidentTimeline = [
+  { time: '09:12', event: 'Incident opened from alert webhook' },
+  { time: '09:18', event: 'War room opened' },
+  { time: '09:24', event: 'Rollback approved' },
+  { time: '09:41', event: 'Service restored' },
+]
+
+function SectionLabel({ index, children }: { index: string; children: React.ReactNode }) {
+  return (
+    <p className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[#4b5260]">
+      <span className="text-[#0c0e12]">{index}</span>
+      <span aria-hidden="true" className="h-px w-6 bg-[#c8c3b8]" />
+      {children}
+    </p>
+  )
+}
 
 function SiteNav() {
   return (
@@ -132,8 +184,8 @@ function SiteNav() {
           </div>
 
           <nav aria-label="Main navigation" className="hidden items-center gap-7 lg:flex">
-            <a href="#product" className="site-nav-link">Product</a>
-            <a href="#practices" className="site-nav-link">Practices</a>
+            <a href="#product" className="site-nav-link">Record</a>
+            <a href="#pilot" className="site-nav-link">Pilot</a>
             <a href="#platform" className="site-nav-link">Platform</a>
             <a href="/learn" className="site-nav-link">Learn</a>
           </nav>
@@ -153,8 +205,8 @@ function SiteNav() {
           aria-label="Mobile navigation"
           className="-mx-5 flex items-center gap-6 overflow-x-auto border-t border-[#dcd8ce] px-5 py-3 sm:-mx-8 sm:px-8 lg:hidden"
         >
-          <a href="#product" className="site-nav-link shrink-0">Product</a>
-          <a href="#practices" className="site-nav-link shrink-0">Practices</a>
+          <a href="#product" className="site-nav-link shrink-0">Record</a>
+          <a href="#pilot" className="site-nav-link shrink-0">Pilot</a>
           <a href="#platform" className="site-nav-link shrink-0">Platform</a>
           <a href="/learn" className="site-nav-link shrink-0">Learn</a>
         </nav>
@@ -163,9 +215,9 @@ function SiteNav() {
   )
 }
 
-function PracticeRack() {
+function IncidentFile() {
   return (
-    <aside aria-label="Terraline ITIL practice rack" className="relative">
+    <aside aria-label="Sample incident record" className="relative">
       <div className="overflow-hidden rounded-[22px] border border-[#1e2430] bg-[#0c0e12] text-white shadow-[0_30px_70px_-28px_rgba(12,14,18,0.55)]">
         <div className="hazard-tape h-1.5 w-full" aria-hidden="true" />
 
@@ -177,69 +229,101 @@ function PracticeRack() {
               <i className="h-1.5 w-1.5 rounded-full bg-emerald-400/70" />
             </span>
             <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-slate-300">
-              Service operations · practice rack
+              Incident file · INC-2041
             </span>
           </div>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-emerald-300">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
-            6 in product
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-red-500/25 bg-red-500/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-red-300">
+            <span className="rack-lamp h-1.5 w-1.5 rounded-full bg-red-400" aria-hidden="true" />
+            In progress
           </span>
         </div>
 
-        <div className="px-2 py-1">
-          {productPractices.map((practice, index) => (
-            <a
-              key={practice.id}
-              href="/learn#practices"
-              className="group grid grid-cols-[28px_minmax(0,1fr)] items-start gap-3 rounded-xl px-2.5 py-3 transition-colors hover:bg-white/[0.04] sm:grid-cols-[28px_minmax(0,1fr)_auto] sm:items-center sm:gap-4"
-            >
-              <div className="relative flex h-full justify-center pt-1.5">
-                <span aria-hidden="true" className="absolute inset-y-[-14px] w-px bg-white/10" />
-                <span
-                  className="rack-lamp relative z-10 mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full"
-                  style={{
-                    backgroundColor: practice.lamp,
-                    boxShadow: `0 0 0 4px ${practice.lamp}1f, 0 0 16px ${practice.lamp}66`,
-                    animationDelay: `${index * 0.6}s`,
-                  }}
-                  aria-hidden="true"
-                />
-              </div>
+        <div className="relative px-3 py-4 sm:px-4 sm:py-5">
+          <span
+            aria-hidden="true"
+            className="absolute left-8 top-2 h-2.5 w-24 rounded-t-md border border-b-0 border-[#dcd8ce] bg-[#efeae0]"
+          />
+          <div className="relative rounded-[12px] border border-[#dcd8ce] bg-[#fbfaf7] p-4 text-[#0c0e12] shadow-[0_12px_28px_-18px_rgba(0,0,0,0.45)] sm:p-5">
+            <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
-                <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-                  <span className="font-mono text-[10px] tracking-[0.08em] text-slate-400">{practice.prefix}</span>
-                  <span className="text-[13.5px] font-semibold leading-snug text-white">{practice.shortTitle}</span>
-                </div>
-                <p className="mt-0.5 text-[11.5px] leading-snug text-slate-400">{practice.oneLiner}</p>
+                <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-[#4b5260]">Payment gateway outage</p>
+                <p className="mt-2 font-display text-[24px] font-semibold leading-none tracking-[-0.03em] sm:text-[27px]">
+                  INC-2041
+                </p>
               </div>
-              <span className="col-start-2 justify-self-start rounded border border-white/10 bg-white/[0.04] px-2 py-1 font-mono text-[9px] uppercase tracking-[0.08em] text-slate-300 sm:col-start-auto sm:justify-self-end">
-                AI · {practice.aiSkill}
+              <span className="shrink-0 rotate-[-5deg] rounded border-2 border-red-700/50 px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.16em] text-red-800/80">
+                Reportable?
               </span>
-            </a>
-          ))}
-        </div>
+            </div>
 
-        <div className="border-t border-white/10 px-4 py-3 sm:px-5">
-          <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-slate-400">
-            Also documented in the open knowledge base
-          </p>
-          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5">
-            {referencePractices.map((practice) => (
-              <a
-                key={practice.id}
-                href="/learn#practices"
-                className="inline-flex items-center gap-2 font-mono text-[10px] text-slate-300 transition-colors hover:text-white"
-              >
-                <span className="h-1.5 w-1.5 rounded-full border border-slate-400/60" aria-hidden="true" />
-                {practice.prefix} {practice.shortTitle}
-              </a>
-            ))}
+            <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5 border-y border-[#dcd8ce] py-3 font-mono text-[10px] sm:grid-cols-3">
+              <div>
+                <dt className="text-[#4b5260]">Service</dt>
+                <dd className="mt-0.5 font-semibold">Payment Gateway</dd>
+              </div>
+              <div>
+                <dt className="text-[#4b5260]">Criticality</dt>
+                <dd className="mt-0.5 font-semibold">Critical</dd>
+              </div>
+              <div>
+                <dt className="text-[#4b5260]">Owner</dt>
+                <dd className="mt-0.5 font-semibold">Payments</dd>
+              </div>
+              <div>
+                <dt className="text-[#4b5260]">Started</dt>
+                <dd className="mt-0.5 font-semibold">09:12</dd>
+              </div>
+              <div className="col-span-2">
+                <dt className="text-[#4b5260]">Impact</dt>
+                <dd className="mt-0.5 font-semibold">12,400 failed transactions</dd>
+              </div>
+            </dl>
+
+            <div className="mt-4">
+              <div className="flex items-center justify-between gap-3">
+                <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-[#4b5260]">Timeline</p>
+                <p className="font-mono text-[9px] text-[#4b5260]">18 events · 4 decisions</p>
+              </div>
+              <ol className="relative mt-3 space-y-2.5 pl-4">
+                <span aria-hidden="true" className="absolute bottom-1.5 left-[3px] top-1.5 w-px bg-[#dcd8ce]" />
+                {incidentTimeline.map((item, index) => (
+                  <li key={item.time} className="relative flex items-baseline gap-2.5 text-[11px] leading-snug">
+                    <span
+                      aria-hidden="true"
+                      className="absolute -left-4 top-1 h-1.5 w-1.5 rounded-full"
+                      style={{
+                        backgroundColor: index === incidentTimeline.length - 1 ? '#10b981' : '#0c0e12',
+                      }}
+                    />
+                    <span className="font-mono text-[10px] text-[#4b5260]">{item.time}</span>
+                    <span className="text-[#1f242d]">{item.event}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="mt-4 rounded-lg border border-amber-700/20 bg-[#f5ecd2] px-3 py-2.5">
+              <div className="flex items-center justify-between gap-3">
+                <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-amber-900">In pilot</p>
+                <p className="font-mono text-[9px] text-amber-900/70">Regulator fields</p>
+              </div>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {['Reportable?', '2h window', 'Evidence pack'].map((item) => (
+                  <span
+                    key={item}
+                    className="rounded border border-amber-800/20 bg-[#fbfaf7] px-2 py-0.5 font-mono text-[9px] text-amber-950"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/10 bg-[#10131a] px-4 py-2.5 font-mono text-[10px] text-slate-400 sm:px-5">
-          <span>One queue · one catalog · one record</span>
-          <span className="text-slate-400">ITIL-aligned · not certified</span>
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/10 bg-[#10131a] px-4 py-2.5 font-mono text-[9px] text-slate-400 sm:px-5">
+          <span>One record · timeline · service context</span>
+          <span>Sample data · Product illustration</span>
         </div>
       </div>
     </aside>
@@ -250,12 +334,15 @@ function Hero() {
   return (
     <section id="top" className="relative overflow-hidden border-b border-[#dcd8ce] bg-[#f6f4ef]">
       <div aria-hidden="true" className="paper-grid pointer-events-none absolute inset-0 opacity-70" />
-      <div className="relative mx-auto grid w-full max-w-[1440px] items-center gap-12 px-5 py-14 sm:px-8 md:py-20 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16 lg:px-14 lg:py-24">
-        <div className="max-w-[600px]">
-          <h1 className="text-balance font-display text-[clamp(42px,5.2vw,68px)] font-semibold leading-[0.98] tracking-[-0.04em] text-[#0c0e12]">
+      <div className="relative mx-auto grid w-full max-w-[1440px] items-center gap-12 px-5 py-14 sm:px-8 md:py-20 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:px-14 lg:py-24">
+        <div className="max-w-[620px]">
+          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#4b5260]">
+            {product.hero.eyebrow}
+          </p>
+          <h1 className="mt-5 text-balance font-display text-[clamp(42px,5.2vw,68px)] font-semibold leading-[0.98] tracking-[-0.04em] text-[#0c0e12]">
             {product.hero.title}
           </h1>
-          <p className="mt-6 max-w-[54ch] text-[16.5px] leading-[1.65] text-[#3a404d]">
+          <p className="mt-6 max-w-[56ch] text-[16.5px] leading-[1.65] text-[#3a404d]">
             {product.hero.body}
           </p>
 
@@ -271,15 +358,11 @@ function Hero() {
           </div>
 
           <p className="mt-10 max-w-[52ch] border-t border-[#dcd8ce] pt-5 text-[12.5px] leading-relaxed text-[#4b5260]">
-            Six practices ship today. Asset management and service configuration are documented in the{' '}
-            <a href="/learn" className="font-semibold text-[#0c0e12] underline underline-offset-4">
-              open knowledge base
-            </a>
-            , not packaged as modules.
+            {product.hero.boundary}
           </p>
         </div>
 
-        <PracticeRack />
+        <IncidentFile />
       </div>
     </section>
   )
@@ -287,10 +370,10 @@ function Hero() {
 
 function FactStrip() {
   return (
-    <section aria-label="Platform foundations" className="border-b border-[#dcd8ce] bg-[#efeae0]">
+    <section aria-label="Pilot and platform facts" className="border-b border-[#dcd8ce] bg-[#efeae0]">
       <div className="mx-auto flex w-full max-w-[1440px] flex-col justify-between gap-4 px-5 py-6 sm:px-8 lg:flex-row lg:items-center lg:px-14">
         <p className="text-sm font-medium text-[#2d333f]">
-          Open-source foundation, built for service operations
+          The incident record ships. The regulator pack is in pilot.
         </p>
         <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
           {product.facts.map((fact) => (
@@ -308,134 +391,73 @@ function FactStrip() {
   )
 }
 
-function ConnectedPractices() {
+function ProblemSection() {
   return (
-    <section aria-label="How the practices connect" className="border-b border-[#dcd8ce] bg-[#efeae0]/45">
+    <section aria-label="The reporting problem" className="border-b border-[#dcd8ce] bg-[#f6f4ef]">
       <div className="mx-auto w-full max-w-[1440px] px-5 py-20 sm:px-8 md:py-28 lg:px-14">
-        <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
+        <SectionLabel index="01">The report clock</SectionLabel>
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
           <h2 className="max-w-[18ch] text-balance font-display text-[clamp(34px,3.8vw,48px)] font-semibold leading-[1.06] tracking-[-0.03em] text-[#0c0e12]">
-            The practices arrive connected.
+            {product.problem.title}
           </h2>
           <p className="max-w-[62ch] text-[15px] leading-[1.65] text-[#3a404d] lg:justify-self-end">
-            An incident that recurs can open a problem. A confirmed problem can publish a known error. The fix runs as a change. Closure captures the evidence and drafts the knowledge or improvement follow-up. One record follows the work.
+            {product.problem.body}
           </p>
         </div>
 
-        <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-[18px] border border-[#dcd8ce] bg-[#dcd8ce] sm:grid-cols-5">
-          {handoffs.map((handoff) => {
-            const practice = landingPractices.find((item) => item.prefix === handoff.id)
-            return (
-              <div key={handoff.id} className="bg-[#fbfaf7] p-4 sm:p-5 last:col-span-2 sm:last:col-span-1">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-mono text-[10px] tracking-[0.08em] text-[#4b5260]">{handoff.id}</span>
-                  <span
-                    className="h-2 w-2 rounded-full"
-                    style={{
-                      backgroundColor: practice?.lamp ?? '#64748b',
-                      boxShadow: `0 0 18px ${practice?.lamp ?? '#64748b'}44`,
-                    }}
-                    aria-hidden="true"
-                  />
-                </div>
-                <p className="mt-3 font-display text-[19px] font-semibold tracking-[-0.02em] text-[#0c0e12]">
-                  {handoff.label}
-                </p>
-                <p className="mt-1 text-[12px] leading-snug text-[#4b5260]">{handoff.action}</p>
+        <div className="mt-12 grid gap-px overflow-hidden rounded-[18px] border border-[#dcd8ce] bg-[#dcd8ce] md:grid-cols-3">
+          {product.problem.cards.map((card, index) => (
+            <article key={card.id} className="group bg-[#fbfaf7] p-6 transition-colors hover:bg-[#efeae0]/55 sm:p-7">
+              <div className="flex items-center justify-between gap-3">
+                <span className="font-mono text-[10px] text-[#4b5260]">0{index + 1}</span>
+                <span className="h-2 w-2 rounded-full bg-[#0c0e12] transition-transform group-hover:scale-125" aria-hidden="true" />
               </div>
-            )
-          })}
-        </div>
-
-        <div className="mt-12 grid gap-8 border-t border-[#dcd8ce] pt-8 md:grid-cols-3 md:gap-10">
-          {principles.map((principle) => (
-            <article key={principle.title}>
-              <h3 className="font-display text-[19px] font-semibold tracking-[-0.02em] text-[#0c0e12]">
-                {principle.title}
+              <h3 className="mt-8 font-display text-[21px] font-semibold leading-tight tracking-[-0.02em] text-[#0c0e12]">
+                {card.title}
               </h3>
-              <p className="mt-2 text-[13.5px] leading-[1.65] text-[#3a404d]">{principle.body}</p>
+              <p className="mt-2.5 text-[13.5px] leading-[1.65] text-[#3a404d]">{card.body}</p>
             </article>
           ))}
         </div>
+
+        <p className="mt-4 font-mono text-[10px] leading-relaxed text-[#4b5260]">{product.problem.note}</p>
       </div>
     </section>
   )
 }
 
-function statusClasses(status: LandingPractice['status']) {
-  return status === 'product'
-    ? 'inline-flex w-fit items-center gap-1.5 rounded-full border border-emerald-700/25 bg-emerald-950 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.08em] text-emerald-200'
-    : 'inline-flex w-fit items-center gap-1.5 rounded-full border border-[#c8c3b8] bg-[#f6f4ef] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.08em] text-[#4b5260]'
-}
-
-function PracticesSection() {
+function ShippedSection() {
   return (
-    <section id="practices" className="scroll-mt-[112px] border-b border-[#dcd8ce] md:scroll-mt-16">
+    <section aria-label="What ships today" className="border-b border-[#dcd8ce] bg-[#efeae0]/45">
       <div className="mx-auto w-full max-w-[1440px] px-5 py-20 sm:px-8 md:py-28 lg:px-14">
-        <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
+        <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
           <div>
-            <h2 className="max-w-[20ch] text-balance font-display text-[clamp(34px,3.8vw,48px)] font-semibold leading-[1.06] tracking-[-0.03em] text-[#0c0e12]">
-              Eight practices. Six in the product. All in the open.
+            <SectionLabel index="02">Shipped today</SectionLabel>
+            <h2 className="mt-6 max-w-[16ch] text-balance font-display text-[clamp(34px,3.8vw,48px)] font-semibold leading-[1.06] tracking-[-0.03em] text-[#0c0e12]">
+              The incident record is already here.
             </h2>
-            <p className="mt-4 max-w-[56ch] text-[15px] leading-[1.65] text-[#3a404d]">
-              Six practices ship as connected work types. Asset management and service configuration live in the open knowledge base, so the full map is readable before you deploy.
-            </p>
           </div>
-          <div className="flex flex-wrap items-center gap-3 lg:justify-self-end">
-            <span className={statusClasses('product')}>
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
-              6 in product
-            </span>
-            <span className={statusClasses('reference')}>2 reference</span>
-          </div>
+          <p className="max-w-[58ch] text-[15px] leading-[1.65] text-[#3a404d] lg:justify-self-end">
+            Before the regulator pack, Terraline runs the operational record the report depends on.
+          </p>
         </div>
 
-        <div className="mt-10 overflow-hidden rounded-[18px] border border-[#dcd8ce] bg-[#fbfaf7]">
-          <div className="hidden grid-cols-[minmax(0,1.15fr)_minmax(0,1.5fr)_minmax(0,0.9fr)_auto_18px] items-center gap-4 border-b border-[#dcd8ce] bg-[#efeae0]/60 px-5 py-2.5 font-mono text-[9px] uppercase tracking-[0.12em] text-[#4b5260] md:grid">
-            <span>Practice</span>
-            <span>What it does</span>
-            <span>AI skill</span>
-            <span>Status</span>
-            <span />
-          </div>
-
-          {landingPractices.map((practice) => (
-            <a
-              key={practice.id}
-              href="/learn#practices"
-              className="group grid gap-2 border-b border-[#e5e1d8] px-5 py-4 transition-colors last:border-b-0 hover:bg-[#f6f4ef] md:grid-cols-[minmax(0,1.15fr)_minmax(0,1.5fr)_minmax(0,0.9fr)_auto_18px] md:items-center md:gap-4"
-            >
-              <div className="flex items-center gap-3">
-                <span
-                  className="h-2 w-2 shrink-0 rounded-full"
-                  style={{
-                    backgroundColor: practice.lamp,
-                    boxShadow: practice.status === 'product' ? `0 0 8px ${practice.lamp}66` : undefined,
-                  }}
-                  aria-hidden="true"
-                />
-                <span className="font-mono text-[10px] text-[#4b5260]">{practice.prefix}</span>
-                <span className="text-[14px] font-semibold text-[#0c0e12]">{practice.shortTitle}</span>
-              </div>
-              <p className="pl-5 text-[13px] leading-snug text-[#3a404d] md:pl-0">{practice.oneLiner}</p>
-              <span className="pl-5 font-mono text-[10px] uppercase tracking-[0.06em] text-[#3a404d] md:pl-0">
-                {practice.aiSkill}
-              </span>
-              <span className={statusClasses(practice.status)}>
-                {practice.status === 'product' ? 'In product' : 'Reference'}
-              </span>
-              <ArrowUpRight
-                className="hidden h-4 w-4 text-[#4b5260] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 md:block"
-                aria-hidden="true"
-              />
-            </a>
-          ))}
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 font-mono text-[10px] text-[#4b5260]">
-          <span>Six practices ship today. Two are reference material in the open knowledge base.</span>
-          <a href="/learn" className="font-semibold text-[#0c0e12] underline underline-offset-4">
-            Read all 8 practices →
-          </a>
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {shippedCards.map((card) => {
+            const Icon = card.icon
+            return (
+              <article
+                key={card.title}
+                className="group rounded-[16px] border border-[#dcd8ce] bg-[#fbfaf7] p-5 transition-colors hover:border-[#b8b2a6] hover:bg-[#f6f4ef]"
+              >
+                <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#0c0e12] text-white">
+                  <Icon className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <h3 className="mt-5 text-[15px] font-semibold leading-snug text-[#0c0e12]">{card.title}</h3>
+                <p className="mt-1.5 text-[13px] leading-[1.6] text-[#3a404d]">{card.body}</p>
+              </article>
+            )
+          })}
         </div>
       </div>
     </section>
@@ -443,7 +465,7 @@ function PracticesSection() {
 }
 
 const chapterMeta: Record<ShowcaseChapterId, { surface: string; badge: string }> = {
-  work: { surface: 'Intake · Queue · Types', badge: 'TERRA-42' },
+  work: { surface: 'Intake · Queue · Types', badge: 'INC-2041' },
   services: { surface: 'Catalog · Dependency graph', badge: '3 SERVICES' },
   galileo: { surface: 'Pages · Grounded AI · Schedules', badge: 'GALILEO AI' },
   delivery: { surface: 'Cycles · Analytics · Mobile', badge: 'WEEK 2' },
@@ -457,11 +479,12 @@ function ProductHeader() {
   return (
     <div id="product" className="flex scroll-mt-24 flex-col justify-between gap-5 md:flex-row md:items-end">
       <div>
-        <h2 className="max-w-[22ch] text-balance font-display text-[clamp(32px,3.6vw,46px)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#0c0e12]">
-          See the six practices at work.
+        <SectionLabel index="03">Product proof</SectionLabel>
+        <h2 className="mt-6 max-w-[22ch] text-balance font-display text-[clamp(32px,3.6vw,46px)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#0c0e12]">
+          See the record at work.
         </h2>
         <p className="mt-2.5 max-w-[58ch] text-[15px] leading-[1.65] text-[#3a404d]">
-          The demo workspace runs the real flows: intake, triage, service context, knowledge and delivery. Step through the chapters or use the slides.
+          The demo workspace runs the real flows: intake, triage, service context, knowledge and reports. Step through the chapters or use the slides.
         </p>
       </div>
 
@@ -629,16 +652,155 @@ function CapabilitySlideDeck() {
   )
 }
 
-function PlatformSection() {
+function PilotSection() {
   return (
-    <section id="platform" className="scroll-mt-[112px] border-b border-[#dcd8ce] md:scroll-mt-16">
+    <section id="pilot" className="scroll-mt-[112px] border-b border-[#dcd8ce] bg-[#f6f4ef] md:scroll-mt-16">
+      <div className="mx-auto w-full max-w-[1440px] px-5 py-20 sm:px-8 md:py-28 lg:px-14">
+        <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
+          <div>
+            <SectionLabel index="04">Design partner pilot</SectionLabel>
+            <h2 className="mt-6 max-w-[18ch] text-balance font-display text-[clamp(34px,3.8vw,48px)] font-semibold leading-[1.06] tracking-[-0.03em] text-[#0c0e12]">
+              {product.pilot.title}
+            </h2>
+            <p className="mt-4 max-w-[58ch] text-[15px] leading-[1.65] text-[#3a404d]">
+              {product.pilot.body}
+            </p>
+
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              {product.pilot.scope.map((item, index) => (
+                <article
+                  key={item.title}
+                  className={`rounded-[14px] border border-[#dcd8ce] bg-[#fbfaf7] p-4 ${
+                    index === product.pilot.scope.length - 1 ? 'sm:col-span-2' : ''
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 className="text-[14px] font-semibold leading-snug text-[#0c0e12]">{item.title}</h3>
+                    <span className="shrink-0 rounded-full border border-amber-700/25 bg-[#f5ecd2] px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.1em] text-amber-900">
+                      {item.status}
+                    </span>
+                  </div>
+                  <p className="mt-1.5 text-[12.5px] leading-[1.55] text-[#3a404d]">{item.body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <aside className="relative overflow-hidden rounded-[22px] border border-[#1e2430] bg-[#0c0e12] text-white shadow-[0_30px_70px_-28px_rgba(12,14,18,0.55)]">
+            <div className="hazard-tape h-1.5 w-full" aria-hidden="true" />
+            <div className="p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-amber-300">Pilot shape</p>
+              <h3 className="mt-3 max-w-[18ch] font-display text-[26px] font-semibold leading-[1.1] tracking-[-0.025em] text-white sm:text-[30px]">
+                One incident. One deadline. One record.
+              </h3>
+              <ol className="mt-6 divide-y divide-white/10 border-y border-white/10">
+                {product.pilot.shape.map((item, index) => (
+                  <li key={item} className="flex items-center gap-4 py-3">
+                    <span className="font-mono text-[10px] text-slate-400">0{index + 1}</span>
+                    <span className="text-[13.5px] text-slate-200">{item}</span>
+                  </li>
+                ))}
+              </ol>
+
+              <div className="mt-6">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-slate-400">Example crosswalk</p>
+                  <p className="font-mono text-[9px] text-slate-400">Pilot scope</p>
+                </div>
+                <ul className="mt-3 space-y-2">
+                  {crosswalk.map((row) => (
+                    <li key={row.regulator} className="flex items-baseline justify-between gap-4 border-b border-white/[0.06] pb-2 text-[11.5px] last:border-b-0">
+                      <span className="text-slate-300">{row.regulator}</span>
+                      <span className="text-right font-mono text-[10px] text-amber-300">{row.record}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <a
+                href={product.pilot.cta.href}
+                className="mt-7 inline-flex h-11 w-full items-center justify-center gap-2 rounded-[10px] bg-white px-5 text-sm font-semibold text-[#0c0e12] transition-colors hover:bg-[#efeae0]"
+              >
+                {product.pilot.cta.label}
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              </a>
+              <p className="mt-3 text-center font-mono text-[9px] text-slate-400">
+                First corridor: Malaysia · 3–5 design partners
+              </p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function CoexistenceSection() {
+  return (
+    <section aria-label="Coexistence" className="border-b border-[#dcd8ce] bg-[#efeae0]/45">
       <div className="mx-auto w-full max-w-[1440px] px-5 py-20 sm:px-8 md:py-28 lg:px-14">
         <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
-          <h2 className="text-balance font-display text-[clamp(34px,3.8vw,48px)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#0c0e12]">
-            Your infrastructure. Your records.
-          </h2>
+          <div>
+            <SectionLabel index="05">Coexistence</SectionLabel>
+            <h2 className="mt-6 max-w-[16ch] text-balance font-display text-[clamp(34px,3.8vw,48px)] font-semibold leading-[1.06] tracking-[-0.03em] text-[#0c0e12]">
+              {product.coexistence.title}
+            </h2>
+          </div>
+          <p className="max-w-[58ch] text-[15px] leading-[1.65] text-[#3a404d] lg:justify-self-end">
+            {product.coexistence.body}
+          </p>
+        </div>
+
+        <div className="mt-10 grid gap-4 md:grid-cols-2">
+          {product.coexistence.cards.map((card, index) => (
+            <article
+              key={card.title}
+              className={
+                index === 0
+                  ? 'rounded-[18px] border border-[#dcd8ce] bg-[#fbfaf7] p-6 sm:p-8'
+                  : 'rounded-[18px] border border-[#1e2430] bg-[#0c0e12] p-6 text-white sm:p-8'
+              }
+            >
+              <div className="flex items-start justify-between gap-4">
+                <h3 className="max-w-[20ch] font-display text-[22px] font-semibold leading-tight tracking-[-0.02em]">
+                  {card.title}
+                </h3>
+                <span
+                  className={`grid h-7 w-7 shrink-0 place-items-center rounded-full border ${
+                    index === 0 ? 'border-[#d0cbc0] text-[#0c0e12]' : 'border-white/20 text-white'
+                  }`}
+                >
+                  {index === 0 ? (
+                    <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
+                  ) : (
+                    <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+                  )}
+                </span>
+              </div>
+              <p className={`mt-4 max-w-[48ch] text-[13.5px] leading-[1.65] ${index === 0 ? 'text-[#3a404d]' : 'text-slate-300'}`}>
+                {card.body}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function PlatformSection() {
+  return (
+    <section id="platform" className="scroll-mt-[112px] border-b border-[#dcd8ce] bg-[#f6f4ef] md:scroll-mt-16">
+      <div className="mx-auto w-full max-w-[1440px] px-5 py-20 sm:px-8 md:py-28 lg:px-14">
+        <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
+          <div>
+            <SectionLabel index="06">Platform</SectionLabel>
+            <h2 className="mt-6 max-w-[16ch] text-balance font-display text-[clamp(34px,3.8vw,48px)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#0c0e12]">
+              Keep the records in your own infrastructure.
+            </h2>
+          </div>
           <p className="max-w-[60ch] text-[15px] leading-[1.65] text-[#3a404d] lg:justify-self-end">
-            {product.architecture.body} AI requests follow the configured LLM endpoint; the default is OpenAI, and the endpoint can be configured for your deployment.
+            {product.architecture.body} AI requests follow the configured LLM endpoint; the endpoint can be configured for your deployment.
           </p>
         </div>
 
@@ -706,58 +868,90 @@ function PlatformSection() {
   )
 }
 
-function RoadmapSection() {
+function BoundarySection() {
+  const columns = [
+    {
+      title: 'Shipped today',
+      badge: 'Available',
+      tone: 'emerald',
+      items: product.roadmap.shipped,
+    },
+    {
+      title: 'In pilot',
+      badge: 'Design partners',
+      tone: 'amber',
+      items: product.roadmap.pilot,
+    },
+    {
+      title: 'Out of scope',
+      badge: 'Deliberate',
+      tone: 'slate',
+      items: product.roadmap.outOfScope,
+    },
+  ] as const
+
+  const toneClasses = {
+    emerald: {
+      badge: 'border-emerald-700/25 bg-emerald-950 text-emerald-200',
+      dot: 'bg-emerald-400',
+      icon: 'text-[#0c0e12]',
+    },
+    amber: {
+      badge: 'border-amber-700/25 bg-[#f5ecd2] text-amber-900',
+      dot: 'bg-amber-500',
+      icon: 'text-amber-700',
+    },
+    slate: {
+      badge: 'border-[#c8c3b8] bg-[#f6f4ef] text-[#4b5260]',
+      dot: 'bg-slate-400',
+      icon: 'text-[#4b5260]',
+    },
+  }
+
   return (
-    <section id="roadmap" className="scroll-mt-[112px] border-b border-[#dcd8ce] md:scroll-mt-16">
+    <section id="boundary" className="scroll-mt-[112px] border-b border-[#dcd8ce] bg-[#efeae0]/45 md:scroll-mt-16">
       <div className="mx-auto w-full max-w-[1440px] px-5 py-20 sm:px-8 md:py-28 lg:px-14">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <h2 className="text-balance font-display text-[clamp(34px,3.8vw,48px)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#0c0e12]">
-            Shipped today. Not claimed.
-          </h2>
-          <p className="max-w-[46ch] text-[15px] leading-[1.65] text-[#3a404d]">
-            The boundary is part of the product. This is what runs now, and what we do not pretend to have.
+        <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
+          <div>
+            <SectionLabel index="07">Boundary</SectionLabel>
+            <h2 className="mt-6 max-w-[16ch] text-balance font-display text-[clamp(34px,3.8vw,48px)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#0c0e12]">
+              What ships. What is in pilot. What we leave out.
+            </h2>
+          </div>
+          <p className="max-w-[52ch] text-[15px] leading-[1.65] text-[#3a404d] lg:justify-self-end">
+            {product.roadmap.note}
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2">
-          <article className="rounded-[20px] border border-[#dcd8ce] bg-[#fbfaf7] p-7 sm:p-9">
-            <div className="flex items-center justify-between border-b border-[#dcd8ce] pb-4">
-              <h3 className="font-display text-[22px] font-semibold tracking-[-0.02em] text-[#0c0e12]">
-                Shipped today
-              </h3>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-950 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-emerald-200">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
-                Available in v1.4
-              </span>
-            </div>
-            <ul className="mt-6 space-y-3.5">
-              {product.roadmap.shipped.map((item) => (
-                <li key={item} className="flex gap-3 text-[14px] leading-[1.55] text-[#1f242d]">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#0c0e12]" aria-hidden="true" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </article>
-
-          <article className="rounded-[20px] border border-[#dcd8ce] bg-[#efeae0]/70 p-7 sm:p-9">
-            <div className="flex items-center justify-between border-b border-[#dcd8ce] pb-4">
-              <h3 className="font-display text-[22px] font-semibold tracking-[-0.02em] text-[#0c0e12]">
-                Out of scope in v1
-              </h3>
-              <span className="rounded-full border border-[#c8c3b8] bg-[#fbfaf7] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[#3a404d]">
-                Deliberate boundary
-              </span>
-            </div>
-            <ul className="mt-6 space-y-3.5">
-              {product.roadmap.next.map((item) => (
-                <li key={item} className="flex gap-3 text-[14px] leading-[1.55] text-[#2d333f]">
-                  <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-[#4b5260]" aria-hidden="true" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </article>
+        <div className="mt-12 grid gap-px overflow-hidden rounded-[18px] border border-[#dcd8ce] bg-[#dcd8ce] lg:grid-cols-3">
+          {columns.map((column) => {
+            const tone = toneClasses[column.tone]
+            return (
+              <article key={column.title} className="bg-[#fbfaf7] p-6 sm:p-7">
+                <div className="flex items-center justify-between gap-3 border-b border-[#dcd8ce] pb-4">
+                  <h3 className="font-display text-[22px] font-semibold tracking-[-0.02em] text-[#0c0e12]">
+                    {column.title}
+                  </h3>
+                  <span className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.1em] ${tone.badge}`}>
+                    <span className={`h-1.5 w-1.5 rounded-full ${tone.dot}`} aria-hidden="true" />
+                    {column.badge}
+                  </span>
+                </div>
+                <ul className="mt-5 space-y-3">
+                  {column.items.map((item) => (
+                    <li key={item} className="flex gap-2.5 text-[13px] leading-[1.55] text-[#2d333f]">
+                      {column.tone === 'slate' ? (
+                        <ArrowRight className={`mt-0.5 h-4 w-4 shrink-0 ${tone.icon}`} aria-hidden="true" />
+                      ) : (
+                        <Check className={`mt-0.5 h-4 w-4 shrink-0 ${tone.icon}`} aria-hidden="true" />
+                      )}
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            )
+          })}
         </div>
       </div>
     </section>
@@ -766,14 +960,15 @@ function RoadmapSection() {
 
 function FaqSection() {
   return (
-    <section id="faq" className="border-b border-[#dcd8ce]">
+    <section id="faq" className="border-b border-[#dcd8ce] bg-[#f6f4ef]">
       <div className="mx-auto grid w-full max-w-[1440px] gap-10 px-5 py-20 sm:px-8 md:grid-cols-[0.82fr_1.18fr] md:gap-14 md:py-28 lg:px-14">
         <div>
-          <h2 className="max-w-[14ch] text-balance font-display text-[clamp(34px,3.8vw,46px)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#0c0e12]">
+          <SectionLabel index="08">Questions</SectionLabel>
+          <h2 className="mt-6 max-w-[14ch] text-balance font-display text-[clamp(34px,3.8vw,46px)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#0c0e12]">
             Before you deploy.
           </h2>
           <p className="mt-4 max-w-[38ch] text-[15px] leading-[1.65] text-[#3a404d]">
-            The short answers on certification, scope and self-hosting. Need the longer version?{' '}
+            The short answers on the regulator pack, pilot scope and self-hosting. Need the longer version?{' '}
             <a className="font-semibold text-[#0c0e12] underline underline-offset-4" href={product.footer.contact}>
               Contact us.
             </a>
@@ -804,12 +999,14 @@ function CallToAction() {
         <div className="hazard-tape h-1.5 w-full" aria-hidden="true" />
         <div className="flex flex-col gap-6 p-8 sm:p-10 md:flex-row md:items-center md:justify-between lg:p-12">
           <div>
-            <h2 className="text-balance font-display text-[clamp(30px,3.4vw,42px)] font-semibold leading-[1.1] tracking-[-0.03em] text-white">
+            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-amber-300">Design partner pilot</p>
+            <h2 className="mt-4 text-balance font-display text-[clamp(30px,3.4vw,42px)] font-semibold leading-[1.1] tracking-[-0.03em] text-white">
               {product.cta.title}
             </h2>
             <p className="mt-3 max-w-[56ch] text-[15px] leading-[1.65] text-slate-300">
               {product.cta.body}
             </p>
+            <p className="mt-4 font-mono text-[10px] text-slate-400">{product.cta.note}</p>
           </div>
           <div className="flex shrink-0 flex-wrap gap-3">
             <a
@@ -819,10 +1016,10 @@ function CallToAction() {
               {product.cta.label} <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </a>
             <a
-              href="/learn"
+              href={product.cta.secondary.href}
               className="button h-11 border border-white/20 bg-white/[0.06] px-5 text-sm font-semibold text-white transition-colors hover:bg-white/12"
             >
-              Read the practice guide
+              {product.cta.secondary.label}
             </a>
             <a
               href={product.footer.repoUrl}
@@ -846,13 +1043,15 @@ export default function Tour() {
       <main>
         <Hero />
         <FactStrip />
-        <ConnectedPractices />
-        <PracticesSection />
+        <ProblemSection />
+        <ShippedSection />
         <ProductShowcase header={<ProductHeader />}>
           <CapabilitySlideDeck />
         </ProductShowcase>
+        <PilotSection />
+        <CoexistenceSection />
         <PlatformSection />
-        <RoadmapSection />
+        <BoundarySection />
         <FaqSection />
         <CallToAction />
       </main>

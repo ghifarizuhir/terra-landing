@@ -54,10 +54,10 @@ export default function NextChapter({ reduced }: Props) {
         >
           <div className="flex items-center gap-2.5">
             <span className="h-1.5 w-1.5 rounded-full bg-muted" />
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink">Not in v1</h3>
+            <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink">Out of scope</h3>
           </div>
           <ul className="mt-5 space-y-3">
-            {product.roadmap.next.map((item) => (
+            {product.roadmap.outOfScope.map((item) => (
               <li key={item} className="flex gap-3 text-[13.5px] leading-snug text-muted">
                 <ArrowUpRight className="mt-[2px] h-3.5 w-3.5 shrink-0 text-muted" />
                 <span>{item}</span>

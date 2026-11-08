@@ -82,10 +82,10 @@ export default function Footer({ variant = 'default' }: Props) {
         </div>
         <nav className="flex flex-col items-start gap-2.5 text-[13.5px] text-slate-200" aria-label="Product links">
           <span className="mb-1 font-mono text-[10px] uppercase tracking-[0.12em] text-slate-400">Product</span>
-          <a href="#product" className="transition-colors hover:text-white">Product tour</a>
-          <a href="#practices" className="transition-colors hover:text-white">Practices</a>
+          <a href="#product" className="transition-colors hover:text-white">The record</a>
+          <a href="#pilot" className="transition-colors hover:text-white">Pilot</a>
           <a href="#platform" className="transition-colors hover:text-white">Platform</a>
-          <a href="#roadmap" className="transition-colors hover:text-white">Roadmap</a>
+          <a href="#boundary" className="transition-colors hover:text-white">What ships</a>
         </nav>
         <nav className="flex flex-col items-start gap-2.5 text-[13.5px] text-slate-200" aria-label="Resources and contact">
           <span className="mb-1 font-mono text-[10px] uppercase tracking-[0.12em] text-slate-400">Resources</span>
@@ -98,7 +98,7 @@ export default function Footer({ variant = 'default' }: Props) {
       <div className="border-t border-white/10">
         <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-2 px-5 py-5 font-mono text-[11px] text-slate-300 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-14">
           <span>© 2026 Terraline, Inc</span>
-          <span>Open-source IT service management</span>
+          <span>Regulatory incident management for mid-market finance</span>
         </div>
       </div>
     </footer>

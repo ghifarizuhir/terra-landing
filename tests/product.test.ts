@@ -11,8 +11,12 @@ describe('product data', () => {
     expect(product.facts.length).toBeGreaterThanOrEqual(4)
     expect(product.features).toHaveLength(9)
     expect(product.comparisons).toHaveLength(2)
+    expect(product.problem.cards).toHaveLength(3)
+    expect(product.pilot.scope.length).toBeGreaterThanOrEqual(4)
+    expect(product.coexistence.cards).toHaveLength(2)
     expect(product.roadmap.shipped.length).toBeGreaterThan(0)
-    expect(product.roadmap.next.length).toBeGreaterThan(0)
+    expect(product.roadmap.pilot.length).toBeGreaterThan(0)
+    expect(product.roadmap.outOfScope.length).toBeGreaterThan(0)
     expect(product.cta.href.startsWith('mailto:')).toBe(true)
   })
 
@@ -38,6 +42,17 @@ describe('product data', () => {
     }).toLowerCase()
 
     expect(copy).not.toContain('workflow')
+  })
+
+  it('keeps the pilot boundary explicit', () => {
+    const pilot = JSON.stringify(product.pilot).toLowerCase()
+    const shipped = JSON.stringify(product.roadmap.shipped).toLowerCase()
+
+    expect(pilot).toContain('bnm rmit')
+    expect(pilot).toContain('cyber security act 2024')
+    expect(pilot).toContain('in pilot')
+    expect(shipped).not.toContain('regulator pack')
+    expect(shipped).not.toContain('evidence pack')
   })
 
   it('links to the public source repository', () => {

@@ -32,7 +32,7 @@ const order = [
 const copy: Record<string, PracticeCopy> = {
   incident: {
     oneLiner: 'Restore disrupted service fast, with users kept informed.',
-    aiSkill: 'Auto-triage & priority',
+    aiSkill: 'Triage suggest',
     shortTitle: 'Incident',
     status: 'product',
   },
@@ -43,8 +43,8 @@ const copy: Record<string, PracticeCopy> = {
     status: 'product',
   },
   change: {
-    oneLiner: 'Ship changes with a risk score, then verify they hold.',
-    aiSkill: 'Risk scoring',
+    oneLiner: 'Plan changes, link affected services and coordinate rollout.',
+    aiSkill: 'Change summary',
     shortTitle: 'Change',
     status: 'product',
   },

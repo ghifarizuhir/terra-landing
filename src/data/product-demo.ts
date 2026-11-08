@@ -1,8 +1,8 @@
 export const showcaseChapters = [
   { id: 'work', label: 'Intake & triage', targetId: 'top', steps: 3 },
   { id: 'services', label: 'Service context', targetId: 'showcase-services', steps: 3 },
-  { id: 'galileo', label: 'Knowledge & AI', targetId: 'showcase-galileo', steps: 3 },
-  { id: 'delivery', label: 'Delivery & mobile', targetId: 'showcase-delivery', steps: 3 },
+  { id: 'galileo', label: 'Evidence & AI', targetId: 'showcase-galileo', steps: 3 },
+  { id: 'delivery', label: 'Reports & delivery', targetId: 'showcase-delivery', steps: 3 },
 ] as const
 
 export type ShowcaseChapterId = (typeof showcaseChapters)[number]['id']
